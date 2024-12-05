@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人门户网站</title>
+
+    <!-- 引入本地CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- 在 <head> 标签中添加，在其他 CSS 之前 -->
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <!-- 搜索框 -->
+        <div class="row mb-4">
+            <div class="col-12 search-container">
+                <span class="brand-text">CharlyW's</span>
+                <div class="search-wrapper">
+                    <input type="text" class="form-control" id="searchBox" placeholder="搜索网站...">
+                </div>
+            </div>
+        </div>
+
+        <!-- 网站集合 -->
+        <div class="row" id="websiteCollection">
+            <!-- 卡片将由 JavaScript 动态生成 -->
+        </div>
+    </div>
+
+    <!-- 添加主题切换按钮 -->
+    <div class="theme-toggle">
+        <button id="themeToggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- 引入本地JavaScript -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
