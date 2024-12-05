@@ -229,12 +229,12 @@ h6 {
 
 /* 暗主题 */
 [data-theme="dark"] body {
-    background-color: #242424;
+    background-color: #303030;
     color: #e0e0e0;
 }
 
 [data-theme="dark"] .card {
-    background-color: #404040;
+    background-color: #242424;
     color: #ffffff;
 }
 
@@ -243,15 +243,15 @@ h6 {
 }
 
 [data-theme="dark"] .card-title {
-    color: #ffffff;
+    color: #ffffffe7;
 }
 
 [data-theme="dark"] .card-text {
-    color: #e0e0e0;
+    color: #e0e0e0d2;
 }
 
 [data-theme="dark"] #searchBox {
-    background-color: #404040;
+    background-color: #242424;
     color: #ffffff;
 }
 
@@ -313,5 +313,15 @@ h6 {
     width: 100%;
     height: 100%;
     border: none;
+}
+
+[data-theme="dark"] {
+    --background-color: #1c1c1c;
+    /* ... 其他深色模式的变量 ... */
+}
+
+/* 或者如果你直接设置背景色，可以这样写： */
+[data-theme="dark"] body {
+    background-color: #1c1c1c;
 }
 
