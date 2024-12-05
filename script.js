@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
-    const websiteCards = document.querySelectorAll('#websiteCollection .card');
     const themeToggle = document.getElementById('themeToggle');
+
+    // 检查系统主题并设置初始主题
+    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = localStorage.getItem('theme') || (systemDarkMode ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme === 'dark');
 
     // 监听搜索框输入事件
     searchBox.addEventListener('input', function(e) {
         const searchText = e.target.value.toLowerCase().trim();
+        const websiteCards = document.querySelectorAll('#websiteCollection .card');
         websiteCards.forEach(card => {
             const title = card.querySelector('.card-title').textContent.toLowerCase();
             const description = card.querySelector('.card-text').textContent.toLowerCase();
@@ -18,22 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 检查系统主题并设置初始图标
-    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    updateThemeIcon(systemDarkMode);
-
     // 主题切换功能
     themeToggle.addEventListener('click', function() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
-        if (currentTheme === 'light') {
-            // 如果当前是亮色，移除 data-theme 属性以恢复跟随系统
-            document.documentElement.removeAttribute('data-theme');
-            updateThemeIcon(systemDarkMode);
-        } else {
-            // 如果当前是暗色或跟随系统，切换到亮色
-            document.documentElement.setAttribute('data-theme', 'light');
-            updateThemeIcon(false);
-        }
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme === 'dark');
     });
 
     // 更新主题图标
