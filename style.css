@@ -293,3 +293,25 @@ h6 {
     box-shadow: var(--shadow-hover);
 }
 
+.video-card {
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 62.5%; /* 16:10 比例 (10/16 = 0.625) */
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+

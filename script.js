@@ -43,18 +43,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // 在 DOMContentLoaded 事件处理函数开始处添加
     function renderWebsites() {
         const container = document.getElementById('websiteCollection');
-        container.innerHTML = websiteData.map(site => `
-            <div class="col-md-4">
-                <a href="${site.url}" class="card-link">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">${site.title}</h5>
-                            <p class="card-text">${site.description}</p>
+        container.innerHTML = websiteData.map(site => {
+            if (site.type === 'video') {
+                return `
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">${site.title}</h5>
+                                <div class="video-container">
+                                    ${site.embedCode}
+                                </div>
+                                <p class="card-text">${site.description}</p>
+                            </div>
                         </div>
                     </div>
-                </a>
-            </div>
-        `).join('');
+                `;
+            }
+            return `
+                <div class="col-md-4">
+                    <a href="${site.url}" class="card-link">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">${site.title}</h5>
+                                <p class="card-text">${site.description}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }).join('');
     }
 
     // 初始渲染
