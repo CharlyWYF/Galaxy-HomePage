@@ -15,6 +15,11 @@ const websiteData = [
         description: "ming.charlyw.top"
     },
     {
+        title: "视频码率计算器",
+        url: "https://ming.charlyw.top/cal",
+        description: "ming.charlyw.top/cal"
+    },
+    {
         title: "简陋的PIZZA网站",
         url: "https://pizza.charlyw.top",
         description: "pizza.charlyw.top"
