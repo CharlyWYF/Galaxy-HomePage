@@ -42,7 +42,8 @@
 
 /* 使用CSS变量应用样式 */
 body {
-    font-family: 'Jura', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'Ubuntu', 'ZCOOL KuaiLe', sans-serif;
+    font-weight: 400;
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
@@ -81,8 +82,8 @@ h6 {
 .search-wrapper {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     max-width: 800px;
-    width: 40%;
     margin-left: auto;
     margin-right: 20px;
 }
@@ -101,17 +102,34 @@ h6 {
     padding: 5px 0;
 }
 
+.search-box-container {
+    position: relative;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
 #searchBox {
-    width: 100%;
-    flex: 1;
+    width: 45px;
+    padding-right: 35px;
+    margin: 0;
     background-color: var(--card-bg);
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    padding: 12px 15px;
+    padding: 12px;
+    height: 45px;
     box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    transition: width 0.3s ease;
     color: var(--text-color);
+}
+
+.search-icon {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
 }
 
 #searchBox::placeholder {
@@ -121,6 +139,11 @@ h6 {
 #searchBox:focus {
     outline: none;
     box-shadow: var(--shadow-hover);
+}
+
+#searchBox:hover,
+#searchBox:focus {
+    width: 400px;
 }
 
 /* 5. 网站卡片样式 */
@@ -147,17 +170,17 @@ h6 {
 }
 
 .card-title {
-    font-family: 'Jura', sans-serif;
-    font-weight: 600;
+    font-family: 'Ubuntu', 'ZCOOL KuaiLe', sans-serif;
+    font-weight: 500;
     font-size: 1.5rem;
     color: var(--text-color);
     margin-bottom: 5px;
     transition: color 0.2s;
-    letter-spacing: 1px;
 }
 
 .card-text {
-    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'Ubuntu', 'ZCOOL KuaiLe', sans-serif;
+    font-weight: 400;
     font-size: 0.95rem;
     color: var(--text-secondary);
     margin-bottom: 0;
@@ -234,7 +257,7 @@ h6 {
 }
 
 [data-theme="dark"] .card {
-    background-color: #242424;
+    background-color: #2c2c2c;
     color: #ffffff;
 }
 

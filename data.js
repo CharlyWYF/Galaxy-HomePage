@@ -20,12 +20,12 @@ const websiteData = [
         description: "ming.charlyw.top/cal"
     },
     {
-        title: "简陋的PIZZA网站",
+        title: "简陋 PIZZA 网站",
         url: "https://pizza.charlyw.top",
         description: "pizza.charlyw.top"
     },
     {
-        title: "某个不重要的PPT",
+        title: "某个不重要的 PPT",
         url: "https://ppt.charlyw.top",
         description: "ppt.charlyw.top"
     },
