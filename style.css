@@ -338,6 +338,20 @@ h6 {
     border: none;
 }
 
+.btn {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    /* 添加上边距 */
+}
+
 [data-theme="dark"] {
     --background-color: #1c1c1c;
     /* ... 其他深色模式的变量 ... */
