@@ -43,15 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // 在 DOMContentLoaded 事件处理函数开始处添加
     const fileDownloadCollection = document.getElementById("fileDownloadCollection");
 
-    // 获取当前网站的基础URL
-    const baseUrl = window.location.origin;
-
     files.forEach(file => {
         const card = document.createElement("div");
         card.className = "col-md-4";
 
-        // 构建完整的下载URL
-        const downloadUrl = baseUrl + file.path;
+        // 直接使用文件路径作为下载链接
+        const downloadUrl = file.path;
 
         card.innerHTML = `
             <div class="card">
