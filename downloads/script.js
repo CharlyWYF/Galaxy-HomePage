@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <h5 class="card-title">${file.title}</h5>
                     <p class="card-text">${file.description}</p>
-                    <a href="${downloadUrl}" class="btn btn-primary" target="_blank">访问链接</a>
+                    <a href="${downloadUrl}" class="btn btn-primary" target="_blank">下载</a>
                 </div>
             </div>
         `;
