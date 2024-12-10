@@ -84,8 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelPassword = document.getElementById('cancelPassword');
     const passwordInput = document.getElementById('passwordInput');
 
-    // 正确的密码
-    const correctPassword = 'ddd'; // 替换为你想要的密码
+    // 使用配置文件中的密码
+    const correctPassword = CONFIG.password;
 
     downloadBtn.addEventListener('click', (e) => {
         e.preventDefault();
