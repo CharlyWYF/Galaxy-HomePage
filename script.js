@@ -76,4 +76,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 初始渲染
     renderWebsites();
+
+    // 密码验证功能
+    const downloadBtn = document.getElementById('downloadBtn');
+    const passwordModal = document.getElementById('passwordModal');
+    const submitPassword = document.getElementById('submitPassword');
+    const cancelPassword = document.getElementById('cancelPassword');
+    const passwordInput = document.getElementById('passwordInput');
+
+    // 正确的密码
+    const correctPassword = 'ddd'; // 替换为你想要的密码
+
+    downloadBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        passwordModal.style.display = 'flex';
+    });
+
+    submitPassword.addEventListener('click', () => {
+        if (passwordInput.value === correctPassword) {
+            window.location.href = 'https://www.charlyw.top/downloads';
+        } else {
+            alert('密码错误！');
+        }
+        passwordInput.value = '';
+        passwordModal.style.display = 'none';
+    });
+
+    cancelPassword.addEventListener('click', () => {
+        passwordInput.value = '';
+        passwordModal.style.display = 'none';
+    });
+
+    // 点击模态框外部关闭
+    passwordModal.addEventListener('click', (e) => {
+        if (e.target === passwordModal) {
+            passwordInput.value = '';
+            passwordModal.style.display = 'none';
+        }
+    });
 });

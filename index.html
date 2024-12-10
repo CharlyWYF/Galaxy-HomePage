@@ -26,6 +26,17 @@
 
 <body>
     <div class="container mt-5">
+        <!-- 添加下载按钮 -->
+        <div class="download-button">
+            <a href="#" class="download-link" id="downloadBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+            </a>
+        </div>
+        
         <br><br><br><br><br><br>
         <!-- 搜索框 -->
         <div class="row mb-4">
@@ -69,6 +80,18 @@
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
         </button>
+    </div>
+
+    <!-- 添加密码弹窗 -->
+    <div id="passwordModal" class="password-modal">
+        <div class="modal-content">
+            <h3>请输入密码</h3>
+            <input type="password" id="passwordInput" placeholder="输入密码">
+            <div class="modal-buttons">
+                <button id="submitPassword">确认</button>
+                <button id="cancelPassword">取消</button>
+            </div>
+        </div>
     </div>
 
     <!-- 引入本地JavaScript -->
