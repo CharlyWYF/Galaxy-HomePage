@@ -36,8 +36,8 @@ const websiteData = [
     },
     {
         title: "Derby Pages",
-        url: "https://www.charlyw.top",
-        description: "www.charlyw.top/docs/derby_database"
+        url: "https://www.charlyw.top/docs/derby_database",
+        description: "charlyw.top/docs/derby_database"
     },
     {
         title: "就是这里！",
