@@ -2,7 +2,7 @@ const files = [
     {
         title: "Easy",
         description: "",
-        path: "https://www.charlyw.top/docs/derby_database/pages/Difficult.html"
+        path: "https://www.charlyw.top/docs/derby_database/pages/Easy.html"
     },
     {
         title: "Medium",
