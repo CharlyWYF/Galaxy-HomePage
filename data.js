@@ -40,6 +40,11 @@ const websiteData = [
         description: "charlyw.top/docs/derby_database"
     },
     {
+        title: "移动通信复习",
+        url: "https://www.charlyw.top/docs/ydtx",
+        description: "charlyw.top/docs/ydtx"
+    },
+    {
         title: "就是这里！",
         url: "https://www.charlyw.top",
         description: "www.charlyw.top"
