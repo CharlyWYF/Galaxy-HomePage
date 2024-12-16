@@ -35,7 +35,7 @@ const websiteData = [
         description: "txyl.charlyw.top"
     },
     {
-        title: "Derby Pages",
+        title: "Derby SQL",
         url: "https://www.charlyw.top/docs/derby_database",
         description: "charlyw.top/docs/derby_database"
     },
