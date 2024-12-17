@@ -114,4 +114,25 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordModal.style.display = 'none';
         }
     });
+
+    // 添加通知弹窗
+    function showNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'notification-modal';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <p>由于访问量激增，服务器压力较大，如遇加载缓慢或是无法访问，及时向站主反馈❗</p>
+                <button id="notificationBtn" class="btn btn-primary">收到👌</button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+
+        // 添加关闭按钮事件
+        document.getElementById('notificationBtn').addEventListener('click', () => {
+            notification.remove();
+        });
+    }
+
+    // 显示通知
+    showNotification();
 });
