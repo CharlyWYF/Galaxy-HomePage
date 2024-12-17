@@ -40,7 +40,7 @@ const websiteData = [
         description: "charlyw.top/docs/ydtx"
     },
     {
-        title: "就是这里！",
+        title: "就是这里!!",
         url: "https://www.charlyw.top",
         description: "www.charlyw.top"
     }
