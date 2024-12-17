@@ -25,11 +25,6 @@ const websiteData = [
         description: "pizza.charlyw.top"
     },
     {
-        title: "某个不重要的 PPT",
-        url: "https://ppt.charlyw.top",
-        description: "ppt.charlyw.top"
-    },
-    {
         title: "通信原理知识点",
         url: "https://txyl.charlyw.top",
         description: "txyl.charlyw.top"
