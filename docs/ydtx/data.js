@@ -8,5 +8,10 @@ const files = [
         title: "单选 & 判断",
         description: "",
         path: "https://www.charlyw.top/docs/ydtx/2.html"
+    },
+    {
+        title: "课后答案",
+        description: "",
+        path: "https://www.charlyw.top/docs/ydtx/answer_doc.html"
     }
 ];
