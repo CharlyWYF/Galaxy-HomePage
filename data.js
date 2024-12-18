@@ -29,11 +29,11 @@ const websiteData = [
         url: "https://txyl.charlyw.top",
         description: "txyl.charlyw.top"
     },
-    {
-        title: "Derby SQL",
-        url: "https://www.charlyw.top/docs/derby_database",
-        description: "charlyw.top/docs/derby_database"
-    },
+    // {
+    //     title: "Derby SQL",
+    //     url: "https://www.charlyw.top/docs/derby_database",
+    //     description: "charlyw.top/docs/derby_database"
+    // },
     {
         title: "移动通信复习",
         url: "https://www.charlyw.top/docs/ydtx",
