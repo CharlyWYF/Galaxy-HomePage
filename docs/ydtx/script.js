@@ -62,6 +62,4 @@ document.addEventListener('DOMContentLoaded', function() {
         fileDownloadCollection.appendChild(card);
     });
 
-    // 初始渲染
-    renderWebsites();
 });
