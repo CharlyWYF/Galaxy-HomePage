@@ -12,6 +12,6 @@ const files = [
     {
         title: "课后答案",
         description: "",
-        path: "https://www.charlyw.top/docs/ydtx/answer_doc.html"
+        path: "https://www.charlyw.top/docs/ydtx/answer_doc.pdf"
     }
 ];
