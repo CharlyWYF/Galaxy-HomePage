@@ -10,7 +10,7 @@ const files = [
         path: "https://www.charlyw.top/docs/ydtx/2.html"
     },
     {
-        title: "课后答案",
+        title: "教材答案",
         description: "",
         path: "https://www.charlyw.top/docs/ydtx/answer_doc.pdf"
     }
