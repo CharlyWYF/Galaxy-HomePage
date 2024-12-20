@@ -13,6 +13,11 @@ const files = [
         title: "Clash_win_zh 20.39",
         description: "0.20.39-Opt.1-win.7z",
         path: "https://github.com/Z-Siqi/Clash-for-Windows_Chinese/releases/download/CFW-V0.20.39_OPT-1/Clash.for.Windows-0.20.39-Opt.1-win.7z"
+    },
+    {
+        title: "Lab & Photo",
+        description: "zip",
+        path:  "https://www.charlyw.top/downloads/lab&photo.zip"
     }
     // 可以添加更多文件对象
 ];
