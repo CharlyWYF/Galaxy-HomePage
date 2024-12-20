@@ -31,17 +31,17 @@ const websiteData = [
     },
     {
         title: "Derby SQL",
-        url: "https://www.charlyw.top/docs/derby_database",
+        url: "/docs/derby_database",
         description: "charlyw.top/docs/derby_database"
     },
     {
         title: "移动通信复习",
-        url: "https://www.charlyw.top/docs/ydtx",
+        url: "/docs/ydtx",
         description: "charlyw.top/docs/ydtx"
     },
     {
         title: "就是这里!!",
-        url: "https://www.charlyw.top",
+        url: "/",
         description: "www.charlyw.top"
     }
 ];

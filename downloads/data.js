@@ -2,12 +2,12 @@ const files = [
     {
         title: "我的驿站apk",
         description: "yizhan.apk",
-        path: "https://www.charlyw.top/apks/yizhan.apk"
+        path: "/apks/yizhan.apk"
     },
     {
         title: "交换原理第二章-初稿",
         description: "现代交换原理-第二章-电子初稿.pdf",
-        path: "https://www.charlyw.top/docs/现代交换原理--第二章-电子初稿.pdf"
+        path: "/docs/现代交换原理--第二章-电子初稿.pdf"
     },
     {
         title: "Clash_win_zh 20.39",
@@ -17,7 +17,7 @@ const files = [
     {
         title: "Lab & Photo",
         description: "zip",
-        path:  "https://www.charlyw.top/downloads/lab&photo.zip"
+        path:  "/downloads/lab&photo.zip"
     }
     // 可以添加更多文件对象
 ];
