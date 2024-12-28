@@ -18,5 +18,10 @@ const files = [
         title: "教材答案",
         description: "",
         path: "/docs/ydtx/answer_doc.pdf"
-    }
+    },
+    {
+        title: "填空",
+        description: "",
+        path: "/docs/ydtx/填空.html"
+    },
 ];

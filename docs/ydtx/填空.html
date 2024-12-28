@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>移动通信填空题（点击空白显示）</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .hidden {
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        [id^="a"] {
+            text-decoration: underline;
+            color: #000;
+            padding: 0 2px;
+        }
+    </style>
+    <script>
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            if (answer.style.display === 'none') {
+                answer.style.display = 'inline';
+            } else {
+                answer.style.display = 'none';
+            }
+        }
+
+        function showAllAnswers() {
+            const answers = document.querySelectorAll('[id^="a"]');
+            answers.forEach(answer => {
+                answer.style.display = 'inline';
+            });
+        }
+
+        function hideAllAnswers() {
+            const answers = document.querySelectorAll('[id^="a"]');
+            answers.forEach(answer => {
+                answer.style.display = 'none';
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div style="margin: 20px 0;">
+        <button onclick="showAllAnswers()" style="padding: 10px 20px; margin-right: 10px; font-size: 16px;">显示所有答案</button>
+        <button onclick="hideAllAnswers()" style="padding: 10px 20px; font-size: 16px;">隐藏所有答案</button>
+    </div>
+
+    <script>
+        function showAllAnswers() {
+            const answers = document.querySelectorAll('[id^="a"]');
+            answers.forEach(answer => {
+                answer.style.display = 'inline';
+            });
+        }
+
+        function hideAllAnswers() {
+            const answers = document.querySelectorAll('[id^="a"]');
+            answers.forEach(answer => {
+                answer.style.display = 'none';
+            });
+        }
+    </script>
+
+    <h1>移动通信背题工具</h1>
+    <p>🔺移动通信网络包括 <span id="q1_1" class="hidden" onclick="toggleAnswer('a1_1')">⚪</span><span id="a1_1"
+            style="display:none;">蜂窝移动通信系统</span>、
+        <span id="q1_2" class="hidden" onclick="toggleAnswer('a1_2')">⚪</span><span id="a1_2"
+            style="display:none;">无绳电话系统</span>、
+        <span id="q1_3" class="hidden" onclick="toggleAnswer('a1_3')">⚪</span><span id="a1_3"
+            style="display:none;">无线寻呼系统</span>、
+        <span id="q1_4" class="hidden" onclick="toggleAnswer('a1_4')">⚪</span><span id="a1_4"
+            style="display:none;">集群移动通信</span>、
+        <span id="q1_5" class="hidden" onclick="toggleAnswer('a1_5')">⚪</span><span id="a1_5"
+            style="display:none;">卫星移动通信系统</span>
+    </p>
+
+    <p>🔺移动通信信道是 <span id="q2" class="hidden" onclick="toggleAnswer('a2')">⚪</span><span id="a2"
+            style="display:none;">移动用户</span> 在各种环境中进行通信时的无线电波传播通道</p>
+
+    <p>🔺移动通信信道会引起接收信号在相应的 <span id="q3_1" class="hidden" onclick="toggleAnswer('a3_1')">⚪</span><span id="a3_1"
+            style="display:none;">时间域</span>、
+        <span id="q3_2" class="hidden" onclick="toggleAnswer('a3_2')">⚪</span><span id="a3_2"
+            style="display:none;">频率域</span>、
+        <span id="q3_3" class="hidden" onclick="toggleAnswer('a3_3')">⚪</span><span id="a3_3"
+            style="display:none;">空间域</span> 产生
+        <span id="q3_4" class="hidden" onclick="toggleAnswer('a3_4')">⚪</span><span id="a3_4"
+            style="display:none;">选择性衰落</span>，而这些衰落不但会严重恶化移动通信的
+        <span id="q3_5" class="hidden" onclick="toggleAnswer('a3_5')">⚪</span><span id="a3_5"
+            style="display:none;">传输可靠性</span>，还会明显降低移动通信系统的
+        <span id="q3_6" class="hidden" onclick="toggleAnswer('a3_6')">⚪</span><span id="a3_6"
+            style="display:none;">频谱效率</span>
+    </p>
+
+    <p>🔺无线电波传播方式：<span id="q4_1" class="hidden" onclick="toggleAnswer('a4_1')">⚪</span><span id="a4_1"
+            style="display:none;">直射</span>、
+        <span id="q4_2" class="hidden" onclick="toggleAnswer('a4_2')">⚪</span><span id="a4_2"
+            style="display:none;">反射</span>、
+        <span id="q4_3" class="hidden" onclick="toggleAnswer('a4_3')">⚪</span><span id="a4_3"
+            style="display:none;">绕射</span>、
+        <span id="q4_4" class="hidden" onclick="toggleAnswer('a4_4')">⚪</span><span id="a4_4"
+            style="display:none;">散射</span>，其中
+        <span id="q4_5" class="hidden" onclick="toggleAnswer('a4_5')">⚪</span><span id="a4_5"
+            style="display:none;">反射</span>、
+        <span id="q4_6" class="hidden" onclick="toggleAnswer('a4_6')">⚪</span><span id="a4_6"
+            style="display:none;">绕射</span>、
+        <span id="q4_7" class="hidden" onclick="toggleAnswer('a4_7')">⚪</span><span id="a4_7"
+            style="display:none;">散射</span> 是影响移动通信中电波传播的基本形式
+    </p>
+
+    <p>🔺直射波可按 <span id="q5" class="hidden" onclick="toggleAnswer('a5')">⚪</span><span id="a5"
+            style="display:none;">自由空间传播</span> 来考虑</p>
+
+    <p>🔺自由空间中电波传播损耗（衰减）只与 <span id="q6_1" class="hidden" onclick="toggleAnswer('a6_1')">⚪</span><span id="a6_1"
+            style="display:none;">工作频率 f</span>、
+        <span id="q6_2" class="hidden" onclick="toggleAnswer('a6_2')">⚪</span><span id="a6_2"
+            style="display:none;">传播距离 d</span> 有关
+    </p>
+
+    <p>🔺<span id="q7_1" class="hidden" onclick="toggleAnswer('a7_1')">⚪</span><span id="a7_1"
+            style="display:none;">传播损耗</span>、
+        <span id="q7_2" class="hidden" onclick="toggleAnswer('a7_2')">⚪</span><span id="a7_2"
+            style="display:none;">阴影衰落</span> 合并在一起反映了无线信道在
+        <span id="q7_3" class="hidden" onclick="toggleAnswer('a7_3')">⚪</span><span id="a7_3"
+            style="display:none;">大尺度</span> 上对信号的影响，它们主要影响
+        <span id="q7_4" class="hidden" onclick="toggleAnswer('a7_4')">⚪</span><span id="a7_4"
+            style="display:none;">无线覆盖范围</span>；而
+        <span id="q7_5" class="hidden" onclick="toggleAnswer('a7_5')">⚪</span><span id="a7_5"
+            style="display:none;">多径衰落</span> 严重影响到
+        <span id="q7_6" class="hidden" onclick="toggleAnswer('a7_6')">⚪</span><span id="a7_6"
+            style="display:none;">信号传播质量</span>，并且不可避免，只能采用
+        <span id="q7_7" class="hidden" onclick="toggleAnswer('a7_7')">⚪</span><span id="a7_7"
+            style="display:none;">抗衰落技术</span> 来减小影响
+    </p>
+
+    <p>🔺表示衰落信号幅度特点的特征量：<span id="q8_1" class="hidden" onclick="toggleAnswer('a8_1')">⚪</span><span id="a8_1"
+            style="display:none;">衰落率</span>、
+        <span id="q8_2" class="hidden" onclick="toggleAnswer('a8_2')">⚪</span><span id="a8_2"
+            style="display:none;">电平通过率</span>、
+        <span id="q8_3" class="hidden" onclick="toggleAnswer('a8_3')">⚪</span><span id="a8_3"
+            style="display:none;">衰落持续时间</span>
+    </p>
+
+    <p>🔺衰落率是指 <span id="q9_1" class="hidden" onclick="toggleAnswer('a9_1')">⚪</span><span id="a9_1"
+            style="display:none;">信号包络</span> 在单位时间内以
+        <span id="q9_2" class="hidden" onclick="toggleAnswer('a9_2')">⚪</span><span id="a9_2"
+            style="display:none;">正斜率</span> 通过
+        <span id="q9_3" class="hidden" onclick="toggleAnswer('a9_3')">⚪</span><span id="a9_3"
+            style="display:none;">中值电平</span> 的次数
+    </p>
+
+    <p>🔺衰落率与 <span id="q10_1" class="hidden" onclick="toggleAnswer('a10_1')">⚪</span><span id="a10_1"
+            style="display:none;">发射频率</span>、
+        <span id="q10_2" class="hidden" onclick="toggleAnswer('a10_2')">⚪</span><span id="a10_2"
+            style="display:none;">移动台的行进速度、方向</span> 及
+        <span id="q10_3" class="hidden" onclick="toggleAnswer('a10_3')">⚪</span><span id="a10_3"
+            style="display:none;">多径传播的路径数</span>
+    </p>
+
+    <p>🔺移动通信信道是 <span id="q11_1" class="hidden" onclick="toggleAnswer('a11_1')">⚪</span><span id="a11_1"
+            style="display:none;">色散信道</span>，信号在
+        <span id="q11_2" class="hidden" onclick="toggleAnswer('a11_2')">⚪</span><span id="a11_2"
+            style="display:none;">时域</span>、
+        <span id="q11_3" class="hidden" onclick="toggleAnswer('a11_3')">⚪</span><span id="a11_3"
+            style="display:none;">频域</span>、
+        <span id="q11_4" class="hidden" onclick="toggleAnswer('a11_4')">⚪</span><span id="a11_4"
+            style="display:none;">空间（角度）</span> 上都产生
+        <span id="q11_5" class="hidden" onclick="toggleAnswer('a11_5')">⚪</span><span id="a11_5"
+            style="display:none;">色散</span>：
+    </p>
+
+    <p>🔺1. <span id="q12_1" class="hidden" onclick="toggleAnswer('a12_1')">⚪</span><span id="a12_1"
+            style="display:none;">多径效应</span> 在
+        <span id="q12_2" class="hidden" onclick="toggleAnswer('a12_2')">⚪</span><span id="a12_2"
+            style="display:none;">时域</span> 上引起信号的
+        <span id="q12_3" class="hidden" onclick="toggleAnswer('a12_3')">⚪</span><span id="a12_3"
+            style="display:none;">时延扩展</span>，用
+        <span id="q12_4" class="hidden" onclick="toggleAnswer('a12_4')">⚪</span><span id="a12_4"
+            style="display:none;">功率时延分布</span> 描述
+    </p>
+
+    <p>🔺2. <span id="q13_1" class="hidden" onclick="toggleAnswer('a13_1')">⚪</span><span id="a13_1"
+            style="display:none;">多普勒效应</span> 在
+        <span id="q13_2" class="hidden" onclick="toggleAnswer('a13_2')">⚪</span><span id="a13_2"
+            style="display:none;">频域</span> 上引起
+        <span id="q13_3" class="hidden" onclick="toggleAnswer('a13_3')">⚪</span><span id="a13_3"
+            style="display:none;">频谱扩展</span>，用
+        <span id="q13_4" class="hidden" onclick="toggleAnswer('a13_4')">⚪</span><span id="a13_4"
+            style="display:none;">多普勒功率密度谱</span> 描述
+    </p>
+
+    <p>🔺3. <span id="q14_1" class="hidden" onclick="toggleAnswer('a14_1')">⚪</span><span id="a14_1"
+            style="display:none;">散射效应</span> 会引起
+        <span id="q14_2" class="hidden" onclick="toggleAnswer('a14_2')">⚪</span><span id="a14_2"
+            style="display:none;">角度扩展</span>，用
+        <span id="q14_3" class="hidden" onclick="toggleAnswer('a14_3')">⚪</span><span id="a14_3"
+            style="display:none;">功率角度谱</span> 描述
+    </p>
+
+    <p>🔺<span id="q15_1" class="hidden" onclick="toggleAnswer('a15_1')">⚪</span><span id="a15_1"
+            style="display:none;">平坦衰落信道</span> 只有
+        <span id="q15_2" class="hidden" onclick="toggleAnswer('a15_2')">⚪</span><span id="a15_2"
+            style="display:none;">一个</span>
+        <span id="q15_3" class="hidden" onclick="toggleAnswer('a15_3')">⚪</span><span id="a15_3"
+            style="display:none;">可分辨径</span>（包括多个
+        <span id="q15_4" class="hidden" onclick="toggleAnswer('a15_4')">⚪</span><span id="a15_4"
+            style="display:none;">不可分辨径</span>），而
+        <span id="q15_5" class="hidden" onclick="toggleAnswer('a15_5')">⚪</span><span id="a15_5"
+            style="display:none;">频率选择性信道</span> ���由多个具有不同时延的
+        <span id="q15_6" class="hidden" onclick="toggleAnswer('a15_6')">⚪</span><span id="a15_6"
+            style="display:none;">平坦衰落信道</span> 组合而成
+    </p>
+
+    <p>🔺瑞利衰落信道的统计模型由 <span id="q11" class="hidden" onclick="toggleAnswer('a11')">⚪</span><span id="a11"
+            style="display:none;">Clarke 建立</span></p>
+
+    <p>🔺分集接收的类型包括 <span id="q12_1" class="hidden" onclick="toggleAnswer('a12_1')">⚪</span><span id="a12_1"
+            style="display:none;">宏分集</span> 和
+        <span id="q12_2" class="hidden" onclick="toggleAnswer('a12_2')">⚪</span><span id="a12_2"
+            style="display:none;">微分集</span>
+    </p>
+
+    <p>🔺最大比合并是一种 <span id="q13" class="hidden" onclick="toggleAnswer('a13')">⚪</span><span id="a13"
+            style="display:none;">最佳的分集合并方式</span></p>
+
+    <p>🔺时间分集是指 <span id="q14" class="hidden" onclick="toggleAnswer('a14')">⚪</span><span id="a14"
+            style="display:none;">超过信道相关时间的时间间隔重复发送信号</span></p>
+
+    <p>🔺衰落率与 <span id="q15_1" class="hidden" onclick="toggleAnswer('a15_1')">⚪</span><span id="a15_1" 
+            style="display:none;">发射频率</span>、
+        <span id="q15_2" class="hidden" onclick="toggleAnswer('a15_2')">⚪</span><span id="a15_2"
+            style="display:none;">移动台的行进速度、方向</span>、
+        <span id="q15_3" class="hidden" onclick="toggleAnswer('a15_3')">⚪</span><span id="a15_3"
+            style="display:none;">多径传播的路径数</span> 有关
+    </p>
+
+    <p>🔺移动通信信道是 <span id="q16_1" class="hidden" onclick="toggleAnswer('a16_1')">⚪</span><span id="a16_1"
+            style="display:none;">色散信道</span>，信号在 
+        <span id="q16_2" class="hidden" onclick="toggleAnswer('a16_2')">⚪</span><span id="a16_2"
+            style="display:none;">时域</span>、
+        <span id="q16_3" class="hidden" onclick="toggleAnswer('a16_3')">⚪</span><span id="a16_3"
+            style="display:none;">频域</span>、
+        <span id="q16_4" class="hidden" onclick="toggleAnswer('a16_4')">⚪</span><span id="a16_4"
+            style="display:none;">空间（角度）</span> 上都产生
+        <span id="q16_5" class="hidden" onclick="toggleAnswer('a16_5')">⚪</span><span id="a16_5"
+            style="display:none;">色散</span>
+    </p>
+
+    <p>🔺多径效应在 <span id="q17_1" class="hidden" onclick="toggleAnswer('a17_1')">⚪</span><span id="a17_1"
+            style="display:none;">时域</span> 上引起信号的
+        <span id="q17_2" class="hidden" onclick="toggleAnswer('a17_2')">⚪</span><span id="a17_2"
+            style="display:none;">时延扩展</span>，用
+        <span id="q17_3" class="hidden" onclick="toggleAnswer('a17_3')">⚪</span><span id="a17_3"
+            style="display:none;">功率时延分布</span> 描述
+    </p>
+
+    <p>🔺多普勒效应在 <span id="q18_1" class="hidden" onclick="toggleAnswer('a18_1')">⚪</span><span id="a18_1"
+            style="display:none;">频域</span> 上引起
+        <span id="q18_2" class="hidden" onclick="toggleAnswer('a18_2')">⚪</span><span id="a18_2"
+            style="display:none;">频谱扩展</span>，用
+        <span id="q18_3" class="hidden" onclick="toggleAnswer('a18_3')">⚪</span><span id="a18_3"
+            style="display:none;">多普勒功率密度谱</span> 描述
+    </p>
+
+    <p>🔺散射效应会引起 <span id="q19_1" class="hidden" onclick="toggleAnswer('a19_1')">⚪</span><span id="a19_1"
+            style="display:none;">角度扩展</span>，用
+        <span id="q19_2" class="hidden" onclick="toggleAnswer('a19_2')">⚪</span><span id="a19_2"
+            style="display:none;">功率角度谱</span> 描述
+    </p>
+
+    <p>🔺平坦衰落信道只有 <span id="q20_1" class="hidden" onclick="toggleAnswer('a20_1')">⚪</span><span id="a20_1"
+            style="display:none;">一个</span>
+        <span id="q20_2" class="hidden" onclick="toggleAnswer('a20_2')">⚪</span><span id="a20_2"
+            style="display:none;">可分辨径</span>（包括多个
+        <span id="q20_3" class="hidden" onclick="toggleAnswer('a20_3')">⚪</span><span id="a20_3"
+            style="display:none;">不可分辨径</span>），而
+        <span id="q20_4" class="hidden" onclick="toggleAnswer('a20_4')">⚪</span><span id="a20_4"
+            style="display:none;">频率选择性信道</span>是由多个具有不同时延的
+        <span id="q20_5" class="hidden" onclick="toggleAnswer('a20_5')">⚪</span><span id="a20_5"
+            style="display:none;">平坦衰落信道</span>组合而成
+    </p>
+
+    <p>🔺对于频率选择性衰落信道，最常用的仿真模型是 <span id="q21" class="hidden" onclick="toggleAnswer('a21')">⚪</span><span id="a21"
+            style="display:none;">抽头延时线模型</span></p>
+
+    <p>🔺Clarke建立了一个描述 <span id="q22_1" class="hidden" onclick="toggleAnswer('a22_1')">⚪</span><span id="a22_1"
+            style="display:none;">平坦小尺度衰落</span> 的统计模型，该模型适用于描述
+        <span id="q22_2" class="hidden" onclick="toggleAnswer('a22_2')">⚪</span><span id="a22_2"
+            style="display:none;">瑞利衰落信道</span>
+    </p>
+
+    <p>🔺Jakes仿真模型模拟的是在均匀散射环境中 <span id="q23" class="hidden" onclick="toggleAnswer('a23')">⚪</span><span id="a23"
+            style="display:none;">非频率选择性衰落</span> 信道的非低通包络</p>
+
+    <p>🔺移动通信网由 <span id="q24_1" class="hidden" onclick="toggleAnswer('a24_1')">⚪</span><span id="a24_1"
+            style="display:none;">空中网络</span> 和
+        <span id="q24_2" class="hidden" onclick="toggleAnswer('a24_2')">⚪</span><span id="a24_2"
+            style="display:none;">地面网络</span> 两部分组成
+    </p>
+
+    <p>🔺在移动通信网内，无线电干扰一般分为 <span id="q25_1" class="hidden" onclick="toggleAnswer('a25_1')">⚪</span><span id="a25_1"
+            style="display:none;">同频干扰</span>、
+        <span id="q25_2" class="hidden" onclick="toggleAnswer('a25_2')">⚪</span><span id="a25_2"
+            style="display:none;">邻道干扰</span>、
+        <span id="q25_3" class="hidden" onclick="toggleAnswer('a25_3')">⚪</span><span id="a25_3"
+            style="display:none;">互调干扰</span>、
+        <span id="q25_4" class="hidden" onclick="toggleAnswer('a25_4')">⚪</span><span id="a25_4"
+            style="display:none;">阻塞干扰</span>、
+        <span id="q25_5" class="hidden" onclick="toggleAnswer('a25_5')">⚪</span><span id="a25_5"
+            style="display:none;">近端对远端的干扰</span>
+    </p>
+
+    <p>🔺<span id="q26_1" class="hidden" onclick="toggleAnswer('a26_1')">⚪</span><span id="a26_1"
+            style="display:none;">空间分集</span> 是利用相距足够远的不同天线产生的电场相互独立这一特性而构成的分集技术，也称
+        <span id="q26_2" class="hidden" onclick="toggleAnswer('a26_2')">⚪</span><span id="a26_2"
+            style="display:none;">天线分集</span>
+    </p>
+
+    <p>🔺<span id="q27" class="hidden" onclick="toggleAnswer('a27')">⚪</span><span id="a27"
+            style="display:none;">时间分集</span> 是指超过信道相关时间的时间间隔重复发送信号</p>
+
+    <p>🔺<span id="q28_1" class="hidden" onclick="toggleAnswer('a28_1')">⚪</span><span id="a28_1"
+            style="display:none;">GSM移动通信系统</span> 使用
+        <span id="q28_2" class="hidden" onclick="toggleAnswer('a28_2')">⚪</span><span id="a28_2"
+            style="display:none;">跳频</span> 获得频率分集
+    </p>
+
+    <p>🔺<span id="q29_1" class="hidden" onclick="toggleAnswer('a29_1')">⚪</span><span id="a29_1"
+            style="display:none;">极化分集</span> 可以看作
+        <span id="q29_2" class="hidden" onclick="toggleAnswer('a29_2')">⚪</span><span id="a29_2"
+            style="display:none;">空间分集</span> 的一种特殊情况，仅仅是利用了不同
+        <span id="q29_3" class="hidden" onclick="toggleAnswer('a29_3')">⚪</span><span id="a29_3"
+            style="display:none;">极化波</span> 具有不相关的衰落特性而缩短了天线间的距离而已
+    </p>
+
+    <p>🔺<span id="q30_1" class="hidden" onclick="toggleAnswer('a30_1')">⚪</span><span id="a30_1"
+            style="display:none;">角度分集</span> 在接收端使用
+        <span id="q30_2" class="hidden" onclick="toggleAnswer('a30_2')">⚪</span><span id="a30_2"
+            style="display:none;">方向性天线</span>，使他们指向不同的
+        <span id="q30_3" class="hidden" onclick="toggleAnswer('a30_3')">⚪</span><span id="a30_3"
+            style="display:none;">波达方向</span>，则每个方向性天线接收到的多径信号是
+        <span id="q30_4" class="hidden" onclick="toggleAnswer('a30_4')">⚪</span><span id="a30_4"
+            style="display:none;">不相关的</span>
+    </p>
+
+    <p>🔺<span id="q31_1" class="hidden" onclick="toggleAnswer('a31_1')">⚪</span><span id="a31_1"
+            style="display:none;">空时编码STC</span> 是
+        <span id="q31_2" class="hidden" onclick="toggleAnswer('a31_2')">⚪</span><span id="a31_2"
+            style="display:none;">信道编码设计</span> 和
+        <span id="q31_3" class="hidden" onclick="toggleAnswer('a31_3')">⚪</span><span id="a31_3"
+            style="display:none;">发送分集</span> 的结合
+    </p>
+
+    <p>🔺主流多址接入技术包括：<span id="q32_1" class="hidden" onclick="toggleAnswer('a32_1')">⚪</span><span id="a32_1"
+            style="display:none;">FDMA</span>、
+        <span id="q32_2" class="hidden" onclick="toggleAnswer('a32_2')">⚪</span><span id="a32_2"
+            style="display:none;">TDMA</span>、
+        <span id="q32_3" class="hidden" onclick="toggleAnswer('a32_3')">⚪</span><span id="a32_3"
+            style="display:none;">CDMA</span>、
+        <span id="q32_4" class="hidden" onclick="toggleAnswer('a32_4')">⚪</span><span id="a32_4"
+            style="display:none;">SDMA</span>、
+        <span id="q32_5" class="hidden" onclick="toggleAnswer('a32_5')">⚪</span><span id="a32_5"
+            style="display:none;">OFDMA</span>
+    </p>
+
+</body>
+
+</html>
