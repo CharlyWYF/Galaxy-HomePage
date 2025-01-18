@@ -211,8 +211,6 @@ proxy-groups:
   - name: 🚀 手动切换
     type: select
     proxies:
-      - 🏳️‍🌈 剩余流量：181.13GB
-      - 🏳️‍🌈 过期时间：2025-01-25
       - ASYNCHRONOUS TRANSFERMODE 永久虚通路连接PVCC D01
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 1
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 2
@@ -397,8 +395,6 @@ proxy-groups:
     interval: 300
     tolerance: 50
     proxies:
-      - 🏳️‍🌈 剩余流量：181.13GB
-      - 🏳️‍🌈 过期时间：2025-01-25
       - ASYNCHRONOUS TRANSFERMODE 永久虚通路连接PVCC D01
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 1
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 2
@@ -583,8 +579,6 @@ proxy-groups:
     interval: 300
     tolerance: 50
     proxies:
-      - 🏳️‍🌈 剩余流量：181.13GB
-      - 🏳️‍🌈 过期时间：2025-01-25
       - ASYNCHRONOUS TRANSFERMODE 永久虚通路连接PVCC D01
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 1
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 2
@@ -770,8 +764,6 @@ proxy-groups:
     interval: 300
     tolerance: 50
     proxies:
-      - 🏳️‍🌈 剩余流量：181.13GB
-      - 🏳️‍🌈 过期时间：2025-01-25
       - ASYNCHRONOUS TRANSFERMODE 永久虚通路连接PVCC D01
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 1
       - Next generation AnyPath® Direct Internet Zero Trust Network Access (DIZTNA3.0) CloudBlades 2
