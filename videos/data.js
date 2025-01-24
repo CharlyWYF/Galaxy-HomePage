@@ -24,5 +24,4 @@ const files = [
         description: "",
         path: "https://play.modujx11.com/20250117/13j7zvlW/index.m3u8"
     }
-
 ];
