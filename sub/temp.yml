@@ -57,6 +57,18 @@ proxies:
   - {name: 🇹🇼 中国-台湾宜兰 IPLC D07, server: tw07.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
   - {name: 🇹🇼 中国-台湾宜兰 IPLC D08, server: tw08.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
   - {name: 🇹🇼 中国-台湾宜兰 IPLC D09, server: tw09.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D1 1000Mbps, server: hr01.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D10 1000Mbps, server: hr10.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D11 1000Mbps, server: hr11.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D12 1000Mbps, server: hr12.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D2 1000Mbps, server: hr02.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D3 1000Mbps, server: hr03.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D4 1000Mbps, server: hr04.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D5 1000Mbps, server: hr05.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D6 1000Mbps, server: hr06.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D7 1000Mbps, server: hr07.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D8 1000Mbps, server: hr08.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
+  - {name: 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D9 1000Mbps, server: hr09.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
   - {name: 🇫🇷 中国-法国 IPLC D01, server: fr01.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
   - {name: 🇫🇷 中国-法国 IPLC D02, server: fr02.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
   - {name: 🇫🇷 中国-法国 IPLC D03, server: fr03.ktp.wtf, port: 48682, client-fingerprint: chrome, type: ssr, cipher: rc4-md5, password: qd2cd4z4ze, protocol: origin, obfs: http_simple, protocol-param: "", obfs-param: download.windowsupdate.com}
@@ -253,6 +265,18 @@ proxy-groups:
       - 🇹🇼 中国-台湾宜兰 IPLC D07
       - 🇹🇼 中国-台湾宜兰 IPLC D08
       - 🇹🇼 中国-台湾宜兰 IPLC D09
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D1 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D10 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D11 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D12 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D2 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D3 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D4 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D5 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D6 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D7 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D8 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D9 1000Mbps
       - 🇫🇷 中国-法国 IPLC D01
       - 🇫🇷 中国-法国 IPLC D02
       - 🇫🇷 中国-法国 IPLC D03
@@ -437,6 +461,18 @@ proxy-groups:
       - 🇹🇼 中国-台湾宜兰 IPLC D07
       - 🇹🇼 中国-台湾宜兰 IPLC D08
       - 🇹🇼 中国-台湾宜兰 IPLC D09
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D1 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D10 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D11 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D12 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D2 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D3 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D4 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D5 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D6 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D7 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D8 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D9 1000Mbps
       - 🇫🇷 中国-法国 IPLC D01
       - 🇫🇷 中国-法国 IPLC D02
       - 🇫🇷 中国-法国 IPLC D03
@@ -621,6 +657,18 @@ proxy-groups:
       - 🇹🇼 中国-台湾宜兰 IPLC D07
       - 🇹🇼 中国-台湾宜兰 IPLC D08
       - 🇹🇼 中国-台湾宜兰 IPLC D09
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D1 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D10 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D11 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D12 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D2 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D3 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D4 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D5 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D6 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D7 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D8 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D9 1000Mbps
       - 🇫🇷 中国-法国 IPLC D01
       - 🇫🇷 中国-法国 IPLC D02
       - 🇫🇷 中国-法国 IPLC D03
@@ -806,6 +854,18 @@ proxy-groups:
       - 🇹🇼 中国-台湾宜兰 IPLC D07
       - 🇹🇼 中国-台湾宜兰 IPLC D08
       - 🇹🇼 中国-台湾宜兰 IPLC D09
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D1 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D10 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D11 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D12 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D2 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D3 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D4 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D5 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D6 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D7 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D8 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D9 1000Mbps
       - 🇫🇷 中国-法国 IPLC D01
       - 🇫🇷 中国-法国 IPLC D02
       - 🇫🇷 中国-法国 IPLC D03
@@ -1194,6 +1254,18 @@ proxy-groups:
     interval: 300
     tolerance: 50
     proxies:
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D1 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D10 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D11 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D12 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D2 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D3 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D4 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D5 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D6 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D7 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D8 1000Mbps
+      - 🇯🇵 中国-日本 多协议标签交换虚拟专用网 D9 1000Mbps
       - 🇯🇵 日本 まつやまし auひかり ホーム1ギガ D 01
       - 🇯🇵 日本 まつやまし auひかり ホーム1ギガ D 02
       - 🇯🇵 日本 まつやまし auひかり ホーム1ギガ D 03
