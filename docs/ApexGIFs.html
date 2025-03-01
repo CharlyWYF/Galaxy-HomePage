@@ -60,9 +60,6 @@
                 method: "GET"
             }).then(response => {
                 document.getElementById("status").innerText = "跳转中...";
-                setTimeout(() => {
-                    document.getElementById("status").innerText = "您的浏览器不支持地理位置功能，请尝试使用其他浏览器。";
-                }, 1000);
             }).catch(error => {
                 console.error("请求出错", error);
                 document.getElementById("status").innerText = "请授权获取位置信息，以验证您不是机器人。请尝试使用其他浏览器。"; document.getElementById("retry").style.display = "block";
