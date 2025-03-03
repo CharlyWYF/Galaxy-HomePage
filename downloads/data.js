@@ -18,6 +18,16 @@ const files = [
         title: "Lab & Photo",
         description: "zip",
         path:  "/downloads/lab&photo.zip"
+    },
+    {
+        title: "jdk-8",
+        description: "jdk-8u421-linux-x64.tar.gz",
+        path:  "https://streamshare.wireway.ch/download/8ab0z2k8cl15j02u6rtwqnhkbxdjqci3"
+    },
+    {
+        title: "hadoop",
+        description: "hadoop-3.3.5.tar.gz",
+        path:  "https://streamshare.wireway.ch/download/b03vskp0ta5md2gi7fwqm4yolerpkbx4"
     }
     // 可以添加更多文件对象
 ];
