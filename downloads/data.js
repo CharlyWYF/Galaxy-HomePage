@@ -28,6 +28,11 @@ const files = [
         title: "hadoop",
         description: "hadoop-3.3.5.tar.gz",
         path:  "https://streamshare.wireway.ch/download/b03vskp0ta5md2gi7fwqm4yolerpkbx4"
+    },
+    {
+        title: "PartyAnimalCursor",
+        description: "zip",
+        path: "https://streamshare.wireway.ch/download/pm9ibv2g"
     }
     // 可以添加更多文件对象
 ];
