@@ -33,6 +33,11 @@ const files = [
         title: "PartyAnimalCursor",
         description: "zip",
         path: "https://streamshare.wireway.ch/download/pm9ibv2g"
+    },
+    {
+        title: "KuWo for PC",
+        description: "zip",
+        path: "https://streamshare.wireway.ch/download/6wwfcbuv"
     }
     // 可以添加更多文件对象
 ];
