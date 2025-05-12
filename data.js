@@ -41,7 +41,7 @@ const websiteData = [
     },
     {
         title: "大数据复习",
-        url: "/docs/dsj.html",
+        url: "/docs/dsj/dsj.html",
         description: "charlyw.top/docs/dsj"
     },
     {
