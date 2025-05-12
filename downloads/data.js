@@ -15,11 +15,6 @@ const files = [
         path: "https://github.com/Z-Siqi/Clash-for-Windows_Chinese/releases/download/CFW-V0.20.39_OPT-1/Clash.for.Windows-0.20.39-Opt.1-win.7z"
     },
     {
-        title: "Lab & Photo",
-        description: "zip",
-        path:  "/downloads/lab&photo.zip"
-    },
-    {
         title: "jdk-8",
         description: "jdk-8u421-linux-x64.tar.gz",
         path:  "https://streamshare.wireway.ch/download/8ab0z2k8cl15j02u6rtwqnhkbxdjqci3"
