@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>flv.js 示例</title>
+</head>
+
+<body>
+    <video id="videoElement" controls></video>
+    <script src="https://cdn.jsdelivr.net/npm/flv.js@latest/dist/flv.min.js"></script>
+    <script>
+    if (flvjs.isSupported()) {
+        const videoElement = document.getElementById('videoElement');
+        const flvPlayer = flvjs.createPlayer({
+            type: 'flv',  // 可以是 'flv' 或 'mp4'
+            isLive: true,  // 是否为直播流
+            hasAudio: true,  // 是否有音频
+            hasVideo: true,  // 是否有视频
+            url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_67d31acc5a8be141e6a7382762cdcd66_1080p4000k.flv?txSecret=0489ecdf4a7c839b688c5bfd101ba9a6&txTime=68557681',
+            cors: true  // 是否启用CORS
+        }, {
+            enableWorker: true,  // 启用分离的线程进行转封装
+            enableStashBuffer: false,  // 关闭IO隐藏缓冲区
+            stashInitialSize: 128,  // 减少首帧显示等待时长
+            lazyLoad: true,  // 延迟加载
+            lazyLoadMaxDuration: 3 * 60,  // 延迟加载的最大时长
+            deferLoadAfterSourceOpen: true  // 在sourceOpen后延迟加载
+        });
+
+        flvPlayer.attachMediaElement(videoElement);
+
+        flvPlayer.on(flvjs.Events.ERROR, (errorType, errorDetail, errorInfo) => {
+            console.error('Error:', errorType, errorDetail, errorInfo);
+            // 错误处理逻辑
+        });
+
+        flvPlayer.on(flvjs.Events.METADATA_ARRIVED, () => {
+            console.log('Metadata arrived');
+        });
+
+        flvPlayer.on(flvjs.Events.STATISTICS_INFO, (info) => {
+            console.log('Statistics info:', info);
+        });
+
+        try {
+            flvPlayer.load();
+            flvPlayer.play();
+        } catch (e) {
+            console.error('Error:', e);
+        }
+    }
+    </script>
+</body>
+
+</html>
