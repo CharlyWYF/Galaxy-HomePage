@@ -67,8 +67,8 @@
 
         #videoElement {
             width: 100%;
-            height: 65vh;
-            min-height: 400px;
+            height: 20%;
+            /* min-height: 4px; */
             display: block;
             background: #000;
         }
@@ -103,7 +103,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 7px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(142, 45, 226, 0.3);
         }
@@ -381,7 +381,7 @@
 
             // 尝试自动播放
             flvPlayer.play().then(() => {
-                statusText.textContent = '正在播放';
+                statusText.textContent = '正在播放 [小年轻]';
                 streamStatus.textContent = '直播中';
                 loadingIndicator.style.display = 'none';
             }).catch(e => {
