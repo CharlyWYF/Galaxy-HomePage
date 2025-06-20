@@ -338,7 +338,6 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 10px;
             justify-content: center;
         }
     </style>
@@ -393,8 +392,7 @@
 
                 <div class="audio-info">
                     <div class="sound-status" id="audioStatus">
-                        <i class="fas fa-volume-up"></i>
-                        <span>音量: 100%</span>
+                        <span>100%</span>
                     </div>
                 </div>
             </div>
@@ -562,7 +560,7 @@
             // 更新状态显示
             audioStatus.innerHTML = isMuted ?
                 `<i class="fas fa-volume-mute"></i> <span>静音状态</span>` :
-                `<i class="fas fa-volume-${volume > 0.5 ? 'up' : volume > 0 ? 'down' : 'off'}"></i> <span>音量: ${percent}%</span>`;
+                `<span>${percent}%</span>`;
         }
 
         // 切换静音状态
