@@ -37,7 +37,7 @@
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 40PX;
+            border-radius: 60px;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             margin-bottom: 10px;
@@ -59,7 +59,7 @@
         .player-container {
             position: relative;
             width: 100%;
-            border-radius: 40px;
+            border-radius: 60px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             background: rgba(0, 0, 0, 0.6);
@@ -84,7 +84,7 @@
             gap: 15px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.7);
-            border-radius: 40px;
+            border-radius: 60px;
             backdrop-filter: blur(10px);
             margin-top: 20px;
         }
@@ -92,24 +92,24 @@
         .control-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
             flex: auto;
             align-items: center;
             justify-content: space-around;
         }
 
         .btn {
-            padding: 14px 24px;
+            padding: 10px 20px;
             background: linear-gradient(to right, #4a00e0, #8e2de2);
             color: white;
             border: none;
-            border-radius: 40px;
-            font-size: 1.1rem;
+            border-radius: 60px;
+            font-size: 1.0rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 5px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(142, 45, 226, 0.3);
         }
@@ -139,7 +139,7 @@
             display: flex;
             padding: 15px 25px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
+            border-radius: 60px;
             font-size: 1.1rem;
             gap: 10px;
             flex: auto;
@@ -156,7 +156,7 @@
             flex-wrap: wrap;
             gap: 20px;
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 40px;
+            border-radius: 60px;
             padding: 25px;
             margin-top: 20px;
         }
@@ -165,7 +165,7 @@
             flex: 1;
             min-width: 280px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
+            border-radius: 60px;
             padding: 25px;
             backdrop-filter: blur(10px);
         }
@@ -232,45 +232,50 @@
                 flex-direction: column;
             }
 
-            .loading {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: white;
-                font-size: 1.5rem;
+            #videoElement {
+                height: auto;
             }
+        }
 
-            .error {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: rgba(255, 0, 0, 0.7);
-                padding: 20px;
-                border-radius: 15px;
-                text-align: center;
-                max-width: 80%;
-            }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+        }
 
-            .error-btn {
-                margin-top: 15px;
-                padding: 10px 20px;
-                background: white;
-                color: #ff4b2b;
-                border: none;
-                border-radius: 15px;
-                font-weight: bold;
-                cursor: pointer;
-            }
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 80%;
+        }
 
-            .watermark {
-                position: absolute;
-                bottom: 20px;
-                right: 20px;
-                color: rgba(255, 255, 255, 0.6);
-                font-size: 0.9rem;
-            }
+        .error-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: white;
+            color: #ff4b2b;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 
@@ -281,9 +286,6 @@
             <p class="subtitle">www.charlyw.top/flv</p>
         </header>
 
-
-
-
         <div class="player-container">
             <video id="videoElement" controls muted></video>
             <div class="loading" id="loadingIndicator">
@@ -291,10 +293,7 @@
             </div>
             <div class="error" id="errorDisplay" style="display: none;"></div>
         </div>
-        <div class="status">
-            <i class="fas fa-circle"></i>
-            <span id="statusText">播放器已就绪</span>
-        </div>
+
         <div class="controls">
             <div class="control-group">
                 <button class="btn" id="playBtn">
@@ -311,6 +310,13 @@
                 </button>
             </div>
 
+            <div class="status">
+                <i class="fas fa-circle"></i>
+                <span id="statusText">播放器已就绪</span>
+            </div>
+
+            <div class="control-group">
+
             </div>
         </div>
 
@@ -320,10 +326,6 @@
                 <p>视频源类型: <strong>HTTP-FLV 直播流</strong></p>
                 <p>当前状态: <strong id="streamStatus">正在连接...</strong></p>
                 <p>视频尺寸: <strong>1920×1080 (1080p)</strong></p>
-
-                <div class="url-display">
-                    https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_1d9bc6bbbcec174cafe7e0d96a90a21b_1080p4000k.flv
-                </div>
             </div>
         </div>
     </div>
