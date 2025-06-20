@@ -371,8 +371,8 @@
             // 创建新的播放器实例
             flvPlayer = flvjs.createPlayer({
                 type: 'flv',
-                url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_1d9bc6bbbcec174cafe7e0d96a90a21b_1080p4000k.flv?txSecret=dd6ba0a8f2bf7c436a18844abc460c3c&txTime=6856708B',//小年轻
-                // url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_592d0ed39864c1cd2ad6fb865b15b4ae_1080p4000k.flv?txSecret=568d87a21b91349bda1c8e3b00174b08&txTime=68569014',//cw
+                // url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_1d9bc6bbbcec174cafe7e0d96a90a21b_1080p4000k.flv?txSecret=dd6ba0a8f2bf7c436a18844abc460c3c&txTime=6856708B',//小年轻
+                url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_592d0ed39864c1cd2ad6fb865b15b4ae_1080p4000k.flv?txSecret=568d87a21b91349bda1c8e3b00174b08&txTime=68569014',//cw
                 isLive: true,
                 cors: true,
                 hasAudio: true,
@@ -390,8 +390,8 @@
 
             // 尝试自动播放
             flvPlayer.play().then(() => {
-                statusText.textContent = '[小年轻] 放映中';
-                // statusText.textContent = '[小铭] 放映中';
+                // statusText.textContent = '[小年轻] 放映中';
+                statusText.textContent = '[小铭] 放映中';
                 // statusText.textContent = '[查理] 放映中';
                 streamStatus.textContent = '直播中';
                 loadingIndicator.style.display = 'none';
