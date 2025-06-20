@@ -3,96 +3,47 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>flv</title>
-    <style>
-        #refreshButton {
-            display: block;
-            margin: 20px auto;
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #74c577;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #refreshButton:hover {
-            background-color: #45a049;
-        }
-
-        #videoElement {
-            display: block;
-            margin: 0 auto;
-            width: 98vw;
-        }
-    </style>
+    <title>flv.js 示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
 </head>
 
 <body>
-    <video id="videoElement" controls></video>
-    <button id="refreshButton">刷新</button>
-    <script src="https://cdn.jsdelivr.net/npm/flv.js@latest/dist/flv.min.js"></script>
+    <video id="videoElement" controls width="100%"></video>
+
     <script>
-        let flvPlayer = null;
+        // 检查浏览器支持
+        if (flvjs.isSupported()) {
+            const videoElement = document.getElementById('videoElement');
 
-        function setupPlayer() {
-            if (flvjs.isSupported()) {
-                const videoElement = document.getElementById('videoElement');
+            // 创建 FLV 播放器
+            const flvPlayer = flvjs.createPlayer({
+                type: 'flv',          // 播放类型
+                url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_1d9bc6bbbcec174cafe7e0d96a90a21b_1080p4000k.flv?txSecret=dd6ba0a8f2bf7c436a18844abc460c3c&txTime=6856708B', // 替换为实际FLV地址
+                isLive: false,        // 如果是直播流改为 true
+                cors: true,           // 启用跨域
+                hasAudio: true,     // 启用音频
+                hasVideo: true,     // 启用视频
+                stashInitialSize: 128, // 减少初始缓冲
+                enableWorker: true,  // 使用Web Worker解码
+                enableStashBuffer: false  // 直播时建议关闭缓冲区
+            });
 
-                // 如果已有播放器，先销毁
-                if (flvPlayer) {
-                    flvPlayer.destroy();
-                }
+            // 关联 video 标签
+            flvPlayer.attachMediaElement(videoElement);
 
-                flvPlayer = flvjs.createPlayer({
-                    type: 'flv',
-                    isLive: true,
-                    hasAudio: true,
-                    hasVideo: true,
-                    url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_67d31acc5a8be141e6a7382762cdcd66_1080p4000k.flv?txSecret=0489ecdf4a7c839b688c5bfd101ba9a6',
-                    cors: true
-                }, {
-                    enableWorker: true,
-                    enableStashBuffer: false,
-                    stashInitialSize: 128,
-                    lazyLoad: true,
-                    lazyLoadMaxDuration: 3 * 60,
-                    deferLoadAfterSourceOpen: true
-                });
+            // 加载并播放
+            flvPlayer.load();
+            flvPlayer.play().catch(e => {
+                console.error('播放失败:', e);
+            });
 
-                flvPlayer.attachMediaElement(videoElement);
-
-                flvPlayer.on(flvjs.Events.ERROR, (errorType, errorDetail, errorInfo) => {
-                    console.error('Error:', errorType, errorDetail, errorInfo);
-                });
-
-                flvPlayer.on(flvjs.Events.METADATA_ARRIVED, () => {
-                    console.log('Metadata arrived');
-                });
-
-                flvPlayer.on(flvjs.Events.STATISTICS_INFO, (info) => {
-                    console.log('Statistics info:', info);
-                });
-
-                try {
-                    flvPlayer.load();
-                    flvPlayer.play();
-                } catch (e) {
-                    console.error('Error:', e);
-                }
-            }
+            // 错误监听
+            flvPlayer.on(flvjs.Events.ERROR, (errType, errDetail) => {
+                console.error('播放器错误:', errType, errDetail);
+            });
+        } else {
+            alert('当前浏览器不支持 flv.js！');
         }
-
-        // 初始化播放器
-        setupPlayer();
-
-        // 添加刷新按钮点击事件
-        document.getElementById('refreshButton').addEventListener('click', function () {
-            console.log('Refreshing video...');
-            setupPlayer();
-        });
     </script>
 </body>
 
