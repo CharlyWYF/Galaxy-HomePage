@@ -88,7 +88,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            flex: 1;
+            flex: auto;
+            align-items: center;
         }
 
         .btn {
@@ -130,13 +131,12 @@
 
         .status {
             display: flex;
-            align-items: center;
             padding: 15px 25px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50px;
             font-size: 1.1rem;
             gap: 10px;
-            flex: 1;
+            flex :auto;
             justify-content: center;
         }
 
@@ -282,7 +282,6 @@
 
         <div class="player-container">
             <video id="videoElement" controls muted></video>
-            <div class="watermark">FLV.js Player v1.6.2</div>
             <div class="loading" id="loadingIndicator">
                 <i class="fas fa-spinner fa-spin"></i> 正在加载视频流...
             </div>
@@ -298,7 +297,10 @@
                     <i class="fas fa-stop"></i> 停止
                 </button>
                 <button class="btn btn-refresh" id="refreshBtn">
-                    <i class="fas fa-sync"></i> 刷新流
+                    <i class="fas fa-sync"></i> 刷新
+                </button>
+                <button class="btn btn-fullscreen" id="fullscreenBtn">
+                    <i class="fas fa-expand"></i> 全屏
                 </button>
             </div>
 
@@ -308,9 +310,7 @@
             </div>
 
             <div class="control-group">
-                <button class="btn btn-fullscreen" id="fullscreenBtn">
-                    <i class="fas fa-expand"></i> 全屏
-                </button>
+
             </div>
         </div>
 
