@@ -37,7 +37,7 @@
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
+            border-radius: 40PX;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             margin-bottom: 10px;
@@ -59,15 +59,20 @@
         .player-container {
             position: relative;
             width: 100%;
-            border-radius: 15px;
+            border-radius: 40px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             background: rgba(0, 0, 0, 0.6);
         }
 
+        @media (max-width: 768px) {
+            #videoElement {
+                height: auto;
+            }
+        }
+
         #videoElement {
             width: 100%;
-            height: 20%;
             /* min-height: 4px; */
             display: block;
             background: #000;
@@ -79,7 +84,7 @@
             gap: 15px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.7);
-            border-radius: 12px;
+            border-radius: 40px;
             backdrop-filter: blur(10px);
             margin-top: 20px;
         }
@@ -90,6 +95,7 @@
             gap: 15px;
             flex: auto;
             align-items: center;
+            justify-content: space-around;
         }
 
         .btn {
@@ -97,7 +103,7 @@
             background: linear-gradient(to right, #4a00e0, #8e2de2);
             color: white;
             border: none;
-            border-radius: 50px;
+            border-radius: 40px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
@@ -133,10 +139,10 @@
             display: flex;
             padding: 15px 25px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
+            border-radius: 40px;
             font-size: 1.1rem;
             gap: 10px;
-            flex :auto;
+            flex: auto;
             justify-content: center;
         }
 
@@ -150,7 +156,7 @@
             flex-wrap: wrap;
             gap: 20px;
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
+            border-radius: 40px;
             padding: 25px;
             margin-top: 20px;
         }
@@ -159,7 +165,7 @@
             flex: 1;
             min-width: 280px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            border-radius: 40px;
             padding: 25px;
             backdrop-filter: blur(10px);
         }
@@ -226,50 +232,45 @@
                 flex-direction: column;
             }
 
-            #videoElement {
-                height: 50vh;
+            .loading {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 1.5rem;
             }
-        }
 
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 1.5rem;
-        }
+            .error {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(255, 0, 0, 0.7);
+                padding: 20px;
+                border-radius: 15px;
+                text-align: center;
+                max-width: 80%;
+            }
 
-        .error {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 80%;
-        }
+            .error-btn {
+                margin-top: 15px;
+                padding: 10px 20px;
+                background: white;
+                color: #ff4b2b;
+                border: none;
+                border-radius: 15px;
+                font-weight: bold;
+                cursor: pointer;
+            }
 
-        .error-btn {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: white;
-            color: #ff4b2b;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .watermark {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
+            .watermark {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 0.9rem;
+            }
     </style>
 </head>
 
@@ -280,6 +281,9 @@
             <p class="subtitle">www.charlyw.top/flv</p>
         </header>
 
+
+
+
         <div class="player-container">
             <video id="videoElement" controls muted></video>
             <div class="loading" id="loadingIndicator">
@@ -287,7 +291,10 @@
             </div>
             <div class="error" id="errorDisplay" style="display: none;"></div>
         </div>
-
+        <div class="status">
+            <i class="fas fa-circle"></i>
+            <span id="statusText">播放器已就绪</span>
+        </div>
         <div class="controls">
             <div class="control-group">
                 <button class="btn" id="playBtn">
@@ -303,13 +310,6 @@
                     <i class="fas fa-expand"></i> 全屏
                 </button>
             </div>
-
-            <div class="status">
-                <i class="fas fa-circle"></i>
-                <span id="statusText">播放器已就绪</span>
-            </div>
-
-            <div class="control-group">
 
             </div>
         </div>
