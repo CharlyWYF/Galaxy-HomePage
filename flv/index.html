@@ -140,6 +140,10 @@
             background: linear-gradient(to right, #FF9800, #FF5722);
         }
 
+        .btn-pip {
+            background: linear-gradient(to right, #8E44AD, #3498DB);
+        }
+
         .status {
             display: flex;
             padding: 15px 25px;
@@ -165,7 +169,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 40px;
             min-width: 200px;
-                        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 
         }
 
@@ -206,16 +210,16 @@
             border-radius: 40px;
             padding: 25px;
             margin-top: 20px;
-                        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
         }
 
         .info-card {
             flex: 1;
             min-width: 280px;
             border-radius: 40px;
-            padding: 5px;
-            backdrop-filter: blur(10px);
-            
+            /* padding: 5px;
+            backdrop-filter: blur(10px); */
+
         }
 
         .info-card h3 {
@@ -225,7 +229,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            
+
         }
 
         .info-card p {
@@ -347,6 +351,19 @@
             gap: 10px;
             justify-content: center;
         }
+
+        .pip-indicator {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #3498DB;
+            display: none;
+            z-index: 100;
+        }
     </style>
 </head>
 
@@ -360,6 +377,9 @@
         <div class="player-container">
             <!-- 移除了 muted 属性 -->
             <video id="videoElement" controls muted></video>
+            <div class="pip-indicator" id="pipIndicator">
+                <i class="fas fa-picture-in-picture"></i> 小窗模式中
+            </div>
             <div class="loading" id="loadingIndicator">
                 <i class="fas fa-spinner fa-spin"></i> 正在加载视频流...
             </div>
@@ -384,6 +404,9 @@
                 </button>
                 <button class="btn btn-fullscreen" id="fullscreenBtn">
                     <i class="fas fa-expand"></i> 全屏
+                </button>
+                <button class="btn btn-pip" id="pipBtn">
+                    <i class="fas fa-compress-alt"></i> 小窗
                 </button>
                 <button class="btn btn-sound" id="muteBtn">
                     <i class="fas fa-volume-up"></i> 取消静音
@@ -410,7 +433,6 @@
         <div class="info-panel">
             <div class="info-card">
                 <h3><i class="fas fa-info-circle"></i> 提示</h3>
-                <p><strong>小窗播放: </strong>视频内部 右下角 三个点→[画中画]，手机电脑都可以哦</p>
                 <p><strong>记得刷新: </strong>如果延迟高记得[刷新]哦</p>
                 <p><strong>声音控制: </strong>默认静音，点击[静音]按钮开关声音</p>
             </div>
@@ -421,7 +443,7 @@
                 <p><strong>HTTP-FLV 直播流</strong></p>
                 <p><strong>1920×1080 (1080p)</strong></p>
                 <p><strong id="streamStatus">正在连接...</strong></p>
-                <!-- <p>音频状态: <strong id="audioState">正常</strong></p> -->
+                <!-- <p>小窗状态: <strong id="pipState">未激活</strong></p> -->
             </div>
         </div>
     </div>
@@ -434,16 +456,19 @@
         const refreshBtn = document.getElementById('refreshBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const muteBtn = document.getElementById('muteBtn');
+        const pipBtn = document.getElementById('pipBtn');
         const volumeSlider = document.getElementById('volumeSlider');
         const statusText = document.getElementById('statusText');
         const streamStatus = document.getElementById('streamStatus');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const errorDisplay = document.getElementById('errorDisplay');
         const audioStatus = document.getElementById('audioStatus');
-        // const audioState = document.getElementById('audioState');
+        const pipIndicator = document.getElementById('pipIndicator');
+        // const pipState = document.getElementById('pipState');
 
         let flvPlayer;
         let isMuted = false;
+        let pipActive = false;
 
         // 初始化播放器
         function initPlayer() {
@@ -451,7 +476,7 @@
             errorDisplay.style.display = 'none';
             loadingIndicator.style.display = 'block';
             streamStatus.textContent = '正在连接...';
-            // audioState.textContent = '检测中...';
+            // pipState.textContent = '未激活';
 
             // 检查浏览器支持
             if (!flvjs.isSupported()) {
@@ -490,17 +515,11 @@
                 streamStatus.textContent = '直播中';
                 loadingIndicator.style.display = 'none';
 
-                // 检查音频状态
-                // checkAudioState();
-
             }).catch(e => {
                 console.error('自动播放失败:', e);
                 statusText.textContent = '播放已暂停 (点击播放按钮开始)';
                 streamStatus.textContent = '已连接 (暂停中)';
                 loadingIndicator.style.display = 'none';
-
-                // 检查音频状态
-                // checkAudioState();
             });
 
             // 事件监听
@@ -524,7 +543,6 @@
                 showError(errorMsg);
                 statusText.textContent = '播放错误';
                 streamStatus.textContent = '连接失败';
-                // audioState.textContent = '未知';
             });
 
             flvPlayer.on(flvjs.Events.LOADING_COMPLETE, () => {
@@ -542,19 +560,6 @@
             videoElement.volume = 1;
             updateVolumeDisplay();
         }
-
-        // 检查音频状态
-        // function checkAudioState() {
-        //     setTimeout(() => {
-        //         if (videoElement.mozHasAudio || videoElement.webkitAudioDecodedByteCount > 0) {
-        //             audioState.textContent = '正常';
-        //             audioState.style.color = '#38ef7d';
-        //         } else {
-        //             audioState.textContent = '无音频流';
-        //             audioState.style.color = '#ff4b2b';
-        //         }
-        //     }, 2000);
-        // }
 
         // 更新音量显示
         function updateVolumeDisplay() {
@@ -671,6 +676,61 @@
             }
         }
 
+        // 小窗功能
+        function togglePictureInPicture() {
+            if (!document.pictureInPictureEnabled) {
+                statusText.textContent = '浏览器不支持小窗';
+                return;
+            }
+
+            if (document.pictureInPictureElement) {
+                // 退出小窗
+                document.exitPictureInPicture()
+                    .then(() => {
+                        pipActive = false;
+                        pipIndicator.style.display = 'none';
+                        pipBtn.innerHTML = '<i class="fas fa-compress-alt"></i> 小窗';
+                        // pipState.textContent = '未激活';
+                        statusText.textContent = '已退出小窗';
+                    })
+                    .catch(error => {
+                        console.error('退出小窗失败:', error);
+                        statusText.textContent = '退出小窗失败';
+                    });
+            } else {
+                // 进入小窗
+                videoElement.requestPictureInPicture()
+                    .then(() => {
+                        pipActive = true;
+                        pipIndicator.style.display = 'block';
+                        pipBtn.innerHTML = '<i class="fas fa-times"></i> 还原';
+                        // pipState.textContent = '激活中';
+                        statusText.textContent = '已进入小窗模式';
+                    })
+                    .catch(error => {
+                        console.error('进入小窗失败:', error);
+                        statusText.textContent = '进入小窗失败';
+                    });
+            }
+        }
+
+        // 监听小窗状态变化
+        videoElement.addEventListener('enterpictureinpicture', () => {
+            pipActive = true;
+            pipIndicator.style.display = 'block';
+            pipBtn.innerHTML = '<i class="fas fa-times"></i> 退出小窗';
+            pipState.textContent = '激活中';
+            statusText.textContent = '已进入小窗模式';
+        });
+
+        videoElement.addEventListener('leavepictureinpicture', () => {
+            pipActive = false;
+            pipIndicator.style.display = 'none';
+            pipBtn.innerHTML = '<i class="fas fa-compress-alt"></i> 小窗';
+            pipState.textContent = '未激活';
+            statusText.textContent = '已退出小窗';
+        });
+
         // 事件绑定
         playBtn.addEventListener('click', togglePlay);
         stopBtn.addEventListener('click', stopPlayback);
@@ -678,6 +738,7 @@
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         muteBtn.addEventListener('click', toggleMute);
         volumeSlider.addEventListener('input', setVolume);
+        pipBtn.addEventListener('click', togglePictureInPicture);
 
         // 视频播放状态变化
         videoElement.addEventListener('play', () => {
@@ -701,7 +762,13 @@
 
         // 页面加载完成后初始化播放器
         window.addEventListener('load', initPlayer);
-        // toggleMute();
+
+        // 检查小窗支持情况
+        if (!document.pictureInPictureEnabled) {
+            pipBtn.disabled = true;
+            pipBtn.title = "您的浏览器不支持小窗功能";
+            pipBtn.innerHTML = '<i class="fas fa-ban"></i> 小窗不可用';
+        }
 
     </script>
 </body>
