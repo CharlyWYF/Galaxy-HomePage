@@ -30,7 +30,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 10px;
         }
 
         header {
@@ -39,7 +39,7 @@
             background: rgba(0, 0, 0, 0.3);
             border-radius: 40px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
             margin-bottom: 10px;
         }
 
@@ -61,7 +61,7 @@
             width: 100%;
             border-radius: 40px;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
             background: rgba(0, 0, 0, 0.6);
         }
 
@@ -82,10 +82,11 @@
             flex-wrap: wrap;
             gap: 15px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 40px;
             backdrop-filter: blur(10px);
             margin-top: 20px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
         }
 
         .control-group {
@@ -94,7 +95,7 @@
             gap: 10px;
             flex: auto;
             align-items: center;
-            justify-content: space-around;
+            justify-content: center;
         }
 
         .btn {
@@ -103,23 +104,24 @@
             color: white;
             border: none;
             border-radius: 40px;
-            font-size: 1.0rem;
+            font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
+            /* cursor: pointer; */
             display: flex;
             align-items: center;
             gap: 5px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(142, 45, 226, 0.3);
+            box-shadow: 7px 7px 15px rgba(29, 9, 46, 0.5);
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(142, 45, 226, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(142, 45, 226, 0.6);
         }
 
         .btn:active {
-            transform: translateY(1px);
+            transform: translateY(8px);
+            box-shadow: 0 3px 60px rgba(189, 172, 204, 1);
         }
 
         .btn-refresh {
@@ -147,6 +149,7 @@
             gap: 10px;
             flex: auto;
             justify-content: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
 
         .status i {
@@ -162,6 +165,8 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 40px;
             min-width: 200px;
+                        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+
         }
 
         .volume-slider {
@@ -201,6 +206,7 @@
             border-radius: 40px;
             padding: 25px;
             margin-top: 20px;
+                        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
         }
 
         .info-card {
@@ -209,6 +215,7 @@
             border-radius: 40px;
             padding: 5px;
             backdrop-filter: blur(10px);
+            
         }
 
         .info-card h3 {
@@ -218,6 +225,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            
         }
 
         .info-card p {
@@ -307,7 +315,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 0, 0, 0.7);
+            background: rgba(255, 0, 0, 0.6);
             padding: 20px;
             border-radius: 15px;
             text-align: center;
@@ -410,10 +418,10 @@
         <div class="info-panel">
             <div class="info-card">
                 <h3><i class="fas fa-info-circle"></i> 当前视频信息</h3>
-                <p>视频源类型: <strong>HTTP-FLV 直播流</strong></p>
-                <p>当前状态: <strong id="streamStatus">正在连接...</strong></p>
-                <p>视频尺寸: <strong>1920×1080 (1080p)</strong></p>
-                <p>音频状态: <strong id="audioState">正常</strong></p>
+                <p><strong>HTTP-FLV 直播流</strong></p>
+                <p><strong>1920×1080 (1080p)</strong></p>
+                <p><strong id="streamStatus">正在连接...</strong></p>
+                <!-- <p>音频状态: <strong id="audioState">正常</strong></p> -->
             </div>
         </div>
     </div>
@@ -432,7 +440,7 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         const errorDisplay = document.getElementById('errorDisplay');
         const audioStatus = document.getElementById('audioStatus');
-        const audioState = document.getElementById('audioState');
+        // const audioState = document.getElementById('audioState');
 
         let flvPlayer;
         let isMuted = false;
@@ -443,7 +451,7 @@
             errorDisplay.style.display = 'none';
             loadingIndicator.style.display = 'block';
             streamStatus.textContent = '正在连接...';
-            audioState.textContent = '检测中...';
+            // audioState.textContent = '检测中...';
 
             // 检查浏览器支持
             if (!flvjs.isSupported()) {
@@ -483,7 +491,7 @@
                 loadingIndicator.style.display = 'none';
 
                 // 检查音频状态
-                checkAudioState();
+                // checkAudioState();
 
             }).catch(e => {
                 console.error('自动播放失败:', e);
@@ -492,7 +500,7 @@
                 loadingIndicator.style.display = 'none';
 
                 // 检查音频状态
-                checkAudioState();
+                // checkAudioState();
             });
 
             // 事件监听
@@ -516,7 +524,7 @@
                 showError(errorMsg);
                 statusText.textContent = '播放错误';
                 streamStatus.textContent = '连接失败';
-                audioState.textContent = '未知';
+                // audioState.textContent = '未知';
             });
 
             flvPlayer.on(flvjs.Events.LOADING_COMPLETE, () => {
@@ -536,17 +544,17 @@
         }
 
         // 检查音频状态
-        function checkAudioState() {
-            setTimeout(() => {
-                if (videoElement.mozHasAudio || videoElement.webkitAudioDecodedByteCount > 0) {
-                    audioState.textContent = '正常';
-                    audioState.style.color = '#38ef7d';
-                } else {
-                    audioState.textContent = '无音频流';
-                    audioState.style.color = '#ff4b2b';
-                }
-            }, 2000);
-        }
+        // function checkAudioState() {
+        //     setTimeout(() => {
+        //         if (videoElement.mozHasAudio || videoElement.webkitAudioDecodedByteCount > 0) {
+        //             audioState.textContent = '正常';
+        //             audioState.style.color = '#38ef7d';
+        //         } else {
+        //             audioState.textContent = '无音频流';
+        //             audioState.style.color = '#ff4b2b';
+        //         }
+        //     }, 2000);
+        // }
 
         // 更新音量显示
         function updateVolumeDisplay() {
