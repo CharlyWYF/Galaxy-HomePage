@@ -104,7 +104,7 @@
             gap: 10px;
             flex: auto;
             align-items: center;
-            justify-content: center;
+            justify-content: space-evenly;
         }
 
         .btn {
@@ -163,11 +163,16 @@
             flex: auto;
             justify-content: center;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            align-items: center
         }
 
         .status i {
             color: #38ef7d;
-            font-size: 1.4rem;
+            font-size: 1rem;
+        }
+
+        .status span {
+            color: rgba(232, 250, 234, 0.9);
         }
 
         .audio-controls {
@@ -187,7 +192,7 @@
             -webkit-appearance: none;
             height: 8px;
             border-radius: 4px;
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            background: linear-gradient(to right, #c3a6c7, #a376ff);
             outline: none;
         }
 
@@ -196,18 +201,18 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: white;
+            background: rgb(115, 209, 189);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
         }
 
         .volume-slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: white;
+            background: rgb(228, 163, 163);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 6px rgba(0, 0, 0, 0.9);
             border: none;
         }
 
@@ -234,7 +239,7 @@
         .info-card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
-            color: #8e2de2;
+            color: rgba(205, 147, 255, 0.9);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -243,7 +248,7 @@
 
         .info-card p {
             line-height: 1.8;
-            color: #e0e0e0;
+            color: rgba(250, 255, 226, 0.9);
         }
 
         .url-display {
@@ -279,11 +284,11 @@
         .sound-status {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: #FF9800;
-            background: rgba(255, 152, 0, 0.1);
-            padding: 6px 12px;
+            gap: 0px;
+            font-size: 1rem;
+            color: #fca82a;
+            background: rgba(255, 152, 0, 0.2);
+            padding: 2px 8px;
             border-radius: 20px;
         }
 
