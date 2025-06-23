@@ -200,7 +200,7 @@
             border-radius: 40px;
             min-width: 200px;
             box-shadow: 0 0px 5px rgba(255, 255, 255, 0.37);
-            
+
 
         }
 
@@ -280,10 +280,11 @@
             gap: 10px;
         }
 
-        .info-card p strong{
+        .info-card p strong {
             min-width: 5rem;
             font-size: 1.1rem;
         }
+
         .url-display {
             background: rgba(0, 0, 0, 0.3);
             padding: 12px 20px;
@@ -338,15 +339,30 @@
                 padding: 8px 12px;
                 font-size: 0.9rem;
             }
-            .status{
+
+            .status {
                 padding: 4px 2px;
                 font-size: 1rem;
             }
 
             .controls {
                 flex-direction: column;
+                border-radius: 30px;
             }
 
+            .info-panel {
+                border-radius: 30px;
+
+            }
+
+            .player-container {
+                border-radius: 30px;
+
+            }
+            header{
+                                border-radius: 30px;
+
+            }
             #videoElement {
                 height: auto;
             }
@@ -568,7 +584,9 @@
                     <button class="copy-btn pulse" onclick="copyText('stream-key-text', this)">
                         <i class="fas fa-copy"></i>
                     </button>
-                <div class="info-text" id="stream-key-text">6721_592d0ed39864c1cd2ad6fb865b15b4ae?bizid=6721&txSecret=a75fb8936c68b8ec1b457252098ad554&txTime=685E78CA&sdkappid=1400526639&k=0898d788931210ca9c8194051a1a089a4e1215343837313832363332385f31373530343136393730&ck=f074&txPRI=1750416970</div>
+                <div class="info-text" id="stream-key-text">
+                    6721_592d0ed39864c1cd2ad6fb865b15b4ae?bizid=6721&txSecret=a75fb8936c68b8ec1b457252098ad554&txTime=685E78CA&sdkappid=1400526639&k=0898d788931210ca9c8194051a1a089a4e1215343837313832363332385f31373530343136393730&ck=f074&txPRI=1750416970
+                </div>
                 </p>
             </div>
         </div>
