@@ -203,7 +203,7 @@
             padding: 8px 10px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 18px;
-                        border-color: rgba(166, 197, 155, 0.3);
+            border-color: rgba(166, 197, 155, 0.3);
             border-width: 1.5px;
             border-style: solid;
             min-width: 200px;
@@ -215,30 +215,37 @@
         .volume-slider {
             flex: 1;
             -webkit-appearance: none;
-            height: 8px;
-            border-radius: 4px;
-            background: linear-gradient(to right, #c3a6c7, #a376ff);
+            height: 23px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #a1c9a18a, #c6ebcc9b);
             outline: none;
         }
 
         .volume-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgb(115, 209, 189);
+            width: 30px;
+            height: 20px;
+            border-radius: 6px;
+            background: rgba(249, 255, 248, 0.95);
+                        border-width: 2px;
+                        border-style: solid;
+            border-style: solid;
+            border-color: rgba(166, 197, 155, 0.3);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0px 10px rgba(0, 0, 0, 0.9);
         }
 
         .volume-slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: rgb(228, 163, 163);
+            border-width: 1cap;
+            border-style: solid;
+            border-color: rgba(166, 197, 155, 0.3);
+
+            background: rgb(112, 18, 18);
             cursor: pointer;
             box-shadow: 0 6px 6px rgba(0, 0, 0, 0.9);
-            border: none;
         }
 
         .info-panel {
@@ -346,7 +353,7 @@
             .btn {
                 padding: 8px 12px;
                 font-size: 0.9rem;
-                            border-radius: 16px;
+                border-radius: 16px;
             }
 
             .status {
@@ -364,10 +371,11 @@
                 justify-content: center
             }
 
-            .audio-controls{
-                                border-radius: 10px;
+            .audio-controls {
+                border-radius: 10px;
 
             }
+
             .info-panel {
                 border-radius: 30px;
 
