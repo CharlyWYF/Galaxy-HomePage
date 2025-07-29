@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥查理亡国🔥 - 玩家主页</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts - Inter 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定义 CSS 样式 */
+        body {
+            font-family: 'Inter', sans-serif; /* 设置 Inter 字体 */
+            background-color: #000000; /* 纯黑色背景 */
+            color: #e2e8f0; /* 默认文字颜色 */
+            /* 添加微妙的背景纹理 */
+            background-image: radial-gradient(circle at center, #1a1a1a 1px, transparent 1px),
+                              radial-gradient(circle at center, #1a1a1a 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        .card {
+            background-color: #1c1c1c; /* 卡片背景色，更深一些 */
+            border: 1px solid rgba(255, 255, 255, 0.4); /* 更明显的高光边缘 */
+            border-radius: 1.5rem; /* 圆角 */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 0, 0, 0.5); /* 增强阴影和微弱发光 */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out; /* 过渡效果 */
+        }
+        .card:hover {
+            transform: translateY(-8px); /* 悬停时上浮更多 */
+            border-color: rgba(255, 255, 255, 0.8); /* 悬停时边缘更亮 */
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 0, 0, 0.7); /* 更大的阴影和发光 */
+        }
+        .link-card {
+            background-color: #1c1c1c; /* 链接卡片背景色 */
+            border: 1px solid rgba(255, 255, 255, 0.4); /* 更明显的高光边缘 */
+            border-radius: 1.5rem; /* 圆角 */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.08), 0 0 20px rgba(0, 0, 0, 0.4); /* 增强阴影和微弱发光 */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out; /* 过渡效果 */
+        }
+        .link-card:hover {
+            transform: scale(1.05); /* 悬停时轻微放大更多 */
+            border-color: rgba(255, 255, 255, 0.8); /* 悬停时边缘更亮 */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), 0 0 30px rgba(0, 0, 0, 0.6); /* 更大的阴影和发光 */
+        }
+        .text-glow-intense {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4); /* 更强的文字发光效果 */
+        }
+        .flame-glow {
+            text-shadow: 0 0 5px rgba(255, 165, 0, 0.8), 0 0 15px rgba(255, 69, 0, 0.6), 0 0 25px rgba(255, 0, 0, 0.4); /* 火焰发光效果 */
+        }
+
+        /* 链接卡片图标悬停动画 */
+        .link-card:hover .link-icon {
+            animation: pulse-grow 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-grow {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
+
+    <!-- 主标题卡片 -->
+    <header class="w-full max-w-4xl mb-12">
+        <div class="card p-8 text-center">
+            <h1 class="text-5xl sm:text-6xl font-extrabold text-white mb-4 leading-tight">
+                <span class="text-red-500 flame-glow">🔥</span><span class="text-glow-intense">查理亡国</span><span class="text-red-500 flame-glow">🔥</span>
+            </h1>
+            <p class="text-xl sm:text-2xl text-gray-300 font-semibold text-glow-intense">
+                王座陨落，传奇不朽，集结亡国之魂，再战黎明！
+            </p>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
+        <!-- 公告卡片 -->
+        <section class="card p-6">
+            <h2 class="text-3xl font-bold text-white mb-4">📢 最新公告</h2>
+            <div class="space-y-4">
+                <div class="border-b border-gray-700 pb-3">
+                    <h3 class="text-xl font-semibold text-blue-400">服务器维护通知</h3>
+                    <p class="text-gray-300 text-sm">亲爱的玩家们，服务器将于 <span class="text-yellow-400">7月30日 02:00-04:00 (UTC+8)</span> 进行例行维护，请大家提前下线。</p>
+                    <p class="text-xs text-gray-500 mt-1">发布日期: 2025-07-29</p>
+                </div>
+                <div class="border-b border-gray-700 pb-3">
+                    <h3 class="text-xl font-semibold text-green-400">新版本“黎明之光”即将上线！</h3>
+                    <p class="text-gray-300 text-sm">万众期待的新版本“黎明之光”将于 <span class="text-yellow-400">8月5日</span> 正式上线，更多新玩法、新角色等你探索！</p>
+                    <p class="text-xs text-gray-500 mt-1">发布日期: 2025-07-25</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-purple-400">群组活动：亡国争霸赛报名开启！</h3>
+                    <p class="text-gray-300 text-sm">首届“亡国争霸赛”现已开放报名，丰厚奖励等你来拿！详情请查看Discord频道。</p>
+                    <p class="text-xs text-gray-500 mt-1">发布日期: 2025-07-20</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 成员概览与近期活动卡片 -->
+        <section class="grid grid-cols-1 gap-8">
+            <div class="card p-6">
+                <h2 class="text-3xl font-bold text-white mb-4">👥 成员概览</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="text-center">
+                        <p class="text-5xl font-extrabold text-blue-400 text-glow-intense">87</p>
+                        <p class="text-gray-400">总成员</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-5xl font-extrabold text-green-400 text-glow-intense">23</p>
+                        <p class="text-gray-400">当前在线</p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">核心玩家</h3>
+                    <ul class="flex flex-wrap gap-2">
+                        <li class="bg-gray-800 text-gray-200 px-3 py-1 rounded-full text-sm border border-gray-600">亡国之主</li>
+                        <li class="bg-gray-800 text-gray-200 px-3 py-1 rounded-full text-sm border border-gray-600">暗夜行者</li>
+                        <li class="bg-gray-800 text-gray-200 px-3 py-1 rounded-full text-sm border border-gray-600">烈焰法师</li>
+                        <li class="bg-gray-800 text-gray-200 px-3 py-1 rounded-full text-sm border border-gray-600">疾风剑客</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h2 class="text-3xl font-bold text-white mb-4">🎮 近期活动</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-4xl text-yellow-400 flame-glow">⚔️</span>
+                        <div>
+                            <p class="text-xl font-semibold text-yellow-400">公会战胜利！</p>
+                            <p class="text-gray-300 text-sm">在“血色峡谷”中击败敌对公会，夺得胜利！</p>
+                            <p class="text-xs text-gray-500">2025-07-28</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-4xl text-teal-400 flame-glow">🏆</span>
+                        <div>
+                            <p class="text-xl font-semibold text-teal-400">PVE副本首通</p>
+                            <p class="text-gray-300 text-sm">成功挑战“远古遗迹”地狱模式，获得稀有装备！</p>
+                            <p class="text-xs text-gray-500">2025-07-26</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 网站快捷卡片区 -->
+    <section class="w-full max-w-4xl mb-12">
+        <h2 class="text-3xl font-bold text-white mb-6 text-center">🔗 快捷传送门</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- 游戏官网 -->
+            <a href="https://www.example.com/game-official" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">🎮</span>
+                <p class="text-xl font-semibold text-white">游戏官网</p>
+                <p class="text-gray-400 text-sm">获取最新游戏资讯</p>
+            </a>
+            <!-- Discord 频道 -->
+            <a href="https://discord.gg/your-discord-invite" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">💬</span>
+                <p class="text-xl font-semibold text-white">Discord 频道</p>
+                <p class="text-gray-400 text-sm">实时语音与文字交流</p>
+            </a>
+            <!-- 攻略站/WIKI -->
+            <a href="https://www.example.com/strategy-wiki" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">📚</span>
+                <p class="text-xl font-semibold text-white">攻略站 / WIKI</p>
+                <p class="text-gray-400 text-sm">查阅游戏资料与攻略</p>
+            </a>
+            <!-- 直播间链接 -->
+            <a href="https://www.example.com/live-stream" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">🔴</span>
+                <p class="text-xl font-semibold text-white">直播间</p>
+                <p class="text-gray-400 text-sm">观看精彩直播</p>
+            </a>
+            <!-- B站/YouTube 频道 -->
+            <a href="https://www.example.com/video-channel" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">🎬</span>
+                <p class="text-xl font-semibold text-white">视频频道</p>
+                <p class="text-gray-400 text-sm">精彩视频集锦</p>
+            </a>
+            <!-- 公会论坛 -->
+            <a href="https://www.example.com/forum" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">📝</span>
+                <p class="text-xl font-semibold text-white">公会论坛</p>
+                <p class="text-gray-400 text-sm">深入讨论与交流</p>
+            </a>
+            <!-- 成员风采 -->
+            <a href="https://www.example.com/members-showcase" target="_blank" class="link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">🌟</span>
+                <p class="text-xl font-semibold text-white">成员风采</p>
+                <p class="text-gray-400 text-sm">展示玩家高光时刻</p>
+            </a>
+            <!-- 联系我们 -->
+            <a href="mailto:your-email@example.com" class="_blank link-card p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl mb-2 link-icon">📧</span>
+                <p class="text-xl font-semibold text-white">联系我们</p>
+                <p class="text-gray-400 text-sm">获取帮助与支持</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="w-full max-w-4xl text-center text-gray-500 text-sm mt-12">
+        <p>&copy; 2025 🔥查理亡国🔥. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
