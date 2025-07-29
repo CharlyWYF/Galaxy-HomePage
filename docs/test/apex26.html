@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Legends - S26 爆料信息站</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Chosen Palette: Apex Crimson & Slate -->
+    <!-- Application Structure Plan: A single-page application with a fixed top navigation bar for easy access to key sections: Overview, Weapons/Modes, Legend Balance, and Cosmetics/Rewards. This thematic structure is more intuitive for users than the linear report format. The "Legend Balance" section is the core interactive element, using a grid of clickable legend portraits that trigger modals. This design choice turns passive reading into active exploration, allowing users to focus on their favorite characters. The user flow is non-linear, encouraging jumps between topics of interest, which is ideal for consuming leak/summary information. -->
+    <!-- Visualization & Content Choices: 
+        - Legend Cooldowns (Wattson): Report Info -> Wattson fence cooldown reduction from 15s to 4s. Goal -> Compare before/after. Viz -> Bar Chart (Chart.js). Interaction -> Displayed in a modal upon clicking Wattson's icon. Justification -> Visually quantifies the buff's significance instantly.
+        - Weapon Damage (Grand Slam Bat): Report Info -> Bat has abilities with different damage values (30, 75). Goal -> Inform damage output. Viz -> Horizontal Bar Chart (Chart.js). Interaction -> Static chart within the weapon's info card. Justification -> Clearly presents the offensive capabilities of the new heirloom.
+        - LTM Composition (Rampage): Report Info -> LTM combines elements of Control, Airdrop Escalation, 3-Strikes. Goal -> Organize/Explain relationship. Viz -> Diagram using HTML/CSS (Flexbox/Grid with styled text and Unicode arrows). Interaction -> Static visual diagram. Justification -> Creates a clear, flowchart-like representation without violating the NO SVG/Mermaid rule.
+        - Map Rotation: Report Info -> Olympus out, Zip City in. Goal -> Inform change. Viz -> Styled HTML lists with icons (Unicode check/cross marks). Interaction -> Static display. Justification -> Simple, effective visual cue for map pool status.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre-v2.png');
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .apex-bg {
+            background-color: #161616;
+        }
+
+        .apex-red {
+            color: #DA292A;
+        }
+
+        .apex-border {
+            border-color: #DA292A;
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #DA292A;
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+
+        .nav-item:hover::after,
+        .nav-item.active::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .card {
+            background-color: rgba(30, 30, 30, 0.8);
+            border: 1px solid #444;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(218, 41, 42, 0.5);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-content.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body class="apex-bg">
+
+    <header class="bg-black/80 backdrop-blur-sm sticky top-0 z-30 border-b-2 apex-border">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl font-bold font-orbitron text-white">S26<span class="apex-red">.</span>INFO</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview"
+                            class="nav-item text-gray-300 hover:apex-red px-3 py-2 rounded-md text-sm font-medium">赛季总览</a>
+                        <a href="#arsenal"
+                            class="nav-item text-gray-300 hover:apex-red px-3 py-2 rounded-md text-sm font-medium">武器与模式</a>
+                        <a href="#legends"
+                            class="nav-item text-gray-300 hover:apex-red px-3 py-2 rounded-md text-sm font-medium">传奇平衡</a>
+                        <a href="#rewards"
+                            class="nav-item text-gray-300 hover:apex-red px-3 py-2 rounded-md text-sm font-medium">外观奖励</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <section id="overview" class="my-12 scroll-mt-20">
+            <h2 class="text-4xl font-black font-orbitron text-center mb-2">赛季<span class="apex-red">总览</span></h2>
+            <p class="text-center text-gray-400 mb-8 max-w-3xl mx-auto">
+                欢迎来到第26赛季“决战时刻”的情报中心。本赛季将以萨尔沃的混乱为主题，深入挖掘邦加罗尔与疯玛吉的宿怨。准备好迎接一场席卷边境的后启示录风暴。</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold font-orbitron apex-red">发布日期</h3>
+                    <p class="text-3xl font-bold mt-2">8月6日</p>
+                    <p class="text-gray-400 text-sm">第一阶段更新上线</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold font-orbitron apex-red">赛季主题</h3>
+                    <p class="text-3xl font-bold mt-2">萨尔沃之怒</p>
+                    <p class="text-gray-400 text-sm">后启示录 & 拾荒者美学</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold font-orbitron apex-red">故事焦点</h3>
+                    <p class="text-3xl font-bold mt-2">宿敌</p>
+                    <p class="text-gray-400 text-sm">疯玛吉 vs. 邦加罗尔</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-gray-700 my-16"></div>
+
+        <section id="arsenal" class="my-12 scroll-mt-20">
+            <h2 class="text-4xl font-black font-orbitron text-center mb-2">武器<span class="apex-red">&</span>模式</h2>
+            <p class="text-center text-gray-400 mb-8 max-w-3xl mx-auto">
+                军械库迎来爆炸性更新。全新的神话武器和通用传家宝将颠覆战场规则，而快节奏的“失控”限时模式将为您带来前所未有的高强度战斗体验。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card rounded-lg p-6">
+                    <h3 class="text-2xl font-bold font-orbitron mb-4"><span class="apex-red">神话武器:</span> 轰炸型平行步枪</h3>
+                    <p class="text-gray-300 mb-4">引入热量表机制。第13发子弹将变为爆炸弹药，击倒敌人后更会附加一个造成75点范围伤害的定时炸弹。精准控制热量是驾驭这把毁灭性武器的关键。
+                    </p>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>爆炸弹药:</strong> 第13发子弹，带溅射伤害。</li>
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>定时炸弹:</strong> 击倒后触发，75点范围伤害。</li>
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>过热惩罚:</strong> 6秒锁定，期间爆炸效果失效。</li>
+                    </ul>
+                </div>
+                <div class="card rounded-lg p-6">
+                    <h3 class="text-2xl font-bold font-orbitron mb-4"><span class="apex-red">通用传家宝:</span> 大满贯棒球棒</h3>
+                    <p class="text-gray-300 mb-4">这不仅仅是收藏品，更是具备多种主动攻击能力的近战大杀器。无论是快速突进还是范围猛击，它都能胜任。</p>
+                    <div class="chart-container">
+                        <canvas id="heirloomDamageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="card rounded-lg p-6 mt-8">
+                <h3 class="text-2xl font-bold font-orbitron mb-4 text-center"><span class="apex-red">新LTM:</span> 失控
+                    (Rampage)</h3>
+                <p class="text-center text-gray-400 mb-6 max-w-3xl mx-auto">
+                    一个融合了多种热门模式精髓的快节奏、高战利品模式。在这里，战斗永不停歇，神话物品唾手可得。</p>
+                <div
+                    class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-center">
+                    <div class="bg-gray-800 p-3 rounded-md">控制</div>
+                    <div class="text-2xl font-bold apex-red">+</div>
+                    <div class="bg-gray-800 p-3 rounded-md">空投升级</div>
+                    <div class="text-2xl font-bold apex-red">+</div>
+                    <div class="bg-gray-800 p-3 rounded-md">三振出局</div>
+                    <div class="text-2xl font-bold apex-red">→</div>
+                    <div class="bg-red-900 p-3 rounded-md font-bold">失控模式</div>
+                </div>
+                <ul class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300 max-w-4xl mx-auto">
+                    <li class="flex items-center"><span class="text-2xl apex-red mr-3">●</span> 武器伤害进化升级</li>
+                    <li class="flex items-center"><span class="text-2xl apex-red mr-3">●</span> 频繁空投神话物品</li>
+                    <li class="flex items-center"><span class="text-2xl apex-red mr-3">●</span> 自动重生机制</li>
+                    <li class="flex items-center"><span class="text-2xl apex-red mr-3">●</span> 宝箱可能爆出高级装备</li>
+                </ul>
+            </div>
+            <div class="card rounded-lg p-6 mt-8">
+                <h3 class="text-2xl font-bold font-orbitron mb-4 text-center"><span class="apex-red">排位赛地图轮换</span></h3>
+                <p class="text-center text-gray-400 mb-6 max-w-3xl mx-auto">排位赛地图池迎来重大调整。奥林匹斯暂时移出，而充满激烈巷战的E区（Zip
+                    City）将强势回归，准备好迎接全新的战斗节奏。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h4 class="font-bold text-lg text-green-400">加入轮换</h4>
+                        <ul class="mt-2 space-y-1">
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✔</span> 破碎月亮</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✔</span> 风暴点</li>
+                            <li class="flex items-center"><span class="text-green-400 mr-2">✔</span> E区 (回归)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h4 class="font-bold text-lg text-red-500">移出轮换</h4>
+                        <ul class="mt-2 space-y-1">
+                            <li class="flex items-center"><span class="text-red-500 mr-2">✖</span> 奥林匹斯</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-gray-700 my-16"></div>
+
+        <section id="legends" class="my-12 scroll-mt-20">
+            <h2 class="text-4xl font-black font-orbitron text-center mb-2">传奇<span class="apex-red">平衡</span></h2>
+            <p class="text-center text-gray-400 mb-8 max-w-3xl mx-auto">
+                竞技环境迎来剧变。多位传奇获得重大增益与调整，旨在促进角色多样性并引入更多战术反制。点击下方传奇头像，查看详细改动情报。</p>
+            <div id="legend-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+            </div>
+        </section>
+
+        <div class="border-t border-gray-700 my-16"></div>
+
+        <section id="rewards" class="my-12 scroll-mt-20">
+            <h2 class="text-4xl font-black font-orbitron text-center mb-2">外观<span class="apex-red">&</span>奖励</h2>
+            <p class="text-center text-gray-400 mb-8 max-w-3xl mx-auto">
+                用全新的外观物品武装你的传奇。从战令皮肤到与段位挂钩的动态视觉特效，第26赛季将提供海量内容供您追逐与炫耀。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card rounded-lg p-6">
+                    <h3 class="text-2xl font-bold font-orbitron mb-4"><span class="apex-red">战令亮点</span></h3>
+                    <p class="text-gray-300 mb-4">本赛季战令内容丰富，包括多款高品质的传奇和武器皮肤，其中L-Star将获得新的反应式皮肤。</p>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>反应式皮肤:</strong> L-Star</li>
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>传奇皮肤:</strong> 史诗级动力小子, 传奇级奥特</li>
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>武器皮肤:</strong> 转换者, P2020, CAR</li>
+                    </ul>
+                </div>
+                <div class="card rounded-lg p-6">
+                    <h3 class="text-2xl font-bold font-orbitron mb-4"><span class="apex-red">排位赛奖励</span></h3>
+                    <p class="text-gray-300 mb-4">全新的排位系统上线，奖励也更加酷炫。玩家将根据最终段位获得独特的动态视觉特效（VFX）外观物品。</p>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>VFX奖励:</strong> 与最终段位挂钩的动画特效。</li>
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>新系统:</strong> 根据MMR决定起始段位。</li>
+                        <li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span>
+                            <strong>动画徽章:</strong> 达到段位最终层级即可获得。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+    <div id="modal-content" class="modal-content w-11/12 max-w-2xl"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const legendData = {
+                wattson: {
+                    name: '沃特森',
+                    title: '静态防御者',
+                    type: '增益',
+                    color: 'text-sky-400',
+                    changes: [
+                        '围栏冷却时间从15秒大幅缩短至4秒。',
+                        '围栏现在可以穿透门电击敌人。',
+                        '被动护盾再生速度翻倍。',
+                        '获得支援专长（开启蓝色补给箱、制作旗帜）。'
+                    ],
+                    chart: {
+                        type: 'bar',
+                        data: {
+                            labels: ['旧冷却', '新冷却 (S26)'],
+                            datasets: [{
+                                label: '战术技能冷却时间 (秒)',
+                                data: [15, 4],
+                                backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)'],
+                                borderColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            scales: {
+                                x: { beginAtZero: true, ticks: { color: '#f0f0f0' }, grid: { color: '#444' } },
+                                y: { ticks: { color: '#f0f0f0' }, grid: { color: '#444' } }
+                            },
+                            plugins: { legend: { labels: { color: '#f0f0f0' } } }
+                        }
+                    }
+                },
+                octane: {
+                    name: '动力小子',
+                    title: '高速敢死队',
+                    type: '增益',
+                    color: 'text-green-400',
+                    changes: [
+                        '“突击强化”专长将二段跳整合进基础技能。',
+                        '获得新专长，可开启突击补给箱。',
+                        '击破敌人护盾后立即获得速度提升和快速换弹。'
+                    ]
+                },
+                valkyrie: {
+                    name: '瓦尔基里',
+                    title: '带翼复仇者',
+                    type: '增益',
+                    color: 'text-sky-400',
+                    changes: [
+                        '回声重定位更流畅（更快、更远、自动召回）。',
+                        '回声跳跃后武器重部署时间缩短至0.2秒。',
+                        '终极技能的狙击激光在射击前隐藏。',
+                        '新增2级升级“改进标记”，可短暂透视并显示生命值。'
+                    ]
+                },
+                conduit: {
+                    name: '导电',
+                    title: '圣盾英雄',
+                    type: '增益',
+                    color: 'text-yellow-400',
+                    changes: [
+                        '战术技能“辐射转移”冷却时间缩短至21秒。',
+                        '受伤害后的充能延迟缩短至1秒。'
+                    ]
+                },
+                fuse: {
+                    name: '邦加罗尔',
+                    title: '爆破专家',
+                    type: '传闻重做',
+                    color: 'text-orange-400',
+                    changes: [
+                        '传闻：爆破钻头对掩体后敌人更稳定。',
+                        '传闻：可能增加至6个指节炸弹。',
+                        '传闻：即将推出威望皮肤。'
+                    ]
+                },
+                maggie: {
+                    name: '疯玛吉',
+                    title: '叛军军阀',
+                    type: '传闻重做',
+                    color: 'text-orange-400',
+                    changes: [
+                        '传闻：爆破钻头稳定性改进。',
+                        '传闻：可能将现有专长整合进基础技能。',
+                        '已泄露：即将推出威望皮肤。'
+                    ]
+                },
+                ash: {
+                    name: '艾许',
+                    title: '煽动判官',
+                    type: '调整',
+                    color: 'text-purple-400',
+                    changes: [
+                        '冷却时间改进，提升机动性和节奏。',
+                        '贪婪陷阱将在第一次命中后正确放置。'
+                    ]
+                },
+                ballistic: {
+                    name: '弹道',
+                    title: '文雅枪手',
+                    type: '削弱',
+                    color: 'text-red-500',
+                    changes: [
+                        '开发者暗示：哨兵战术技能伤害过高，预计将被削弱。'
+                    ]
+                }
+            };
+
+            const legendGrid = document.getElementById('legend-grid');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content');
+            let activeChart = null;
+
+            Object.keys(legendData).forEach(key => {
+                const legend = legendData[key];
+                const legendCard = document.createElement('div');
+                legendCard.className = 'card rounded-lg p-2 text-center cursor-pointer';
+                legendCard.innerHTML = `
+                    <img src="https://placehold.co/100x100/333333/f0f0f0?text=${legend.name.charAt(0)}" alt="${legend.name}" class="w-20 h-20 mx-auto rounded-full border-2 apex-border mb-2">
+                    <h4 class="font-bold font-orbitron text-white">${legend.name}</h4>
+                    <p class="text-xs ${legend.color}">${legend.type}</p>
+                `;
+                legendCard.addEventListener('click', () => openModal(legend));
+                legendGrid.appendChild(legendCard);
+            });
+
+            function openModal(legend) {
+                if (activeChart) {
+                    activeChart.destroy();
+                    activeChart = null;
+                }
+
+                let chartHtml = '';
+                if (legend.chart) {
+                    chartHtml = `<div class="mt-4 chart-container"><canvas id="legend-chart"></canvas></div>`;
+                }
+
+                modalContent.innerHTML = `
+                    <div class="card rounded-lg p-6 relative border-2 apex-border">
+                        <button id="close-modal" class="absolute top-2 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+                        <h3 class="text-3xl font-bold font-orbitron mb-2">${legend.name} <span class="text-lg ${legend.color} font-sans">(${legend.type})</span></h3>
+                        <p class="text-gray-400 mb-4">${legend.title}</p>
+                        <div class="border-t border-gray-600 my-4"></div>
+                        <ul class="space-y-2 text-left">
+                            ${legend.changes.map(change => `<li class="flex items-start"><span class="apex-red font-bold mr-2">▶</span> ${change}</li>`).join('')}
+                        </ul>
+                        ${chartHtml}
+                    </div>
+                `;
+
+                modalBackdrop.classList.add('active');
+                modalContent.classList.add('active');
+
+                if (legend.chart) {
+                    const ctx = document.getElementById('legend-chart').getContext('2d');
+                    const chartOptions = { ...legend.chart.options, maintainAspectRatio: false };
+                    activeChart = new Chart(ctx, {
+                        type: legend.chart.type,
+                        data: legend.chart.data,
+                        options: chartOptions
+                    });
+                }
+
+                document.getElementById('close-modal').addEventListener('click', closeModal);
+            }
+
+            function closeModal() {
+                modalBackdrop.classList.remove('active');
+                modalContent.classList.remove('active');
+                if (activeChart) {
+                    activeChart.destroy();
+                    activeChart = null;
+                }
+            }
+
+            modalBackdrop.addEventListener('click', closeModal);
+
+            const heirloomCtx = document.getElementById('heirloomDamageChart').getContext('2d');
+            new Chart(heirloomCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['“砰！” (冲刺)', '“大满贯！！！” (范围)'],
+                    datasets: [{
+                        label: '技能伤害',
+                        data: [30, 75],
+                        backgroundColor: ['rgba(255, 206, 86, 0.5)', 'rgba(218, 41, 42, 0.5)'],
+                        borderColor: ['rgb(255, 206, 86)', 'rgb(218, 41, 42)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, ticks: { color: '#f0f0f0' }, grid: { color: '#444' } },
+                        y: { ticks: { color: '#f0f0f0' }, grid: { color: '#444' } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return ` 伤害: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const navLinks = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 80) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
