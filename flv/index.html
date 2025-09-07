@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>查理の放映厅</title>
-    <!-- 引入 hls.js 库 -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -15,13 +14,13 @@
             box-sizing: border-box;
             /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
         }
-
+    
         body {
             /* background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c); */
             background: linear-gradient(135deg, #70433b, #3f725c, #9b8548, #526099);
             color: #fff;
             min-height: 100vh;
-            display: flex;
+            display:flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
@@ -484,10 +483,6 @@
             box-shadow: 0 6px 20px rgba(255, 255, 255, 0.6);
         }
 
-        .error-btn:active {
-            transform: translateY(0);
-        }
-
         .watermark {
             position: absolute;
             bottom: 20px;
@@ -637,12 +632,8 @@
         <div class="info-panel">
             <div class="info-card">
                 <h3><i class="fa-solid fa-lightbulb"></i> 提示</h3>
-                <p><strong>记得刷新: </strong>
-                    <p1>如果延迟高记得 <i class="fas fa-sync"> 刷新</i> 哦！</p1>
-                </p>
-                <p><strong>声音控制: </strong>
-                    <p1>默认静音，点击 <i class="fas fa-volume-mute"> 静音</i> 按钮开关声音</p1>
-                </p>
+                <p><strong>记得刷新: </strong><p1>如果延迟高记得 <i class="fas fa-sync"> 刷新</i> 哦！</p1></p>
+                <p><strong>声音控制: </strong><p1>默认静音，点击 <i class="fas fa-volume-mute"> 静音</i> 按钮开关声音</p1></p>
             </div>
         </div>
         <div class="info-panel">
@@ -671,7 +662,7 @@
                         <i class="fas fa-copy"></i>
                     </button>
                 <div class="info-text" id="stream-key-text">
-                    703011901_144115218681198537_main?txSecret=6559ce3da9135c1871b27df08e7f212e&txTime=689C5AB3&txPRI=1753867699&groupid=703011901&userid=MTQ0MTE1MjE4NjgxMTk4NTM3
+                    703011901_144115218681198537_main?txSecret=7253d1aa94b62fd362dd3501b40a0244&txTime=68CFCD38&txPRI=1757239352&groupid=703011901&userid=MTQ0MTE1MjE4NjgxMTk4NTM3
                 </div>
                 </p>
             </div>
@@ -696,7 +687,7 @@
         const pipIndicator = document.getElementById('pipIndicator');
         // const pipState = document.getElementById('pipState');
 
-        let hlsPlayer;
+        let flvPlayer;
         let isMuted = false;
         let pipActive = false;
 
@@ -709,71 +700,80 @@
             // pipState.textContent = '未激活';
 
             // 检查浏览器支持
-            if (Hls.isSupported()) {
-                // 如果已有播放器实例，先销毁
-                if (hlsPlayer) {
-                    hlsPlayer.destroy();
-                }
-
-                // 创建新的播放器实例
-                hlsPlayer = new Hls();
-                hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
-                    console.log("video and hls.js are now bound together !");
-                    // 替换成公共的测试 m3u8 地址
-                    hlsPlayer.loadSource('https://live-play-hls.cctvnews.cctv.com/CCTVChannel/channel_cctv4k_mtd.m3u8?auth_key=1756914130-0-pcs9201d1891a1f4e31a712cede9a4a9ea8-14703adfb72e5a1034fdb3a7ad1feb28&yid=pcs9201d1891a1f4e31a712cede9a4a9ea8');
-                    hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-                        console.log("manifest loaded, found " + data.levels.length + " quality level");
-                        videoElement.play().then(() => {
-                            statusText.textContent = '播放中';
-                            streamStatus.textContent = '直播中';
-                            loadingIndicator.style.display = 'none';
-                        }).catch(e => {
-                            console.error('自动播放失败:', e);
-                            statusText.textContent = '播放已暂停 (点击播放按钮开始)';
-                            streamStatus.textContent = '已连接 (暂停中)';
-                            loadingIndicator.style.display = 'none';
-                        });
-                    });
-                });
-                hlsPlayer.attachMedia(videoElement);
-            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                // 浏览器原生支持 HLS
-                videoElement.src = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-                videoElement.addEventListener('loadedmetadata', function () {
-                    videoElement.play();
-                });
-            } else {
-                showError('当前浏览器不支持播放 m3u8 格式！请使用最新版Chrome、Firefox或Edge浏览器。');
+            if (!flvjs.isSupported()) {
+                showError('当前浏览器不支持 flv.js！请使用最新版Chrome、Firefox或Edge浏览器。');
+                return;
             }
+
+            // 如果已有播放器实例，先销毁
+            if (flvPlayer) {
+                flvPlayer.destroy();
+            }
+
+            // 创建新的播放器实例
+            flvPlayer = flvjs.createPlayer({
+                // type: 'flv',
+                type: 'flv',
+                // url: 'https://qqgroup.6721.liveplay.ilive.qq.com/live/6721_1d9bc6bbbcec174cafe7e0d96a90a21b_1080p4000k.flv?txSecret=dd6ba0a8f2bf7c436a18844abc460c3c&txTime=6856708B',//小年轻
+                url: 'https://live.qcloud.c1channel.com/trtc_1251316161/703011901_144115218681198537_main_1080p4000k.flv?txSecret=ceb34512b6d15bed17e51764da278217&txTime=68BEAA79',//cw
+                isLive: true,
+                cors: true,
+                hasAudio: true,
+                hasVideo: true,
+                stashInitialSize: 128,
+                enableWorker: true,
+                enableStashBuffer: false
+            });
+
+            // 关联video元素
+            flvPlayer.attachMediaElement(videoElement);
+
+            // 加载视频流
+            flvPlayer.load();
+
+            // 尝试自动播放
+            flvPlayer.play().then(() => {
+                statusText.textContent = '[小铭] 放映中';
+                streamStatus.textContent = '直播中';
+                loadingIndicator.style.display = 'none';
+
+            }).catch(e => {
+                console.error('自动播放失败:', e);
+                statusText.textContent = '播放已暂停 (点击播放按钮开始)';
+                streamStatus.textContent = '已连接 (暂停中)';
+                loadingIndicator.style.display = 'none';
+            });
 
             // 事件监听
-            if (hlsPlayer) {
-                hlsPlayer.on(Hls.Events.ERROR, function (event, data) {
-                    if (data.fatal) {
-                        switch (data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                // 尝试恢复网络错误
-                                console.error("fatal network error, try to recover");
-                                hlsPlayer.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.error("fatal media error, try to recover");
-                                hlsPlayer.recoverMediaError();
-                                break;
-                            default:
-                                // 其他致命错误，销毁并重建
-                                showError('播放器出现致命错误');
-                                hlsPlayer.destroy();
-                                break;
-                        }
-                    }
-                    console.error('播放器错误:', data);
-                    let errorMsg = '播放器错误: ' + (data.details || '未知错误');
-                    showError(errorMsg);
-                    statusText.textContent = '播放错误';
-                    streamStatus.textContent = '连接失败';
-                });
-            }
+            flvPlayer.on(flvjs.Events.ERROR, (errType, errDetail) => {
+                console.error('播放器错误:', errType, errDetail);
+
+                let errorMsg = '';
+                switch (errType) {
+                    case flvjs.ErrorTypes.NETWORK_ERROR:
+                        errorMsg += '没有人在放映哦，稍后再来吧！';
+                        break;
+                    case flvjs.ErrorTypes.MEDIA_ERROR:
+                        errorMsg += '媒体错误';
+                        break;
+                    case flvjs.ErrorTypes.OTHER_ERROR:
+                    default:
+                        errorMsg += '其他错误';
+                }
+
+                errorMsg += ``;
+                showError(errorMsg);
+                statusText.textContent = '播放错误';
+                streamStatus.textContent = '连接失败';
+            });
+
+            flvPlayer.on(flvjs.Events.LOADING_COMPLETE, () => {
+                loadingIndicator.style.display = 'none';
+            });
+
+            flvPlayer.on(flvjs.Events.STATISTICS_INFO, () => {
+                // 可以在这里更新统计信息
+            });
 
             // 监听音量变化
             videoElement.addEventListener('volumechange', updateVolumeDisplay);
@@ -837,7 +837,7 @@
         // 播放/暂停控制
         function togglePlay() {
             if (videoElement.paused) {
-                videoElement.play().then(() => {
+                flvPlayer.play().then(() => {
                     statusText.textContent = '正在播放';
                     playBtn.innerHTML = '<i class="fas fa-pause"></i> 暂停';
                 }).catch(e => {
@@ -845,7 +845,7 @@
                     statusText.textContent = '播放失败';
                 });
             } else {
-                videoElement.pause();
+                flvPlayer.pause();
                 statusText.textContent = '已暂停';
                 playBtn.innerHTML = '<i class="fas fa-play"></i> 播放';
             }
@@ -853,9 +853,9 @@
 
         // 停止播放
         function stopPlayback() {
-            if (hlsPlayer) {
-                hlsPlayer.stopLoad();
-                hlsPlayer.detachMedia();
+            if (flvPlayer) {
+                flvPlayer.pause();
+                flvPlayer.unload();
                 statusText.textContent = '已停止';
                 streamStatus.textContent = '未连接';
                 playBtn.innerHTML = '<i class="fas fa-play"></i> 播放';
@@ -1031,6 +1031,7 @@
             pipBtn.title = "您的浏览器不支持小窗功能";
             pipBtn.innerHTML = '<i class="fas fa-ban"></i> 小窗不可用';
         }
+
     </script>
 </body>
 
