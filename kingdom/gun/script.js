@@ -51,7 +51,7 @@ function lookupGun() {
 
         // 3. 显示图片
         // 假设图片文件和 HTML 文件在同一个目录，或在 'images/' 目录下
-        const imagePath = `images/${gunInfo.imageFile}`;
+        const imagePath = `/kingdom/gun/images/${gunInfo.imageFile}`;
 
         // 检查图片文件是否存在 (在实际Web服务器上才准确，这里只是设置路径)
         gunImage.src = imagePath;
