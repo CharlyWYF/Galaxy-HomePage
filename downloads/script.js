@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 cardContainer.style.display = '';
             } else {
                 cardContainer.style.display = 'none';
+                
             }
         });
     });
