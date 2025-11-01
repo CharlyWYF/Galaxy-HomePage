@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单双周查询工具</title>
+    <!-- Material Design 3 CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/@material/web@1.0.0/dist/material-web.min.css">
+    <style>
+        :root {
+            --md-sys-color-primary: #3b82f6;
+            --md-sys-color-primary-container: #dbeafe;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-on-primary-container: #1e3a8a;
+            --md-sys-color-surface: #ffffff;
+            --md-sys-color-surface-variant: #f3f4f6;
+            --md-sys-color-on-surface: #1f2937;
+            --md-sys-color-on-surface-variant: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            gap: 2rem;
+        }
+
+        .container {
+            background-color: var(--md-sys-color-surface);
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        h1 {
+            color: var(--md-sys-color-primary);
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: var(--md-sys-color-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        .result-card {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .result-status {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-date {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .calendar-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--md-sys-color-surface-variant);
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .info-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--md-sys-color-primary);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1rem;
+            background-color: var(--md-sys-color-surface-variant);
+            border-radius: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+        }
+
+        .single-week {
+            background-color: #ef4444;
+        }
+
+        .double-week {
+            background-color: #10b981;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 0.875rem;
+            padding-top: 1rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .legend {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>单双周查询工具</h1>
+        
+        <div class="date-selector">
+            <label for="query-date">选择日期：</label>
+            <input type="date" id="query-date" class="date-input">
+        </div>
+
+        <div class="button-container">
+            <button id="query-btn" class="btn btn-primary">查询</button>
+            <button id="today-btn" class="btn btn-secondary">今天</button>
+        </div>
+
+        <div class="calendar-info">
+            <div class="info-item">
+                <span class="info-label">当前周</span>
+                <span id="current-week" class="info-value">--</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">当前月</span>
+                <span id="current-month" class="info-value">--</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">当前日</span>
+                <span id="current-day" class="info-value">--</span>
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div id="result-status" class="result-status">请选择日期进行查询</div>
+            <div id="result-date" class="result-date"></div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color single-week"></div>
+                <span>单周（单休）</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color double-week"></div>
+                <span>双周（双休）</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>基于周六日期奇偶性判断单双周 | 轻量查询工具 v1.0</p>
+    </div>
+
+    <script>
+        // DOM 元素
+        const dateInput = document.getElementById('query-date');
+        const queryBtn = document.getElementById('query-btn');
+        const todayBtn = document.getElementById('today-btn');
+        const resultStatus = document.getElementById('result-status');
+        const resultDate = document.getElementById('result-date');
+        const currentWeek = document.getElementById('current-week');
+        const currentMonth = document.getElementById('current-month');
+        const currentDay = document.getElementById('current-day');
+        const resultCard = document.querySelector('.result-card');
+
+        // 设置今天日期为默认值
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        dateInput.value = formattedDate;
+
+        // 更新界面信息
+        updateCalendarInfo(today);
+        
+        // 查询按钮事件
+        queryBtn.addEventListener('click', () => {
+            const selectedDate = new Date(dateInput.value);
+            if (isNaN(selectedDate.getTime())) {
+                alert('请选择有效的日期');
+                return;
+            }
+            checkWeekType(selectedDate);
+        });
+
+        // 今天按钮事件
+        todayBtn.addEventListener('click', () => {
+            dateInput.value = formattedDate;
+            checkWeekType(today);
+        });
+
+        // 日期输入变化时自动查询
+        dateInput.addEventListener('change', () => {
+            const selectedDate = new Date(dateInput.value);
+            if (!isNaN(selectedDate.getTime())) {
+                updateCalendarInfo(selectedDate);
+                checkWeekType(selectedDate);
+            }
+        });
+
+        // 检查单双周类型
+        function checkWeekType(date) {
+            // 获取当周的周六
+            const saturday = getSaturdayOfWeek(date);
+            
+            // 获取周六的日期数字
+            const dayOfMonth = saturday.getDate();
+            
+            // 判断是单周还是双周
+            const isDoubleWeek = dayOfMonth % 2 === 0;
+            const weekType = isDoubleWeek ? '双周' : '单周';
+            const restType = isDoubleWeek ? '双休' : '单休';
+            
+            // 更新结果显示
+            resultStatus.textContent = `${weekType} ${restType}`;
+            resultDate.textContent = `日期：${formatDate(saturday)} (周六) | 日期数：${dayOfMonth}`;
+            
+            // 根据结果设置颜色
+            if (isDoubleWeek) {
+                resultStatus.style.color = '#10b981';
+                resultCard.style.backgroundColor = '#d1fae5';
+            } else {
+                resultStatus.style.color = '#ef4444';
+                resultCard.style.backgroundColor = '#fee2e2';
+            }
+        }
+
+        // 获取给定日期所在周的周六
+        function getSaturdayOfWeek(date) {
+            const temp = new Date(date);
+            const dayOfWeek = temp.getDay(); // 0是周日，1-6是周一到周六
+            
+            // 计算到周六的天数差
+            const diff = dayOfWeek === 0 ? -1 : 6 - dayOfWeek;
+            temp.setDate(temp.getDate() + diff);
+            
+            return temp;
+        }
+
+        // 格式化日期为中文格式
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}年${month.toString().padStart(2, '0')}月${day.toString().padStart(2, '0')}日`;
+        }
+
+        // 更新日历信息
+        function updateCalendarInfo(date) {
+            // 获取年中的第几周
+            const weekNum = getWeekNumber(date);
+            currentWeek.textContent = `第${weekNum}周`;
+            
+            // 获取月份信息
+            currentMonth.textContent = `${date.getMonth() + 1}月`;
+            
+            // 获取日期信息
+            currentDay.textContent = `${date.getDate()}日`;
+        }
+
+        // 获取年中的第几周（ISO 8601）
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // 初始加载时查询今天的状态
+        checkWeekType(today);
+    </script>
+</body>
+</html>
