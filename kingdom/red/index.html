@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红警启动中心 - 命令与征服</title>
+    <style>
+        :root {
+            --ra-red: #ff3c3c;
+            --ra-orange: #ff9d00;
+            --ra-blue: #00d4ff;
+            --bg-dark: #0d1117;
+            --panel-bg: rgba(22, 27, 34, 0.95);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: #e6edf3;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* 军事网格背景 */
+            background-image: 
+                linear-gradient(rgba(31, 38, 46, 0.8) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(31, 38, 46, 0.8) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* 电子扫描线装饰 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .header-box {
+            margin-bottom: 40px;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            color: var(--ra-red);
+            font-weight: 900;
+            letter-spacing: 4px;
+            margin: 0;
+            text-shadow: 0 0 15px rgba(255, 60, 60, 0.4);
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: var(--ra-blue);
+            letter-spacing: 2px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* 启动按钮 */
+        .launch-button {
+            display: block;
+            margin: 30px auto;
+            padding: 18px 0;
+            width: 280px;
+            background: #1f242d;
+            border: 2px solid var(--ra-orange);
+            color: var(--ra-orange);
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s;
+            clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 157, 0, 0.2);
+        }
+
+        .launch-button:hover {
+            background: var(--ra-orange);
+            color: #000;
+            box-shadow: 0 0 25px var(--ra-orange);
+            transform: translateY(-2px);
+        }
+
+        /* 教程卡片 */
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid #30363d;
+            border-top: 3px solid var(--ra-blue);
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            color: var(--ra-blue);
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: block;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 5px;
+        }
+
+        .instruction-img {
+            width: 100%;
+            height: 160px;
+            background: #161b22;
+            border: 1px dashed #484f58;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #484f58;
+            /* 如果你有图，替换src即可 */
+            object-fit: cover;
+        }
+
+        .instruction-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #c9d1d9;
+        }
+
+        .url-box {
+            background: #0d1117;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #30363d;
+            word-break: break-all;
+            color: var(--ra-orange);
+            font-family: Consolas, monospace;
+            font-size: 0.85rem;
+            user-select: all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-box">
+            <h1 class="main-title">Charlyの红色警戒</h1>
+            <div class="sub-title">指挥中心 · 链接就绪</div>
+        </div>
+
+        <a href="http://ddns.charlyw.top:16667" class="launch-button">
+            进入游戏
+        </a>
+
+        <div class="card">
+            <span class="card-tag">▷ 战术情报 / TUTORIAL</span>
+            
+            <img src="https://www.charlyw.top/kingdom/red/tutorial.png" alt="教程示意图" class="instruction-img">
+            
+            <div class="instruction-text">
+                <strong>完全体副本地址填写：</strong>
+                <div class="url-box">
+                    http://ddns.charlyw.top:16667/fully-music.exe
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
