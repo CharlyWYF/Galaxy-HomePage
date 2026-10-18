@@ -55,26 +55,38 @@ nodes.forEach(node=>{
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipDestination=new THREE.Vector3();
-let shipFlight=null;
+let shipFlight=null,shipDockScale=1;
 function sendShipTo(node){
- // Leave enough clearance for the wings and the largest planet's rings.
- shipDestination.set(node&&node.group!=='home'?node.x+node.r+5.5:0,node&&node.group!=='home'?1:0,node&&node.group!=='home'?node.z-2:0);
+ const docking=Boolean(node&&node.group!=='home');
+ // Keep the flight and docking position clear of wings and planetary rings.
+ shipDestination.set(docking?node.x+node.r+5.5:0,docking?1:0,docking?node.z-2:0);
+ shipDockScale=docking ? .72 : 1;
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
-  spacecraft.position.copy(shipDestination);spacecraft.rotation.z=0;shipFlight=null;return;
+  spacecraft.position.copy(shipDestination);spacecraft.scale.setScalar(shipDockScale);
+  spacecraft.rotation.z=0;shipFlight=null;return;
  }
- const length=spacecraft.position.distanceTo(shipDestination);
- shipFlight={start:spacecraft.position.clone(),end:shipDestination.clone(),time:performance.now(),duration:THREE.MathUtils.clamp(length*20,700,1400),height:Math.min(6,length*.12)};
+ const start=spacecraft.position.clone(),end=shipDestination.clone(),delta=end.clone().sub(start),length=delta.length();
+ const bend=new THREE.Vector3(-delta.z,0,delta.x).normalize().multiplyScalar(Math.min(4,length*.1));
+ const lift=Math.min(5,length*.1);
+ const control1=start.clone().addScaledVector(delta,.28).add(bend);control1.y+=lift;
+ const control2=start.clone().addScaledVector(delta,.76).addScaledVector(bend,.7);control2.y+=lift*.8;
+ shipFlight={curve:new THREE.CubicBezierCurve3(start,control1,control2,end),time:performance.now(),duration:THREE.MathUtils.clamp(2000+length*25,2200,3600),startScale:spacecraft.scale.x,startBank:spacecraft.rotation.z};
 }
 function updateShip(now){
  if(shipFlight){
-  const t=THREE.MathUtils.clamp((now-shipFlight.time)/shipFlight.duration,0,1),eased=t*t*(3-2*t);
-  spacecraft.position.lerpVectors(shipFlight.start,shipFlight.end,eased);
-  spacecraft.position.y+=Math.sin(Math.PI*t)*shipFlight.height;
-  spacecraft.rotation.z=Math.sin(Math.PI*t)*.12;
+  const t=THREE.MathUtils.clamp((now-shipFlight.time)/shipFlight.duration,0,1);
+  // Quintic easing gives both zero velocity and zero acceleration at each end.
+  const eased=t*t*t*(t*(t*6-15)+10);
+  shipFlight.curve.getPoint(eased,spacecraft.position);
+  spacecraft.position.y+=Math.sin(time*.5)*.12*eased;
+  spacecraft.rotation.z=shipFlight.startBank*(1-eased)+Math.sin(Math.PI*eased)**2*.1;
+  const approach=THREE.MathUtils.smoothstep(eased,.35,1);
+  spacecraft.scale.setScalar(THREE.MathUtils.lerp(shipFlight.startScale,shipDockScale,approach));
   if(t===1){spacecraft.rotation.z=0;shipFlight=null;}
  }else{
   spacecraft.position.copy(shipDestination);
   spacecraft.position.y+=Math.sin(time*.5)*.12;
+  spacecraft.scale.setScalar(shipDockScale);
  }
 }
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
