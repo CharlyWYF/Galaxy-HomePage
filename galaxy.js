@@ -350,9 +350,8 @@ document.fonts.ready.then(()=>nodes.forEach(n=>{n.labelLayoutKey=null;}));
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer?.setSize(innerWidth,innerHeight);measureInfoFraming();});
 for(const event of ['pointerdown','pointerup','pointercancel','wheel','keydown','input'])document.addEventListener(event,pauseAutoOrbit,{capture:true,passive:true});
 document.addEventListener('pointermove',e=>{if(pointers.has(e.pointerId))pauseAutoOrbit();},{capture:true,passive:true});
-document.addEventListener('visibilitychange',pauseAutoOrbit);
-let previous=performance.now(),lastHud=0;
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;updateAutoOrbit(now,dt);if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
+let previous=performance.now(),lastHud=0,frameRequest=null,pageFocused=document.hasFocus();
+function frame(now){frameRequest=null;if(document.hidden||!pageFocused){syncRendering();return;}frameRequest=requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;updateAutoOrbit(now,dt);if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
  const t=THREE.MathUtils.clamp((now-departure.start)/departure.duration,0,1),travel=t*t*(3-2*t);
  focus.lerpVectors(departure.focus,departure.node.body.position,travel);
  const arrivalDistance=Math.max(.6,departure.node.r*.35);
@@ -402,5 +401,23 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
  updateShip(dt);
  updateEntry();
  if(renderer){renderer.render(scene,camera);if(!document.body.classList.contains('ready')){document.body.classList.add('ready');$('#loading').setAttribute('aria-hidden','true');}}}
-frame(performance.now());
+// Stop scheduling frames entirely while the document is hidden or unfocused.
+function syncRendering(){
+ const suspended=document.hidden||!pageFocused;
+ document.body.classList.toggle('render-paused',suspended);
+ if(suspended){
+  if(frameRequest!==null)cancelAnimationFrame(frameRequest);
+  frameRequest=null;pauseAutoOrbit();return;
+ }
+ if(frameRequest===null){
+  previous=performance.now();
+  frameRequest=requestAnimationFrame(frame);
+ }
+}
+addEventListener('blur',()=>{pageFocused=false;syncRendering();});
+addEventListener('focus',()=>{pageFocused=true;syncRendering();});
+document.addEventListener('visibilitychange',()=>{pauseAutoOrbit();syncRendering();});
+addEventListener('pagehide',()=>{pageFocused=false;syncRendering();});
+addEventListener('pageshow',()=>{pageFocused=document.hasFocus();syncRendering();});
+syncRendering();
 

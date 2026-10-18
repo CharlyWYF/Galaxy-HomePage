@@ -163,3 +163,5 @@ footer{transition:opacity .2s ease,transform .2s ease,visibility .2s}
  .touch-ui .node-label{padding-top:3px;padding-bottom:3px}
  .touch-ui .node-label small{margin-top:3px}
 }
+
+.render-paused *,.render-paused *::before,.render-paused *::after{animation-play-state:paused!important}
