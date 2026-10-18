@@ -1,6 +1,11 @@
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
+import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
 const $=s=>document.querySelector(s);
+let touchMode=matchMedia('(hover: none) and (pointer: coarse)').matches,lastTouchTime=-Infinity,infoPinned=false;
+function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'悬停了解星球，靠近后进入。';$('.hint').textContent=touch?'单指平移 · 双指缩放 / 旋转 / 俯仰':'左键平移 · 右键旋转 · 滚轮缩放';}
+updateInputMode(touchMode);
+document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){lastTouchTime=performance.now();updateInputMode(true);}else if(e.pointerType==='mouse')updateInputMode(false);},{capture:true});
 function displayUrl(url){return url.replace(/^https?:\/\//i,'');}
 const nodes=[
  {name:'Bing Chat 镜像',url:'https://bing.charlyw.top',group:'service',x:-29,z:-22,r:1.8,color:0x7a9a88,desc:'来自旧时代的聊天信号。坐标还在，频道是否有人值守已无从得知。'},
@@ -51,7 +56,7 @@ nodes.forEach(node=>{
   const ship=createSpacecraft();scene.add(ship);node.ship=ship;
   ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
  }
- const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+displayUrl(node.url)+'</small>';label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;label.onpointerenter=()=>showInfo(node);label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
+ const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+displayUrl(node.url)+'</small>';label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
@@ -136,14 +141,14 @@ function showInfo(node){
  $('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');
  $('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destUrl').textContent=displayUrl(node.url);
 }
-function hideInfoSoon(){if(infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;},160);}
-function select(node){
- selected=node;desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);
+function hideInfoSoon(){if(infoPinned||infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;},160);}
+function select(node,pin=false){
+ infoPinned=pin;selected=node;desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);
  showInfo(node);nodes.forEach(n=>n.label.classList.toggle('selected',n===node));
 }
 $('#destination').onpointerenter=()=>{clearTimeout(infoTimer);infoTimer=null;};
 $('#destination').onpointerleave=hideInfoSoon;
-$('#close').onclick=()=>{clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
+$('#close').onclick=()=>{infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
 function updateEntry(){
  // Proximity follows the camera, independently of whichever description is hovered.
  let nearest=null,best=Infinity;
@@ -163,18 +168,60 @@ function home(){clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);w
 function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
 $('#home').onclick=home;$('#plus').onclick=()=>wantedDistance=Math.max(13,wantedDistance*.78);$('#minus').onclick=()=>wantedDistance=Math.min(230,wantedDistance*1.28);
-const pointers=new Map();let moved=false,startX=0,startY=0,lastCenter=null,lastPinch=0;
+const pointers=new Map();let moved=false,lastGesture=null;
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
-canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0&&e.button!==2)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,rotate:e.button===2});startX=e.clientX;startY=e.clientY;hideInfoSoon();moved=false;lastCenter=null;lastPinch=0;canvas.style.cursor='grabbing';});
+function pointerDown(e){
+ if(departure||(e.pointerType==='mouse'&&e.button!==0&&e.button!==2))return;
+ e.preventDefault();canvas.setPointerCapture(e.pointerId);
+ if(e.pointerType==='touch'){clearTimeout(clickTimer);pendingClick=null;}
+ if(!pointers.size){moved=false;lastGesture=null;}
+ const label=e.target.closest?.('.node-label');
+ pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,rotate:e.button===2,node:nodes.find(n=>n.label===label)});
+ if(pointers.size>1){moved=true;lastGesture=measureGesture([...pointers.values()]);dismissTouchInfo();}
+ if(e.pointerType!=='touch')hideInfoSoon();
+ canvas.style.cursor='grabbing';
+}
+function dismissTouchInfo(){if(touchMode){infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;}}
+canvas.addEventListener('pointerdown',pointerDown);
+$('#labels').addEventListener('pointerdown',e=>{if(e.pointerType==='touch')pointerDown(e);});
 canvas.addEventListener('pointermove',e=>{
- if(!pointers.has(e.pointerId)){const node=pick(e.clientX,e.clientY);canvas.style.cursor=node?'pointer':'grab';if(node)showInfo(node);else hideInfoSoon();return;}
- const old=pointers.get(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,rotate:old.rotate});if(Math.hypot(e.clientX-startX,e.clientY-startY)>4)moved=true;
+ if(!pointers.has(e.pointerId)){
+  if(e.pointerType==='touch'||touchMode)return;
+  const node=pick(e.clientX,e.clientY);canvas.style.cursor=node?'pointer':'grab';if(node)showInfo(node);else hideInfoSoon();return;
+ }
+ const old=pointers.get(e.pointerId);
+ pointers.set(e.pointerId,{...old,x:e.clientX,y:e.clientY});
+ if(Math.hypot(e.clientX-old.startX,e.clientY-old.startY)>(e.pointerType==='touch'?8:4)){moved=true;dismissTouchInfo();}
+ if(e.pointerType==='touch'&&pointers.size===1&&!moved)return;
  if(pointers.size===1&&old.rotate){wantedAzimuth-=(e.clientX-old.x)*.006;wantedElevation=THREE.MathUtils.clamp(wantedElevation+(e.clientY-old.y)*.005,.3,1.45);}
  else if(pointers.size===1){const a=pointOnPlane(old.x,old.y),b=pointOnPlane(e.clientX,e.clientY);if(a&&b){desired.add(a.sub(b));clampFocus();}}
- else{const [a,b]=[...pointers.values()];const center={x:(a.x+b.x)/2,y:(a.y+b.y)/2},pinch=Math.hypot(a.x-b.x,a.y-b.y);if(lastCenter){const from=pointOnPlane(lastCenter.x,lastCenter.y),to=pointOnPlane(center.x,center.y);if(from&&to)desired.add(from.sub(to));}if(lastPinch&&pinch>1)wantedDistance=THREE.MathUtils.clamp(wantedDistance*lastPinch/pinch,13,230);lastPinch=pinch;lastCenter=center;clampFocus();moved=true;}
+ else{
+  const gesture=measureGesture([...pointers.values()]);
+  if(lastGesture){
+   const change=gestureChange(lastGesture,gesture);
+   wantedDistance=THREE.MathUtils.clamp(wantedDistance*change.zoom,13,230);
+   wantedAzimuth-=change.twist+change.dx*.004;
+   wantedElevation=THREE.MathUtils.clamp(wantedElevation+change.dy*.004,.3,1.45);
+  }
+  lastGesture=gesture;moved=true;
+ }
 });
-canvas.addEventListener('pointerleave',hideInfoSoon);
-canvas.addEventListener('pointerup',e=>{if(!moved&&pointers.size===1&&e.button===0&&!pointers.get(e.pointerId)?.rotate){const node=pick(e.clientX,e.clientY);if(node)clickNode(node);}pointers.delete(e.pointerId);lastCenter=null;lastPinch=0;canvas.style.cursor='grab';});canvas.addEventListener('pointercancel',e=>pointers.delete(e.pointerId));
+canvas.addEventListener('pointerleave',()=>{if(!touchMode)hideInfoSoon();});
+function releasePointer(e,cancelled=false){
+ const pointer=pointers.get(e.pointerId);if(!pointer)return;
+ if(!cancelled&&!moved&&pointers.size===1&&e.button===0&&!pointer.rotate){
+  const node=pointer.node||pick(e.clientX,e.clientY);
+  if(e.pointerType==='touch'){lastTouchTime=performance.now();if(node)select(node,true);else $('#close').click();}
+  else if(node)clickNode(node);
+ }
+ pointers.delete(e.pointerId);lastGesture=null;
+ if(pointers.size){moved=true;for(const p of pointers.values()){p.startX=p.x;p.startY=p.y;}}
+ if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+ canvas.style.cursor=pointers.size?'grabbing':'grab';
+}
+canvas.addEventListener('pointerup',e=>releasePointer(e));
+canvas.addEventListener('pointercancel',e=>releasePointer(e,true));
+canvas.addEventListener('lostpointercapture',e=>releasePointer(e,true));
 canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane(e.clientX,e.clientY),ratio=Math.exp(THREE.MathUtils.clamp(e.deltaY,-200,200)*.0015),next=THREE.MathUtils.clamp(wantedDistance*ratio,13,230);if(anchor){const factor=1-next/wantedDistance;desired.x+=(anchor.x-desired.x)*factor;desired.z+=(anchor.z-desired.z)*factor;clampFocus();}wantedDistance=next;},{passive:false});
 function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();}
 $('#search').oninput=applyFilter;document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(n=>n.classList.toggle('active',n===b));applyFilter();if(filter!=='all'){const ns=nodes.filter(n=>n.group===filter);desired.set(ns.reduce((s,n)=>s+n.x,0)/ns.length,0,ns.reduce((s,n)=>s+n.z,0)/ns.length);wantedDistance=65;}else home();});

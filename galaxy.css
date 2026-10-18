@@ -95,3 +95,38 @@ nav button{font-size:13px}
 
 #destUrl{font-family:Oxanium,Consolas,monospace;font-size:12px;line-height:1.6;color:#8fa4b3;overflow-wrap:anywhere;margin:14px 0 0}
 #departureHost{overflow-wrap:anywhere;line-height:1.6}
+
+body{overscroll-behavior:none}
+#labels{touch-action:none}
+.touch-ui .node-label{min-height:44px}
+.touch-ui #close{min-width:44px;min-height:44px;right:4px;top:4px}
+.touch-ui .zoom button{width:44px;height:44px}
+.touch-ui nav button{min-height:44px;min-width:44px}
+.touch-ui .entry-button{min-height:58px;touch-action:manipulation}
+.touch-ui .search input{font-size:16px}
+@media(max-width:700px){
+ header{top:max(16px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right))}
+ .search{min-width:0}.search input{font-size:16px;width:clamp(120px,38vw,220px);min-width:0}
+ footer{left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom))}
+ nav{justify-content:space-between;gap:8px;margin-top:4px}
+ .touch-ui #destination{top:auto;left:16px;right:16px;bottom:calc(188px + env(safe-area-inset-bottom));width:auto;max-height:30dvh;padding:20px;border-radius:16px;transform-origin:bottom center}
+ .touch-ui #destSector{padding-right:28px;margin-bottom:10px;font-size:10px}
+ .touch-ui #destTitle{padding-right:24px}
+ .touch-ui #destUrl{font-size:11px;margin-top:8px}
+ .touch-ui #destination small{margin-top:8px;font-size:10px}
+ .touch-ui .zoom{top:calc(80px + env(safe-area-inset-top));bottom:auto;right:max(16px,env(safe-area-inset-right));border-radius:12px}
+ .touch-ui .entry-button{bottom:calc(110px + env(safe-area-inset-bottom));width:calc(100vw - 32px);border-radius:14px}
+ .touch-ui .intro{top:100px;max-width:calc(100vw - 100px)}
+ .touch-ui .hint{font-size:10px;letter-spacing:.3px}
+}
+@media(max-height:500px){
+ .touch-ui header{top:max(12px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right))}
+ .touch-ui #destination{top:76px;bottom:90px;left:16px;right:auto;width:min(290px,42vw);max-height:none;padding:16px}
+ .touch-ui .intro{display:none}
+ .touch-ui #destSector{font-size:10px;margin-bottom:10px;padding-right:28px}
+ .touch-ui #destTitle{font-size:21px;margin-bottom:10px;padding-right:24px}
+ .touch-ui #destDesc{font-size:13px;line-height:1.6}
+ .touch-ui #destUrl{font-size:11px;margin-top:8px}
+ .touch-ui #destination small{font-size:10px;margin-top:8px}
+ .touch-ui .entry-button{width:min(300px,46vw);left:auto;right:104px;bottom:calc(88px + env(safe-area-inset-bottom));transform:none}
+}
