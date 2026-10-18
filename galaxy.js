@@ -54,44 +54,33 @@ nodes.forEach(node=>{
  const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+new URL(node.url).hostname+'</small>';label.setAttribute('aria-label',node.name+'，单击查看，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
-const shipDestination=new THREE.Vector3();
-let shipFlight=null,shipDockScale=1;
-function sendShipTo(node){
- const docking=Boolean(node&&node.group!=='home');
- // Keep the flight and docking position clear of wings and planetary rings.
- shipDestination.set(docking?node.x+node.r+5.5:0,docking?1:0,docking?node.z-2:0);
- shipDockScale=docking ? .30 : 1;
+const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
+const shipError=new THREE.Vector3(),shipStep=new THREE.Vector3();
+function updateShip(dt){
+ // A point on the camera's center ray stays in front of the planet, not inside it.
+ shipTarget.copy(camera.position).sub(focus);
+ shipTarget.setLength(Math.min(4,shipTarget.length()*.25)).add(focus);
+ const targetScale=THREE.MathUtils.lerp(.30,1,THREE.MathUtils.smoothstep(distance,42,110));
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
-  spacecraft.position.copy(shipDestination);spacecraft.scale.setScalar(shipDockScale);
-  spacecraft.rotation.z=0;shipFlight=null;return;
+  spacecraft.position.copy(shipTarget);shipVelocity.set(0,0,0);
+  spacecraft.scale.setScalar(targetScale);spacecraft.rotation.z=0;return;
  }
- const start=spacecraft.position.clone(),end=shipDestination.clone(),delta=end.clone().sub(start),length=delta.length();
- const bend=new THREE.Vector3(-delta.z,0,delta.x).normalize().multiplyScalar(Math.min(4,length*.1));
- const lift=Math.min(5,length*.1);
- const control1=start.clone().addScaledVector(delta,.28).add(bend);control1.y+=lift;
- const control2=start.clone().addScaledVector(delta,.76).addScaledVector(bend,.7);control2.y+=lift*.8;
- shipFlight={curve:new THREE.CubicBezierCurve3(start,control1,control2,end),time:performance.now(),duration:THREE.MathUtils.clamp(2000+length*25,2200,3600),startScale:spacecraft.scale.x,startBank:spacecraft.rotation.z};
-}
-function updateShip(now){
- if(shipFlight){
-  const t=THREE.MathUtils.clamp((now-shipFlight.time)/shipFlight.duration,0,1);
-  // Quintic easing gives both zero velocity and zero acceleration at each end.
-  const eased=t*t*t*(t*(t*6-15)+10);
-  shipFlight.curve.getPoint(eased,spacecraft.position);
-  spacecraft.position.y+=Math.sin(time*.5)*.12*eased;
-  spacecraft.rotation.z=shipFlight.startBank*(1-eased)+Math.sin(Math.PI*eased)**2*.1;
-  const approach=THREE.MathUtils.smoothstep(eased,.35,1);
-  spacecraft.scale.setScalar(THREE.MathUtils.lerp(shipFlight.startScale,shipDockScale,approach));
-  if(t===1){spacecraft.rotation.z=0;shipFlight=null;}
- }else{
-  spacecraft.position.copy(shipDestination);
-  spacecraft.position.y+=Math.sin(time*.5)*.12;
-  spacecraft.scale.setScalar(shipDockScale);
- }
+ // Critically damped following retains momentum when the center keeps moving.
+ // Exact integration avoids restarting an animation on every pointer movement.
+ const omega=2.6,decay=Math.exp(-omega*dt);
+ shipError.copy(spacecraft.position).sub(shipTarget);
+ shipStep.copy(shipVelocity).addScaledVector(shipError,omega).multiplyScalar(dt);
+ spacecraft.position.copy(shipTarget).addScaledVector(shipError,decay).addScaledVector(shipStep,decay);
+ shipVelocity.addScaledVector(shipStep,-omega).multiplyScalar(decay);
+ const ease=1-Math.exp(-dt*3);
+ spacecraft.scale.setScalar(THREE.MathUtils.lerp(spacecraft.scale.x,targetScale,ease));
+ const bank=THREE.MathUtils.clamp(-shipVelocity.x*.012,-.12,.12);
+ spacecraft.rotation.z=THREE.MathUtils.lerp(spacecraft.rotation.z,bank,ease);
 }
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
 const routePositions=[];for(let i=0;i<nodes.length-1;i++){const n=nodes[i],next=nodes[(i+1)%10];routePositions.push(n.x,-2,n.z,next.x,-2,next.z);}const routeGeo=new THREE.BufferGeometry();routeGeo.setAttribute('position',new THREE.Float32BufferAttribute(routePositions,3));const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial({color:0x4b6b82,dashSize:.4,gapSize:.8,transparent:true,opacity:.40}));routes.computeLineDistances();scene.add(routes);
 let focus=new THREE.Vector3(-5,0,0),desired=new THREE.Vector3(-5,0,0),distance=105,wantedDistance=105,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,filter='all',selected=null;
+spacecraft.position.copy(focus);
 const initialAzimuth=Math.atan2(.15,.64),initialElevation=Math.atan2(.82,Math.hypot(.15,.64)),orbitRadius=Math.hypot(.15,.82,.64);
 let azimuth=initialAzimuth,elevation=initialElevation,wantedAzimuth=azimuth,wantedElevation=elevation;
 let pendingClick=null,clickTimer=null;
@@ -139,8 +128,8 @@ const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),ground=new THREE.Plane(n
 function pointOnPlane(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.ray.intersectPlane(ground,new THREE.Vector3());}
 function pick(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.intersectObjects(pickables,false).find(hit=>hit.object.visible&&hit.object.parent.visible)?.object.userData.node;}
 function clampFocus(){desired.x=THREE.MathUtils.clamp(desired.x,-105,105);desired.z=THREE.MathUtils.clamp(desired.z,-95,95);}
-function select(node){selected=node;sendShipTo(node);desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);$('#destination').hidden=false;$('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');$('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destLink').href=node.url;nodes.forEach(n=>n.label.classList.toggle('selected',n===node));}
-$('#close').onclick=()=>{$('#destination').hidden=true;selected=null;sendShipTo(null);nodes.forEach(n=>n.label.classList.remove('selected'));};
+function select(node){selected=node;desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);$('#destination').hidden=false;$('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');$('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destLink').href=node.url;nodes.forEach(n=>n.label.classList.toggle('selected',n===node));}
+$('#close').onclick=()=>{$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
 function home(){clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
 function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
@@ -210,7 +199,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
  });
  Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-1,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':metrics.opacity.toFixed(3);});
  if(now-lastHud>80){$('#zoomValue').textContent=(105/distance).toFixed(1)+'×';$('.intro').style.visibility=distance<75?'hidden':'visible';lastHud=now;}
- updateShip(now);
+ updateShip(dt);
  if(renderer){renderer.render(scene,camera);if(!document.body.classList.contains('ready')){document.body.classList.add('ready');$('#loading').setAttribute('aria-hidden','true');}}}
 frame(performance.now());
 
