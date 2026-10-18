@@ -1,5 +1,5 @@
-@font-face{font-family:Oxanium;src:url('./vendor/fonts/oxanium/Oxanium.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
-:root{font-family:Consolas,'Microsoft YaHei',monospace;color:#d9dfdf;background:#0a111b;color-scheme:dark}
+@font-face{font-family:Oxanium;src:url('./vendor/fonts/oxanium/Oxanium.ttf') format('truetype');font-style:normal;font-weight:200 800;font-display:swap}
+:root{--font-ui:Oxanium,'Noto Sans SC',sans-serif;font-family:var(--font-ui);font-synthesis:none;color:#d9dfdf;background:#0a111b;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;overflow:hidden}
 button,input{font:inherit}
@@ -14,13 +14,13 @@ header{position:fixed;left:4%;right:4%;top:26px;display:flex;align-items:center;
 .brand{font-size:20px;letter-spacing:4px;font-weight:bold}
 .search{margin-left:auto;display:flex;align-items:center;gap:12px;border-bottom:1px solid #74899a44;padding:10px 0;color:#9aaab3}
 .search input{width:220px;background:none;border:0;color:#d9dfdf;font-size:15px;outline:none}
-.search kbd{font-size:12px;border:1px solid #74899a44;padding:1px 5px;color:#647785}
+.search kbd{font-family:inherit;font-size:12px;border:1px solid #74899a44;padding:1px 5px;color:#647785}
 .intro{position:fixed;left:4%;top:127px;pointer-events:none;z-index:2}
 .intro h1{font-size:28px;font-weight:300;letter-spacing:3px;margin:15px 0}
 .intro div{font-size:14px;color:#7d8f9e;letter-spacing:1px}
 #labels,#sectorLabels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
 .node-label{position:absolute;left:0;top:0;transform:translate(-50%,0) scale(var(--label-scale,1));transform-origin:50% 0;pointer-events:auto;background:none;border:0;text-align:center;white-space:nowrap;padding:7px 12px;color:#c4d2dc;font-size:16px;letter-spacing:1px;opacity:var(--label-opacity,1);transition:color .2s,opacity .2s;text-shadow:0 2px 8px #000,0 0 16px #000}
-.node-label small{display:block;font-family:Oxanium,Consolas,monospace;font-size:.625em;font-weight:400;color:#7e93a5;margin:6px auto 0;letter-spacing:.7px;max-width:min(260px,calc((100vw - 48px)/1.9));white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.node-label small{display:block;font-family:var(--font-ui);font-size:.625em;font-weight:400;color:#7e93a5;margin:6px auto 0;letter-spacing:.7px;max-width:min(260px,calc((100vw - 48px)/1.9));white-space:normal;overflow-wrap:anywhere;line-height:1.5}
 .node-label:hover,.node-label.selected{color:#ffd39d;opacity:1}
 .node-label:hover small{color:#d1a971}
 .sector-label{position:absolute;text-transform:uppercase;color:#65849d66;letter-spacing:4px;font-size:13px;white-space:nowrap;transform:translate(-50%,-50%) scale(var(--label-scale,1));border-top:1px solid #65849d33;padding-top:12px;min-width:190px;pointer-events:none}
@@ -78,7 +78,7 @@ nav button{font-size:13px}
 #departureVeil{position:absolute;inset:0;background:#0a111b;opacity:0}
 .departure-status{position:absolute;left:5%;right:5%;bottom:13%;text-align:center;color:#d9dfdf;text-shadow:0 2px 12px #0a111b}
 .departure-status p{font-size:17px;letter-spacing:2px;margin:14px 0 8px}
-.departure-status small{display:block;font-family:Oxanium,monospace;font-size:12px;letter-spacing:1px;color:#8fa4b3}
+.departure-status small{display:block;font-family:var(--font-ui);font-size:12px;letter-spacing:1px;color:#8fa4b3}
 .departure-signal{display:inline-block;width:7px;height:7px;border-radius:50%;background:#edc795;box-shadow:0 0 18px #edc79588;animation:signalPulse 1s ease-in-out infinite alternate}
 #cancelDeparture{display:block;margin:22px auto 0;padding:8px 14px;font-size:12px;color:#8fa4b3;background:transparent;border:1px solid #74899a44;border-radius:8px;cursor:pointer}
 .departing header,.departing .intro,.departing footer,.departing .zoom,.departing #destination,.departing #labels,.departing #sectorLabels{opacity:0;transition:opacity .18s;pointer-events:none}
@@ -90,7 +90,7 @@ nav button{font-size:13px}
 @media(max-width:1000px){#destination{bottom:190px;width:min(320px,92vw)}}
 @media(max-width:700px){#destination{top:86px;bottom:auto;max-height:calc(50dvh - 95px);padding:18px}#destTitle{font-size:21px;margin-bottom:10px}#destDesc{font-size:13px;line-height:1.7}.entry-button{font-size:16px;min-height:58px;padding:16px 18px}}
 
-#destUrl{font-family:Oxanium,Consolas,monospace;font-size:12px;line-height:1.6;color:#8fa4b3;overflow-wrap:anywhere;margin:14px 0 0}
+#destUrl{font-family:var(--font-ui);font-size:12px;line-height:1.6;color:#8fa4b3;overflow-wrap:anywhere;margin:14px 0 0}
 #departureHost{overflow-wrap:anywhere;line-height:1.6}
 
 body{overscroll-behavior:none}
@@ -165,3 +165,5 @@ footer{transition:opacity .2s ease,transform .2s ease,visibility .2s}
 }
 
 .render-paused *,.render-paused *::before,.render-paused *::after{animation-play-state:paused!important}
+
+.search-icon{display:block;flex:none}

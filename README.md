@@ -18,7 +18,7 @@ CHARLY 的 Three.js 交互主页。每颗小行星代表一个站点、工具或
 
 纯静态站点，无需安装依赖或构建。使用任意静态 HTTP 服务，例如在仓库目录运行 `python -m http.server 8000`，访问 http://localhost:8000 。ES modules 不能通过直接双击 HTML 加载。
 
-根目录可直接部署至静态托管服务；保留原有部署方式即可。Three.js 已存放于 vendor，不依赖外部 CDN 或字体服务。网址使用本地 Oxanium 字体，突出航天仪表风格。
+根目录可直接部署至静态托管服务；保留原有部署方式即可。Three.js 已存放于 vendor，不依赖外部 CDN 或字体服务。界面英文和数字统一使用本地 Oxanium 可变字体（200–800），中文使用本地 Noto Sans SC 可变字体（300–700，思源黑体同源）。中文包含当前界面的小字包及按 Unicode 范围加载的完整分片；新增内容不需要重新生成字体，也不依赖 Google Fonts 在线服务。
 
 ## 字号与镜头缩放
 
@@ -37,3 +37,5 @@ CHARLY 的 Three.js 交互主页。每颗小行星代表一个站点、工具或
 Three.js 0.180.0 使用 MIT 许可证，详见 vendor/LICENSE。
 
 Oxanium 使用 SIL Open Font License 1.1，详见 vendor/fonts/oxanium/OFL.txt。
+
+Noto Sans SC 使用 SIL Open Font License 1.1，详见 vendor/fonts/noto-sans-sc/OFL.txt；字体来源和加载方式见 vendor/fonts/noto-sans-sc/README.md。
