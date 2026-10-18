@@ -23,7 +23,7 @@ for(const [id,label] of [['all','全部星区'],...Object.entries(groups).map(([
 }
 const canvas=$('#space');let renderer;
 try{renderer=new THREE.WebGLRenderer({canvas,antialias:true});}catch(e){throw new Error('无法创建 WebGL 场景：'+e.message);}
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x09111d);scene.fog=new THREE.FogExp2(0x09111d,.0016);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0a111b);scene.fog=new THREE.FogExp2(0x0a111b,.0016);
 const camera=new THREE.PerspectiveCamera(43,innerWidth/innerHeight,.1,1500);
 if(renderer){renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;}
 scene.add(new THREE.HemisphereLight(0xa6bfd7,0x0e1423,2.3));const sun=new THREE.DirectionalLight(0xffdfb6,4.3);sun.position.set(-15,25,15);scene.add(sun);const edge=new THREE.DirectionalLight(0x649bca,2);edge.position.set(15,5,-20);scene.add(edge);
@@ -32,7 +32,7 @@ function mesh(geometry,material,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geome
 function mat(color){return new THREE.MeshStandardMaterial({color,roughness:.88,metalness:.15,flatShading:true});}
 const c=document.createElement('canvas');c.width=c.height=128;const ctx=c.getContext('2d'),gradient=ctx.createRadialGradient(64,64,0,64,64,64);gradient.addColorStop(0,'rgba(255,255,255,.7)');gradient.addColorStop(.12,'rgba(255,255,255,.25)');gradient.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gradient;ctx.fillRect(0,0,128,128);const glowTexture=new THREE.CanvasTexture(c);
 function halo(parent,x,y,z,color,size,opacity){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture,color,transparent:true,opacity,blending:THREE.AdditiveBlending,depthWrite:false}));s.position.set(x,y,z);s.scale.setScalar(size);parent.add(s);return s;}
-halo(scene,-25,-18,-45,0x407297,110,.14);halo(scene,45,-23,0,0x655981,100,.11);halo(scene,-25,-26,45,0x396780,95,.12);
+halo(scene,-25,-18,-45,0x407297,110,.17);halo(scene,45,-23,0,0x655981,100,.13);halo(scene,-25,-26,45,0x396780,95,.15);
 const coords=[],colors=[];for(let i=0;i<3200;i++){const az=rand()*Math.PI*2,el=Math.acos(2*rand()-1),r=200+rand()*500;coords.push(Math.sin(el)*Math.cos(az)*r,Math.cos(el)*r,Math.sin(el)*Math.sin(az)*r);const light=.25+rand()*.7;colors.push(light*.85,light*.94,light);}
 const stars=new THREE.BufferGeometry();stars.setAttribute('position',new THREE.Float32BufferAttribute(coords,3));stars.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));scene.add(new THREE.Points(stars,new THREE.PointsMaterial({size:.65,vertexColors:true,sizeAttenuation:true,transparent:true,opacity:.85})));
 const dustPos=[];for(let i=0;i<800;i++)dustPos.push((rand()-.5)*250,(rand()-.5)*15-6,(rand()-.5)*210);const dust=new THREE.BufferGeometry();dust.setAttribute('position',new THREE.Float32BufferAttribute(dustPos,3));scene.add(new THREE.Points(dust,new THREE.PointsMaterial({color:0x5b7b91,size:.11,transparent:true,opacity:.5})));

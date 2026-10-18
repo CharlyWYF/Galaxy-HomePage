@@ -1,5 +1,5 @@
 @font-face{font-family:Oxanium;src:url('./vendor/fonts/oxanium/Oxanium.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
-:root{font-family:Consolas,'Microsoft YaHei',monospace;color:#d9dfdf;background:#09111d;color-scheme:dark}
+:root{font-family:Consolas,'Microsoft YaHei',monospace;color:#d9dfdf;background:#0a111b;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;overflow:hidden}
 button,input{font:inherit}
@@ -43,7 +43,7 @@ nav .active{color:#e5c295;border-bottom:1px solid #c2965e}
 #destDesc{font-size:15px;color:#8398a8;line-height:1.9}
 #destination small{font-size:12px;color:#586f82;display:block;margin-top:13px}
 #empty{position:fixed;top:50%;width:100%;text-align:center;font-size:16px;color:#9aaebc;pointer-events:none}
-#loading{position:fixed;inset:0;background:#09111d;display:flex;align-items:center;justify-content:center;gap:15px;z-index:10;letter-spacing:3px;font-size:15px;color:#b4c1c9;transition:opacity .6s}
+#loading{position:fixed;inset:0;background:#0a111b;display:flex;align-items:center;justify-content:center;gap:15px;z-index:10;letter-spacing:3px;font-size:15px;color:#b4c1c9;transition:opacity .6s}
 .ready #loading{opacity:0;pointer-events:none}
 .ready .intro{animation:arrive 1.3s both}
 @keyframes arrive{from{opacity:0;transform:translateY(8px)}
@@ -75,8 +75,8 @@ nav button{font-size:13px}
 #loading button{background:transparent;color:#edc795;border:1px solid #7b99ad66;border-radius:8px;padding:10px 18px;cursor:pointer;font:inherit}
 
 #departure{position:fixed;inset:0;z-index:20;cursor:progress}
-#departureVeil{position:absolute;inset:0;background:#09111d;opacity:0}
-.departure-status{position:absolute;left:5%;right:5%;bottom:13%;text-align:center;color:#d9dfdf;text-shadow:0 2px 12px #09111d}
+#departureVeil{position:absolute;inset:0;background:#0a111b;opacity:0}
+.departure-status{position:absolute;left:5%;right:5%;bottom:13%;text-align:center;color:#d9dfdf;text-shadow:0 2px 12px #0a111b}
 .departure-status p{font-size:17px;letter-spacing:2px;margin:14px 0 8px}
 .departure-status small{display:block;font-family:Oxanium,monospace;font-size:12px;letter-spacing:1px;color:#8fa4b3}
 .departure-signal{display:inline-block;width:7px;height:7px;border-radius:50%;background:#edc795;box-shadow:0 0 18px #edc79588;animation:signalPulse 1s ease-in-out infinite alternate}
