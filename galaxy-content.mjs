@@ -44,6 +44,7 @@ export function parseGalaxyContent(input){
   try{if(!['http:','https:'].includes(new URL(url).protocol))fail(path+'.url 只支持完整的 http/https 地址');}catch{fail(path+'.url 请填写完整的 http/https 地址');}
   if(item.desc!==undefined&&typeof item.desc!=='string')fail(path+'.desc 必须是文字');
   const planet={id,name:text(item.name,path+'.name'),url,desc:item.desc??'',group:item.group,x:number(item.x,path+'.x'),z:number(item.z,path+'.z'),r:number(item.radius,path+'.radius',.1),color:color(item.color,path+'.color')};
+  if(item.accentColor!==undefined)planet.accentColor=color(item.accentColor,path+'.accentColor');
   for(const key of ['ring','satellites','orbit','glow'])planet[key]=flag(item[key],path+'.'+key);
   return planet;
  });

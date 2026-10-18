@@ -1,4 +1,4 @@
-import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-sector-centers1';
+import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-black-gold1';
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft,updateSpacecraftThrust} from './spacecraft.js?v=20261018-exhaust1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
@@ -41,12 +41,25 @@ nodes.forEach(node=>{
  const body=new THREE.Group();body.position.set(node.x,0,node.z);scene.add(body);node.body=body;
  const geo=new THREE.IcosahedronGeometry(node.r,1),p=geo.attributes.position;
  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),noise=1+.12*Math.sin(x*3.1+y*4.2+z*2.3);p.setXYZ(i,x*noise,y*noise,z*noise);}geo.computeVertexNormals();
- const rock=mesh(geo,mat(node.color),body);rock.rotation.set(rand(),rand(),rand());rock.scale.set(1,.78+rand()*.3,1);rock.userData.node=node;pickables.push(rock);node.rock=rock;
+ const rockMaterial=mat(node.color);
+ if(node.accentColor!==undefined){
+  const base=new THREE.Color(node.color),accent=new THREE.Color(node.accentColor),colors=[];
+  for(let i=0;i<p.count;i+=3){
+   const x=(p.getX(i)+p.getX(i+1)+p.getX(i+2))/(3*node.r);
+   const y=(p.getY(i)+p.getY(i+1)+p.getY(i+2))/(3*node.r);
+   const z=(p.getZ(i)+p.getZ(i+1)+p.getZ(i+2))/(3*node.r);
+   const tint=Math.sin(x*7+z*5)+Math.cos(y*8-x*3)>1.1?accent:base;
+   for(let k=0;k<3;k++)colors.push(tint.r,tint.g,tint.b);
+  }
+  geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  rockMaterial.color.set(0xffffff);rockMaterial.vertexColors=true;rockMaterial.metalness=.55;rockMaterial.roughness=.6;
+ }
+ const rock=mesh(geo,rockMaterial,body);rock.rotation.set(rand(),rand(),rand());rock.scale.set(1,.78+rand()*.3,1);rock.userData.node=node;pickables.push(rock);node.rock=rock;
  if(node.group!=='home'){
  node.satelliteOrbits=[];
  for(let k=0;k<(node.satellites?3:0);k++){const a=rand()*Math.PI*2,r=node.r+1+rand()*1.3;const shard=mesh(new THREE.IcosahedronGeometry(.1+rand()*.22,0),mat(node.color),body,Math.cos(a)*r,(rand()-.5)*1.4,Math.sin(a)*r);shard.rotation.set(rand(),rand(),rand());shard.userData.node=node;pickables.push(shard);node.satelliteOrbits.push({mesh:shard,angle:a,radius:r,height:shard.position.y,speed:.12+k*.045+a*.008,spin:shard.rotation.clone()});}
- if(node.orbit){const orbit=mesh(new THREE.TorusGeometry(node.r+1,.012,4,64),new THREE.MeshBasicMaterial({color:node.color,transparent:true,opacity:.25}),body);orbit.rotation.x=Math.PI/2;node.orbit=orbit;}
- if(node.glow)halo(body,0,-.2,0,node.color,node.r*5,.15);
+ if(node.orbit){const orbit=mesh(new THREE.TorusGeometry(node.r+1,.012,4,64),new THREE.MeshBasicMaterial({color:node.accentColor??node.color,transparent:true,opacity:.25}),body);orbit.rotation.x=Math.PI/2;node.orbit=orbit;}
+ if(node.glow)halo(body,0,-.2,0,node.accentColor??node.color,node.r*5,.15);
  node.hoverGlow=halo(body,0,0,0,0xffffff,node.r*6.5,0);
  node.hoverGlow.visible=false;
  }

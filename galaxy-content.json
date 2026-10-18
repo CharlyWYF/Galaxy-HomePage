@@ -79,7 +79,8 @@
       "x": 46,
       "z": -3,
       "radius": 2.2,
-      "color": "#a56e67"
+      "color": "#17191d",
+      "accentColor": "#c6a15b"
     },
     {
       "id": "bitrate",
