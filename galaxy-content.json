@@ -71,6 +71,17 @@
       "ring": true
     },
     {
+      "id": "kingdom",
+      "name": "查理亡国",
+      "url": "https://www.charlyw.top/kingdom",
+      "desc": "玩家们的集结地，记录游戏公告、成员与日常。",
+      "group": "tool",
+      "x": 46,
+      "z": -3,
+      "radius": 2.2,
+      "color": "#a56e67"
+    },
+    {
       "id": "bitrate",
       "name": "视频码率计算器",
       "url": "https://ming.charlyw.top/cal",
