@@ -7,6 +7,7 @@ let touchMode=matchMedia('(hover: none) and (pointer: coarse)').matches,lastTouc
 function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'悬停了解星球，靠近后进入。';}
 updateInputMode(touchMode);
 document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){lastTouchTime=performance.now();updateInputMode(true);}else if(e.pointerType==='mouse')updateInputMode(false);},{capture:true});
+function mobileModelScale(){return touchMode&&(innerWidth<=700||innerHeight<=500)?1.25:1;}
 function displayUrl(url){return url.replace(/^https?:\/\//i,'');}
 const nodes=[
  {name:'Bing Chat 镜像',url:'https://bing.charlyw.top',group:'service',x:-29,z:-22,r:1.8,color:0x7a9a88,desc:'来自旧时代的聊天信号。坐标还在，频道是否有人值守已无从得知。'},
@@ -66,7 +67,7 @@ function updateShip(dt){
  // A point on the camera's center ray stays in front of the planet, not inside it.
  shipTarget.copy(camera.position).sub(focus);
  shipTarget.setLength(Math.min(4,shipTarget.length()*.25)).add(focus);
- const targetScale=THREE.MathUtils.lerp(.30,1,THREE.MathUtils.smoothstep(distance,42,110));
+ const targetScale=mobileModelScale()*THREE.MathUtils.lerp(.30,1,THREE.MathUtils.smoothstep(distance,42,110));
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
   spacecraft.position.copy(shipTarget);shipVelocity.set(0,0,0);
   spacecraft.scale.setScalar(targetScale);spacecraft.rotation.z=0;return;
@@ -254,7 +255,7 @@ canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane
 function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();}
 function fitCategory(){
  const visible=nodes.filter(n=>n.body.visible&&n.group!=='home');
- const fit=fitPlanetView(visible,{width:innerWidth,height:innerHeight,azimuth:wantedAzimuth,elevation:wantedElevation,fov:camera.fov,orbitRadius});
+ const fit=fitPlanetView(visible.map(n=>({...n,r:n.r*mobileModelScale()})),{width:innerWidth,height:innerHeight,azimuth:wantedAzimuth,elevation:wantedElevation,fov:camera.fov,orbitRadius});
  if(fit){desired.set(fit.x,0,fit.z);wantedDistance=fit.distance;clampFocus();}
 }
 $('#search').oninput=applyFilter;
@@ -320,6 +321,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
  }
  const radius=distance*orbitRadius,groundRadius=radius*Math.cos(elevation);camera.position.set(focus.x+Math.sin(azimuth)*groundRadius,radius*Math.sin(elevation),focus.z+Math.cos(azimuth)*groundRadius);camera.lookAt(focus);camera.updateMatrixWorld();updateInfoFraming(dt);
  nodes.forEach(n=>{
+  n.body.scale.setScalar(mobileModelScale());
   n.body.position.y=Math.sin(time*.5+n.phase)*.25;
   n.rock.rotation.y=n.phase+time*n.speed;
   if(n.orbit)n.orbit.material.opacity=n===selected ? .75 : .2;
@@ -339,7 +341,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
    n.labelLayoutKey=layoutKey;
   }
   const halfWidth=n.labelWidth*metrics.scale/2;
-  const labelTop=p.y+n.r*metrics.pixelsPerUnit+10*metrics.scale;
+  const labelTop=p.y+n.r*mobileModelScale()*metrics.pixelsPerUnit+10*metrics.scale;
   const labelBottom=labelTop+n.labelHeight*metrics.scale;
   n.label.style.left=THREE.MathUtils.clamp(p.x,halfWidth+12,innerWidth-halfWidth-12)+'px';
   n.label.style.top=labelTop+'px';
