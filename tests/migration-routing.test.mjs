@@ -16,6 +16,7 @@ try{
  const config=JSON.parse(await readFile(path.join(temp,'migration-config.json'),'utf8'));
  const vercel=JSON.parse(await readFile(path.join(temp,'vercel.json'),'utf8'));
  assert.equal(config.legacyOrigin,'https://legacy.example.test');
+ for(const directory of config.legacyDirectoryEntries??[])assert.equal(vercel.rewrites.find(rule=>rule.source===directory+'/')?.destination,config.legacyOrigin+directory+'/index.html');
  for(const prefix of config.legacyPaths){
   assert.equal(vercel.rewrites.find(rule=>rule.source===prefix)?.destination,config.legacyOrigin+prefix);
   if(!prefix.includes('.'))assert.equal(vercel.rewrites.find(rule=>rule.source===prefix+'/:path*')?.destination,config.legacyOrigin+prefix+'/:path*');

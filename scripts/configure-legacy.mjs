@@ -7,7 +7,7 @@ if(['charlyw.top','www.charlyw.top'].includes(url.hostname))throw new Error('The
 const settingsFile=new URL('../migration-config.json',import.meta.url),vercelFile=new URL('../vercel.json',import.meta.url);
 const settings=JSON.parse(await readFile(settingsFile,'utf8')),vercel=JSON.parse(await readFile(vercelFile,'utf8'));
 settings.legacyOrigin=url.origin;
-vercel.rewrites=[...Object.entries(settings.homepageAliases).map(([source,destination])=>({source,destination})),...settings.legacyPaths.flatMap(prefix=>{
+vercel.rewrites=[...Object.entries(settings.homepageAliases).map(([source,destination])=>({source,destination})),...(settings.legacyDirectoryEntries??[]).map(directory=>({source:directory+'/',destination:url.origin+directory+'/index.html'})),...settings.legacyPaths.flatMap(prefix=>{
  const exact={source:prefix,destination:url.origin+prefix};
  return prefix.includes('.')?[exact]:[exact,{source:prefix+'/:path*',destination:url.origin+prefix+'/:path*'}];
 })];

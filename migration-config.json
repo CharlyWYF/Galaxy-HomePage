@@ -21,5 +21,19 @@
     "/galaxy.css": "/assets/css/galaxy.css",
     "/galaxy-content.json": "/content/galaxy-content.json",
     "/vendor/:path*": "/assets/vendor/:path*"
-  }
+  },
+  "legacyDirectoryEntries": [
+    "/cal",
+    "/docs/derby_database",
+    "/docs/ydtx",
+    "/downloads",
+    "/flv",
+    "/kingdom",
+    "/kingdom/flip",
+    "/kingdom/gun",
+    "/kingdom/names",
+    "/kingdom/red",
+    "/kingdom/sat",
+    "/video"
+  ]
 }

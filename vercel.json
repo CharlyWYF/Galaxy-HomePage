@@ -38,6 +38,54 @@
       "destination": "/assets/vendor/:path*"
     },
     {
+      "source": "/cal/",
+      "destination": "https://hub.charlyw.top/cal/index.html"
+    },
+    {
+      "source": "/docs/derby_database/",
+      "destination": "https://hub.charlyw.top/docs/derby_database/index.html"
+    },
+    {
+      "source": "/docs/ydtx/",
+      "destination": "https://hub.charlyw.top/docs/ydtx/index.html"
+    },
+    {
+      "source": "/downloads/",
+      "destination": "https://hub.charlyw.top/downloads/index.html"
+    },
+    {
+      "source": "/flv/",
+      "destination": "https://hub.charlyw.top/flv/index.html"
+    },
+    {
+      "source": "/kingdom/",
+      "destination": "https://hub.charlyw.top/kingdom/index.html"
+    },
+    {
+      "source": "/kingdom/flip/",
+      "destination": "https://hub.charlyw.top/kingdom/flip/index.html"
+    },
+    {
+      "source": "/kingdom/gun/",
+      "destination": "https://hub.charlyw.top/kingdom/gun/index.html"
+    },
+    {
+      "source": "/kingdom/names/",
+      "destination": "https://hub.charlyw.top/kingdom/names/index.html"
+    },
+    {
+      "source": "/kingdom/red/",
+      "destination": "https://hub.charlyw.top/kingdom/red/index.html"
+    },
+    {
+      "source": "/kingdom/sat/",
+      "destination": "https://hub.charlyw.top/kingdom/sat/index.html"
+    },
+    {
+      "source": "/video/",
+      "destination": "https://hub.charlyw.top/video/index.html"
+    },
+    {
       "source": "/cal",
       "destination": "https://hub.charlyw.top/cal"
     },
