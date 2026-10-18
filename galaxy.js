@@ -35,9 +35,11 @@ nodes.forEach(node=>{
  const geo=new THREE.IcosahedronGeometry(node.r,1),p=geo.attributes.position;
  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),noise=1+.12*Math.sin(x*3.1+y*4.2+z*2.3);p.setXYZ(i,x*noise,y*noise,z*noise);}geo.computeVertexNormals();
  const rock=mesh(geo,mat(node.color),body);rock.rotation.set(rand(),rand(),rand());rock.scale.set(1,.78+rand()*.3,1);rock.userData.node=node;pickables.push(rock);node.rock=rock;
+ if(node.group!=='home'){
  for(let k=0;k<3;k++){const a=rand()*Math.PI*2,r=node.r+1+rand()*1.3;const shard=mesh(new THREE.IcosahedronGeometry(.1+rand()*.22,0),mat(node.color),body,Math.cos(a)*r,(rand()-.5)*1.4,Math.sin(a)*r);shard.rotation.set(rand(),rand(),rand());shard.userData.node=node;pickables.push(shard);}
  const orbit=mesh(new THREE.TorusGeometry(node.r+1,.012,4,64),new THREE.MeshBasicMaterial({color:node.color,transparent:true,opacity:.25}),body);orbit.rotation.x=Math.PI/2;node.orbit=orbit;
  halo(body,0,-.2,0,node.color,node.r*5,.15);
+ }
  if(node.ring){const ring=mesh(new THREE.RingGeometry(node.r*1.4,node.r*1.9,80),new THREE.MeshStandardMaterial({color:0xb78f65,side:THREE.DoubleSide,transparent:true,opacity:.5,roughness:1}),body);ring.rotation.set(-1.2,.1,.25);ring.userData.node=node;pickables.push(ring);}
  if(node.group==='home'){
   rock.visible=false;
@@ -46,10 +48,10 @@ nodes.forEach(node=>{
   const h=mat(0xb6b7af),d=mat(0x334554),gold=mat(0xcca66b);
   mesh(new THREE.CylinderGeometry(.65,.65,2.2,8),h,ship).rotation.z=Math.PI/2;
   for(const side of [-1,1]){mesh(new THREE.BoxGeometry(3,.08,.12),gold,ship,side*2.3,0,0);mesh(new THREE.BoxGeometry(2.5,.07,2),d,ship,side*2.7,0,0);}
-  mesh(new THREE.CylinderGeometry(.23,.3,1.1,8),h,ship,0,.9,0);halo(ship,0,1.5,0,0xffc071,2,.8);
+  mesh(new THREE.CylinderGeometry(.23,.3,1.1,8),h,ship,0,.9,0);
   ship.children.filter(o=>o.isMesh).forEach(m=>{m.userData.node=node;pickables.push(m);});
  }
- const label=document.createElement('button');label.className='node-label';label.innerHTML=node.name+'<span>↗</span><small>'+new URL(node.url).hostname+'</small>';label.setAttribute('aria-label',node.name+'，单击查看，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
+ const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+new URL(node.url).hostname+'</small>';label.setAttribute('aria-label',node.name+'，单击查看，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipDestination=new THREE.Vector3();
@@ -143,7 +145,7 @@ canvas.addEventListener('pointermove',e=>{
 });
 canvas.addEventListener('pointerup',e=>{if(!moved&&pointers.size===1&&e.button===0&&!pointers.get(e.pointerId)?.rotate){const node=pick(e.clientX,e.clientY);if(node)clickNode(node);}pointers.delete(e.pointerId);lastCenter=null;lastPinch=0;canvas.style.cursor='grab';});canvas.addEventListener('pointercancel',e=>pointers.delete(e.pointerId));
 canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane(e.clientX,e.clientY),ratio=Math.exp(THREE.MathUtils.clamp(e.deltaY,-200,200)*.0015),next=THREE.MathUtils.clamp(wantedDistance*ratio,13,230);if(anchor){const factor=1-next/wantedDistance;desired.x+=(anchor.x-desired.x)*factor;desired.z+=(anchor.z-desired.z)*factor;clampFocus();}wantedDistance=next;},{passive:false});
-function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible;if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if(selected&&!selected.body.visible)$('#close').click();}
+function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if(selected&&!selected.body.visible)$('#close').click();}
 $('#search').oninput=applyFilter;document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(n=>n.classList.toggle('active',n===b));applyFilter();if(filter!=='all'){const ns=nodes.filter(n=>n.group===filter);desired.set(ns.reduce((s,n)=>s+n.x,0)/ns.length,0,ns.reduce((s,n)=>s+n.z,0)/ns.length);wantedDistance=65;}else home();});
 function motion(){$('#motion').textContent=paused?'▷':'Ⅱ';$('#motion').setAttribute('aria-label',paused?'播放星体动画':'暂停星体动画');}motion();$('#motion').onclick=()=>{paused=!paused;motion();};
 document.addEventListener('keydown',e=>{if(departure){if(e.key==='Escape'){e.preventDefault();cancelDeparture();}return;}if(e.target instanceof HTMLInputElement){if(e.key==='Escape'){e.target.value='';applyFilter();e.target.blur();}return;}if(e.key==='/'){e.preventDefault();$('#search').focus();return;}if(e.key==='Escape'){$('#close').click();return;}const step=wantedDistance*.06;const moves={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]};if(moves[e.key]){e.preventDefault();desired.x+=moves[e.key][0];desired.z+=moves[e.key][1];clampFocus();}if(e.key==='+'||e.key==='=')$('#plus').click();if(e.key==='-')$('#minus').click();if(e.key==='Home')home();});
@@ -174,7 +176,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
  nodes.forEach(n=>{
   n.body.position.y=Math.sin(time*.5+n.phase)*.25;
   n.rock.rotation.y=n.phase+time*n.speed;
-  n.orbit.material.opacity=n===selected ? .75 : .2;
+  if(n.orbit)n.orbit.material.opacity=n===selected ? .75 : .2;
   const p=project(n.body.position),metrics=labelMetrics(n.body.position);
   n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
   n.label.querySelector('small').hidden=distance>100;
@@ -191,7 +193,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
   n.label.style.left=THREE.MathUtils.clamp(p.x,halfWidth+12,innerWidth-halfWidth-12)+'px';
   n.label.style.top=labelTop+'px';
   const onScreen=p.visible&&p.x>45&&p.x<innerWidth-45&&p.y>95&&labelBottom<innerHeight-100;
-  n.label.hidden=!n.body.visible||!onScreen;
+  n.label.hidden=!n.body.visible||!onScreen||(n.group==='home'&&n!==selected);
   n.label.style.setProperty('--label-opacity',metrics.opacity.toFixed(3));
  });
  Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-1,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':metrics.opacity.toFixed(3);});
