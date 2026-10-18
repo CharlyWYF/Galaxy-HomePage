@@ -23,7 +23,7 @@ for(const file of await files(publicRoot)){
 const content=parseGalaxyContent(JSON.parse(await readFile(path.join(publicRoot,'content/galaxy-content.json'),'utf8')));
 const migration=JSON.parse(await readFile(path.join(root,'migration-config.json'),'utf8'));
 const deployment=process.argv.includes('--deployment');
-if(deployment&&!migration.legacyOrigin)throw new Error('Migration not ready: deploy charly-sites first, then run node scripts/configure-legacy.mjs https://NEW-ORIGIN before deploying the homepage.');
+if(deployment&&!migration.legacyOrigin)throw new Error('Migration not ready: deploy CharlyHub first, then run node scripts/configure-legacy.mjs https://NEW-ORIGIN before deploying the homepage.');
 if(deployment){
  const vercel=JSON.parse(await readFile(path.join(root,'vercel.json'),'utf8'));
  for(const prefix of migration.legacyPaths){

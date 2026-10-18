@@ -36,6 +36,82 @@
     {
       "source": "/vendor/:path*",
       "destination": "/assets/vendor/:path*"
+    },
+    {
+      "source": "/cal",
+      "destination": "https://hub.charlyw.top/cal"
+    },
+    {
+      "source": "/cal/:path*",
+      "destination": "https://hub.charlyw.top/cal/:path*"
+    },
+    {
+      "source": "/kingdom",
+      "destination": "https://hub.charlyw.top/kingdom"
+    },
+    {
+      "source": "/kingdom/:path*",
+      "destination": "https://hub.charlyw.top/kingdom/:path*"
+    },
+    {
+      "source": "/docs",
+      "destination": "https://hub.charlyw.top/docs"
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "https://hub.charlyw.top/docs/:path*"
+    },
+    {
+      "source": "/flv",
+      "destination": "https://hub.charlyw.top/flv"
+    },
+    {
+      "source": "/flv/:path*",
+      "destination": "https://hub.charlyw.top/flv/:path*"
+    },
+    {
+      "source": "/video",
+      "destination": "https://hub.charlyw.top/video"
+    },
+    {
+      "source": "/video/:path*",
+      "destination": "https://hub.charlyw.top/video/:path*"
+    },
+    {
+      "source": "/downloads",
+      "destination": "https://hub.charlyw.top/downloads"
+    },
+    {
+      "source": "/downloads/:path*",
+      "destination": "https://hub.charlyw.top/downloads/:path*"
+    },
+    {
+      "source": "/apks",
+      "destination": "https://hub.charlyw.top/apks"
+    },
+    {
+      "source": "/apks/:path*",
+      "destination": "https://hub.charlyw.top/apks/:path*"
+    },
+    {
+      "source": "/sub",
+      "destination": "https://hub.charlyw.top/sub"
+    },
+    {
+      "source": "/sub/:path*",
+      "destination": "https://hub.charlyw.top/sub/:path*"
+    },
+    {
+      "source": "/style.css",
+      "destination": "https://hub.charlyw.top/style.css"
+    },
+    {
+      "source": "/icon",
+      "destination": "https://hub.charlyw.top/icon"
+    },
+    {
+      "source": "/icon/:path*",
+      "destination": "https://hub.charlyw.top/icon/:path*"
     }
   ]
 }

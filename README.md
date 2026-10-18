@@ -1,6 +1,6 @@
 # 查理の星空 · HomePage 2.0
 
-只负责三维星空主页和站点导航。工具、影音、游戏、资料及下载资源已在本地拆分到独立项目 `../charly-sites`；生产切换尚未执行。
+只负责三维星空主页和站点导航。工具、影音、游戏、资料及下载资源已在本地拆分到独立项目 `../CharlyHub`；生产切换尚未执行。
 
 ## 项目结构
 
@@ -59,7 +59,7 @@ npm run dev
 
 Vercel 只部署 `public/`，构建命令为 `node scripts/check.mjs --deployment`。
 
-**当前迁移分支不能直接发布。** 需先部署独立内容项目，再运行：
+**当前迁移分支不能直接发布。** 目标私有仓库已创建并推送：https://github.com/CharlyWYF/CharlyHub 。目标域名为 `hub.charlyw.top`，旧路径规则已配置，但新项目尚未完成 Vercel 部署验证，因此暂不合并上线。首次或以后更换地址时使用：
 
 ```sh
 node scripts/configure-legacy.mjs https://NEW-SITES-DOMAIN
