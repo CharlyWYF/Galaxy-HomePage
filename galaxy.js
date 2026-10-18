@@ -297,11 +297,11 @@ document.addEventListener('keydown',e=>{if(departure){if(e.key==='Escape'){e.pre
 // Keep distant labels small and quiet; preserve the larger close-up labels.
 // Use each label's camera depth so panning and rotation also preserve perspective.
 const labelViewPosition=new THREE.Vector3();
-function labelMetrics(position){
+function labelMetrics(position,minScale=.72){
  const depth=Math.max(.1,-labelViewPosition.copy(position).applyMatrix4(camera.matrixWorldInverse).z);
  const zoom=defaultDistance()*orbitRadius/depth;
  const emphasis=THREE.MathUtils.smoothstep(zoom,1,1.6);
- const scale=THREE.MathUtils.clamp(Math.pow(zoom,.55)*(.8+.2*emphasis),.72,1.9);
+ const scale=THREE.MathUtils.clamp(Math.pow(zoom,.55)*(.8+.2*emphasis),minScale,1.9);
  const opacity=.45+.55*THREE.MathUtils.smoothstep(zoom,.8,1.7);
  return {scale, opacity, pixelsPerUnit:innerHeight/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*depth)};
 }
@@ -362,7 +362,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
    n.hoverGlow.material.opacity=THREE.MathUtils.lerp(n.hoverGlow.material.opacity,target,paused?1:1-Math.exp(-dt*10));
    n.hoverGlow.visible=n.hoverGlow.material.opacity>.002;
   }
-  const p=project(n.body.position),metrics=labelMetrics(n.body.position);
+  const p=project(n.body.position),metrics=labelMetrics(n.body.position,mobileModelScale()>1?.55:.72);
   n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
   n.label.querySelector('small').hidden=distance>100;
   // Cache unscaled bounds; only text visibility and viewport changes affect them.
