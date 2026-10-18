@@ -1,3 +1,4 @@
+import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-content1';
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
@@ -9,20 +10,17 @@ updateInputMode(touchMode);
 document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){lastTouchTime=performance.now();updateInputMode(true);}else if(e.pointerType==='mouse')updateInputMode(false);},{capture:true});
 function mobileModelScale(){return touchMode&&(innerWidth<=700||innerHeight<=500)?1.25:1;}
 function displayUrl(url){return url.replace(/^https?:\/\//i,'');}
-const nodes=[
- {name:'Bing Chat 镜像',url:'https://bing.charlyw.top',group:'service',x:-29,z:-22,r:1.8,color:0x7a9a88,desc:'来自旧时代的聊天信号。坐标还在，频道是否有人值守已无从得知。'},
- {name:'NextChat',url:'https://chat.charlyw.top',group:'service',x:-12,z:-31,r:2.4,color:0x8fb9b2,desc:'一颗用于对话的小行星。曾经在这里部署过自己的聊天入口。'},
- {name:'小铭的站',url:'https://ming.charlyw.top',group:'service',x:7,z:-25,r:1.6,color:0x7b99b8,desc:'附近星区的一座小站。沿着这条航线，去别处看看。'},
- {name:'深夜放映厅',url:'https://www.charlyw.top/flv',group:'tool',x:29,z:-13,r:2.1,color:0xa48299,desc:'一座在夜里点灯的放映厅。这里存放着曾经的观影入口。'},
- {name:'视频码率计算器',url:'https://ming.charlyw.top/cal',group:'tool',x:34,z:8,r:1.8,color:0xaa9870,desc:'一件留在轨道上的小工具，用来计算视频码率。'},
- {name:'PIZZA 星球',url:'https://pizza.charlyw.top',group:'tool',x:15,z:21,r:2.5,color:0xbf8c58,desc:'一颗有点不严肃的星球。很久以前，这里有过一个简陋的 PIZZA 网站。',ring:true},
- {name:'通信原理',url:'https://txyl.charlyw.top',group:'memory',x:-6,z:29,r:1.7,color:0x729fac,desc:'以前整理的通信原理知识点。像一段仍在传播的电磁波。'},
- {name:'Derby SQL',url:'https://www.charlyw.top/docs/derby_database',group:'memory',x:-25,z:20,r:1.6,color:0x9d8b7c,desc:'数据库笔记的旧坐标。一些当时认真记录过的东西。'},
- {name:'移动通信复习',url:'https://www.charlyw.top/docs/ydtx',group:'memory',x:-40,z:3,r:1.8,color:0x8993ad,desc:'留在这里的考试季记忆。一颗慢慢自转的旧知识星球。'},
- {name:'大数据复习',url:'https://www.charlyw.top/docs/dsj/dsj.html',group:'memory',x:-43,z:35,r:2.1,color:0x83977d,desc:'关于大数据的旧资料，封存在这片安静的星区。'},
- {name:'星图原点',url:new URL('/',window.location.href).href,group:'home',x:0,z:0,r:1.4,color:0xd6ad75,desc:'这片星图的零号坐标。无论航行多远，都可以回到这里，重新选择方向。'}
-];
-const groups={service:{name:'信号星区',sub:'SIGNALS',color:'#86b7b2',x:-15,z:-41},tool:{name:'游乐星区',sub:'PLAYGROUND',color:'#d4a36f',x:30,z:-24},memory:{name:'记忆星区',sub:'MEMORIES',color:'#969bc2',x:-31,z:42}};
+// Content is revalidated on each visit, so editing JSON needs no version bump.
+const contentResponse=await fetch(new URL('./galaxy-content.json',import.meta.url),{cache:'no-cache'});
+if(!contentResponse.ok)throw new Error('无法读取星图配置：HTTP '+contentResponse.status);
+const content=parseGalaxyContent(await contentResponse.json());
+const groups=content.sectors;
+const nodes=[...content.planets,{id:'home',name:'星图原点',url:new URL('/',window.location.href).href,group:'home',x:0,z:0,r:1.4,color:0xd6ad75,desc:'这片星图的零号坐标。无论航行多远，都可以回到这里，重新选择方向。'}];
+const navigation=$('nav');
+navigation.replaceChildren();
+for(const [id,label] of [['all','全部星区'],...Object.entries(groups).map(([id,g])=>[id,g.label])]){
+ const button=document.createElement('button');button.dataset.filter=id;button.textContent=label;button.classList.toggle('active',id==='all');navigation.append(button);
+}
 const canvas=$('#space');let renderer;
 try{renderer=new THREE.WebGLRenderer({canvas,antialias:true});}catch(e){throw new Error('无法创建 WebGL 场景：'+e.message);}
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x070b13);scene.fog=new THREE.FogExp2(0x070b13,.0016);
@@ -45,9 +43,9 @@ nodes.forEach(node=>{
  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),noise=1+.12*Math.sin(x*3.1+y*4.2+z*2.3);p.setXYZ(i,x*noise,y*noise,z*noise);}geo.computeVertexNormals();
  const rock=mesh(geo,mat(node.color),body);rock.rotation.set(rand(),rand(),rand());rock.scale.set(1,.78+rand()*.3,1);rock.userData.node=node;pickables.push(rock);node.rock=rock;
  if(node.group!=='home'){
- for(let k=0;k<3;k++){const a=rand()*Math.PI*2,r=node.r+1+rand()*1.3;const shard=mesh(new THREE.IcosahedronGeometry(.1+rand()*.22,0),mat(node.color),body,Math.cos(a)*r,(rand()-.5)*1.4,Math.sin(a)*r);shard.rotation.set(rand(),rand(),rand());shard.userData.node=node;pickables.push(shard);}
- const orbit=mesh(new THREE.TorusGeometry(node.r+1,.012,4,64),new THREE.MeshBasicMaterial({color:node.color,transparent:true,opacity:.25}),body);orbit.rotation.x=Math.PI/2;node.orbit=orbit;
- halo(body,0,-.2,0,node.color,node.r*5,.15);
+ for(let k=0;k<(node.satellites?3:0);k++){const a=rand()*Math.PI*2,r=node.r+1+rand()*1.3;const shard=mesh(new THREE.IcosahedronGeometry(.1+rand()*.22,0),mat(node.color),body,Math.cos(a)*r,(rand()-.5)*1.4,Math.sin(a)*r);shard.rotation.set(rand(),rand(),rand());shard.userData.node=node;pickables.push(shard);}
+ if(node.orbit){const orbit=mesh(new THREE.TorusGeometry(node.r+1,.012,4,64),new THREE.MeshBasicMaterial({color:node.color,transparent:true,opacity:.25}),body);orbit.rotation.x=Math.PI/2;node.orbit=orbit;}
+ if(node.glow)halo(body,0,-.2,0,node.color,node.r*5,.15);
  node.hoverGlow=halo(body,0,0,0,0xffffff,node.r*6.5,0);
  node.hoverGlow.visible=false;
  }
@@ -58,7 +56,7 @@ nodes.forEach(node=>{
   const ship=createSpacecraft();scene.add(ship);node.ship=ship;
   ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
  }
- const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<small>'+displayUrl(node.url)+'</small>';label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
+ const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.append(document.createTextNode(node.name));const host=document.createElement('small');host.textContent=displayUrl(node.url);label.append(host);label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
@@ -85,7 +83,21 @@ function updateShip(dt){
  spacecraft.rotation.z=THREE.MathUtils.lerp(spacecraft.rotation.z,bank,ease);
 }
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
-const routePositions=[];for(let i=0;i<nodes.length-1;i++){const n=nodes[i],next=nodes[(i+1)%10];routePositions.push(n.x,-2,n.z,next.x,-2,next.z);}const routeGeo=new THREE.BufferGeometry();routeGeo.setAttribute('position',new THREE.Float32BufferAttribute(routePositions,3));const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial({color:0x4b6b82,dashSize:.4,gapSize:.8,transparent:true,opacity:.40}));routes.computeLineDistances();scene.add(routes);
+const routePairs=buildRoutePairs(content.planets,content.routes);
+const nodesById=new Map(nodes.map(n=>[n.id,n]));
+const routeGeo=new THREE.BufferGeometry();
+const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial({color:content.routes.color,dashSize:content.routes.dashSize,gapSize:content.routes.gapSize,transparent:true,opacity:content.routes.opacity}));scene.add(routes);
+function updateRoutes(){
+ const positions=[];
+ for(const [from,to] of routePairs){
+  const a=nodesById.get(from),b=nodesById.get(to);
+  if(a.body.visible&&b.body.visible)positions.push(a.x,-2,a.z,b.x,-2,b.z);
+ }
+ routeGeo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+ routes.visible=positions.length>0;
+ if(routes.visible){routeGeo.computeBoundingSphere();routes.computeLineDistances();}
+}
+updateRoutes();
 let focus=new THREE.Vector3(-5,0,0),desired=new THREE.Vector3(-5,0,0),distance=105,wantedDistance=105,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,filter='all',selected=null;
 let infoNode=null,infoTimer=null,nearbyNode=null;
 spacecraft.position.copy(focus);
@@ -136,7 +148,8 @@ addEventListener('pageshow',e=>{if(e.persisted)cancelDeparture();});
 const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),ground=new THREE.Plane(new THREE.Vector3(0,1,0),0),projection=new THREE.Vector3();
 function pointOnPlane(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.ray.intersectPlane(ground,new THREE.Vector3());}
 function pick(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);const hits=ray.intersectObjects(pickables,false).filter(hit=>hit.object.visible&&hit.object.parent.visible);return (hits.find(hit=>hit.object.userData.node.group!=='home')||hits[0])?.object.userData.node;}
-function clampFocus(){desired.x=THREE.MathUtils.clamp(desired.x,-105,105);desired.z=THREE.MathUtils.clamp(desired.z,-95,95);}
+const navigationBounds={minX:Math.min(-105,...nodes.map(n=>n.x-n.r-30)),maxX:Math.max(105,...nodes.map(n=>n.x+n.r+30)),minZ:Math.min(-95,...nodes.map(n=>n.z-n.r-30)),maxZ:Math.max(95,...nodes.map(n=>n.z+n.r+30))};
+function clampFocus(){desired.x=THREE.MathUtils.clamp(desired.x,navigationBounds.minX,navigationBounds.maxX);desired.z=THREE.MathUtils.clamp(desired.z,navigationBounds.minZ,navigationBounds.maxZ);}
 function showInfo(node){
  if(departure||!node.body.visible)return;
  clearTimeout(infoTimer);infoTimer=null;infoNode=node;
@@ -252,7 +265,7 @@ canvas.addEventListener('pointerup',e=>releasePointer(e));
 canvas.addEventListener('pointercancel',e=>releasePointer(e,true));
 canvas.addEventListener('lostpointercapture',e=>releasePointer(e,true));
 canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane(e.clientX,e.clientY),ratio=Math.exp(THREE.MathUtils.clamp(e.deltaY,-200,200)*.0015),next=THREE.MathUtils.clamp(wantedDistance*ratio,13,600);if(anchor){const factor=1-next/wantedDistance;desired.x+=(anchor.x-desired.x)*factor;desired.z+=(anchor.z-desired.z)*factor;clampFocus();}wantedDistance=next;},{passive:false});
-function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();}
+function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();updateRoutes();}
 function fitCategory(){
  const visible=nodes.filter(n=>n.body.visible&&n.group!=='home');
  const fit=fitPlanetView(visible.map(n=>({...n,r:n.r*mobileModelScale()})),{width:innerWidth,height:innerHeight,azimuth:wantedAzimuth,elevation:wantedElevation,fov:camera.fov,orbitRadius});
