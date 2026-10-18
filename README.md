@@ -24,7 +24,7 @@ CHARLY 的 Three.js 交互主页。每颗小行星代表一个站点、工具或
 
 ## 维护
 
-首页为 index.html、galaxy.css、galaxy.js。星球名称、链接、坐标、颜色和描述集中在 galaxy.js 顶部的 nodes 数组。更改脚本或样式后，同步更新 index.html 中的资源版本号以避免旧缓存。
+首页为 index.html、galaxy.css、galaxy.js；飞船模型由 spacecraft.js 中的轻量几何体生成。星球名称、链接、坐标、颜色和描述集中在 galaxy.js 顶部的 nodes 数组。更改脚本或样式后，同步更新 index.html 中的资源版本号以避免旧缓存。
 
 原有 docs、cal、downloads、flv 等路径继续保留。历史外部服务可能已经停用，链接展示不代表服务存活状态。
 

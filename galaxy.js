@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.js';
+import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
 const $=s=>document.querySelector(s);
 const nodes=[
  {name:'Bing Chat 镜像',url:'https://bing.charlyw.top',group:'service',x:-29,z:-22,r:1.8,color:0x7a9a88,desc:'来自旧时代的聊天信号。坐标还在，频道是否有人值守已无从得知。'},
@@ -46,12 +47,8 @@ nodes.forEach(node=>{
  if(node.group==='home'){
   rock.visible=false;
   // The spacecraft travels independently; the origin's coordinates stay fixed.
-  const ship=new THREE.Group();scene.add(ship);node.ship=ship;
-  const h=mat(0xb6b7af),d=mat(0x334554),gold=mat(0xcca66b);
-  mesh(new THREE.CylinderGeometry(.65,.65,2.2,8),h,ship).rotation.z=Math.PI/2;
-  for(const side of [-1,1]){mesh(new THREE.BoxGeometry(3,.08,.12),gold,ship,side*2.3,0,0);mesh(new THREE.BoxGeometry(2.5,.07,2),d,ship,side*2.7,0,0);}
-  mesh(new THREE.CylinderGeometry(.23,.3,1.1,8),h,ship,0,.9,0);
-  ship.children.filter(o=>o.isMesh).forEach(m=>{m.userData.node=node;pickables.push(m);});
+  const ship=createSpacecraft();scene.add(ship);node.ship=ship;
+  ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
  }
  const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+new URL(node.url).hostname+'</small>';label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;label.onpointerenter=()=>showInfo(node);label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
