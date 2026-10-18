@@ -166,6 +166,10 @@ function updateEntry(){
  }
 }
 function home(){clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
+function isHomeView(){
+ const angle=Math.atan2(Math.sin(wantedAzimuth-initialAzimuth),Math.cos(wantedAzimuth-initialAzimuth));
+ return Math.hypot(desired.x+5,desired.z)<.2&&Math.abs(wantedDistance-defaultDistance())<.5&&Math.abs(angle)<.01&&Math.abs(wantedElevation-initialElevation)<.01;
+}
 function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
 $('#home').onclick=home;$('#plus').onclick=()=>wantedDistance=Math.max(13,wantedDistance*.78);$('#minus').onclick=()=>wantedDistance=Math.min(230,wantedDistance*1.28);
@@ -313,7 +317,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
   n.label.style.setProperty('--label-opacity',metrics.opacity.toFixed(3));
  });
  Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-1,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':metrics.opacity.toFixed(3);});
- if(now-lastHud>80){$('#zoomValue').textContent=(105/distance).toFixed(1)+'×';$('.intro').style.visibility=distance<75?'hidden':'visible';lastHud=now;}
+ if(now-lastHud>80){document.body.classList.toggle('view-changed',!isHomeView());$('#zoomValue').textContent=(105/distance).toFixed(1)+'×';$('.intro').style.visibility=distance<75?'hidden':'visible';lastHud=now;}
  updateShip(dt);
  updateEntry();
  if(renderer){renderer.render(scene,camera);if(!document.body.classList.contains('ready')){document.body.classList.add('ready');$('#loading').setAttribute('aria-hidden','true');}}}
