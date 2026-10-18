@@ -56,7 +56,7 @@ nodes.forEach(node=>{
   const ship=createSpacecraft();scene.add(ship);node.ship=ship;
   ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
  }
- const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.append(document.createTextNode(node.name));const host=document.createElement('small');host.textContent=displayUrl(node.url);label.append(host);label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
+ const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.append(document.createTextNode(node.name));const host=document.createElement('small');host.textContent=displayUrl(node.url);label.append(host);label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node,e.clientX,e.clientY);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
@@ -114,9 +114,16 @@ function updateAutoOrbit(now,dt){
  const turn=autoOrbitSpeed*dt;
  wantedAzimuth+=turn;autoOrbitOffset+=turn;
 }
-let pendingClick=null,clickTimer=null;
-// 等待双击判定结束后才移动镜头，避免第二次点击时星球已经移走。
-function clickNode(node){const now=performance.now();if(pendingClick?.node===node&&now-pendingClick.time<=450){clearTimeout(clickTimer);pendingClick=null;enterPlanet(node);return;}clearTimeout(clickTimer);pendingClick={node,time:now};clickTimer=setTimeout(()=>{pendingClick=null;select(node);},450);}
+let pendingClick=null;
+// Start moving immediately; keep only a record for recognizing a second click.
+function clickNode(node,x,y){
+ const now=performance.now(),previous=pendingClick;
+ if(previous&&now-previous.time<=450&&(previous.node===node||Math.hypot(x-previous.x,y-previous.y)<30)){
+  pendingClick=null;enterPlanet(previous.node);return;
+ }
+ pendingClick=node?{node,x,y,time:now}:null;
+ if(node)select(node);
+}
 // Keep departure feedback visible while the browser waits for the destination.
 let departure=null;
 const departureUI=$('#departure'),departureVeil=$('#departureVeil');
@@ -124,7 +131,7 @@ const departureControls=[canvas,$('header'),$('.intro'),$('#labels'),$('#sectorL
 function enterPlanet(node){
  if(departure)return;
  cancelTouchTap();
- clearTimeout(clickTimer);pendingClick=null;
+ pendingClick=null;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  departure={node,start:performance.now(),duration:reduced?120:950,reduced,focus:focus.clone(),distance,active:document.activeElement};
  $('#departureTitle').textContent='正在前往 '+node.name;
@@ -192,7 +199,7 @@ function updateEntry(){
   if(nearest){$('#destLink').href=nearest.url;$('#destLink').title=displayUrl(nearest.url);$('#entryText').textContent='进入 '+nearest.name;}
  }
 }
-function home(){pauseAutoOrbit();autoOrbitOffset=0;cancelTouchTap();clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
+function home(){pauseAutoOrbit();autoOrbitOffset=0;cancelTouchTap();pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
 function isHomeView(){
  const angle=Math.atan2(Math.sin(wantedAzimuth-initialAzimuth-autoOrbitOffset),Math.cos(wantedAzimuth-initialAzimuth-autoOrbitOffset));
  return Math.hypot(desired.x+5,desired.z)<.2&&Math.abs(wantedDistance-defaultDistance())<.5&&Math.abs(angle)<.01&&Math.abs(wantedElevation-initialElevation)<.01;
@@ -201,12 +208,12 @@ function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
 $('#home').onclick=home;$('#plus').onclick=()=>wantedDistance=Math.max(13,wantedDistance*.78);$('#minus').onclick=()=>wantedDistance=Math.min(600,wantedDistance*1.28);
 const pointers=new Map();let moved=false,lastGesture=null,pendingTouchTap=null;
-function cancelTouchTap(){if(pendingTouchTap)clearTimeout(pendingTouchTap.timer);pendingTouchTap=null;}
+function cancelTouchTap(){pendingTouchTap=null;}
 function handleTouchTap(node,x,y){
  const now=performance.now(),previous=pendingTouchTap;
  if(previous&&now-previous.time<=300&&Math.hypot(x-previous.x,y-previous.y)<30){
   cancelTouchTap();
-  const target=node||previous.node,before=wantedDistance;
+  const target=previous.node||node,before=wantedDistance;
   if(target){select(target,true);wantedDistance=Math.max(13,Math.min(wantedDistance,before*.6));}
   else{
    dismissTouchInfo();const anchor=pointOnPlane(x,y),next=Math.max(13,before*.6);
@@ -215,16 +222,14 @@ function handleTouchTap(node,x,y){
   }
   return;
  }
- if(previous){clearTimeout(previous.timer);pendingTouchTap=null;if(previous.node)select(previous.node,true);}
- const tap={node,x,y,time:now};
- tap.timer=setTimeout(()=>{if(pendingTouchTap!==tap)return;pendingTouchTap=null;if(node)select(node,true);else $('#close').click();},300);
- pendingTouchTap=tap;
+ if(node)select(node,true);else $('#close').click();
+ pendingTouchTap={node,x,y,time:now};
 }
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 function pointerDown(e){
  if(departure||(e.pointerType==='mouse'&&e.button!==0&&e.button!==2))return;
  e.preventDefault();canvas.setPointerCapture(e.pointerId);
- if(e.pointerType==='touch'){clearTimeout(clickTimer);pendingClick=null;}
+ if(e.pointerType==='touch'){pendingClick=null;}
  if(!pointers.size){moved=false;lastGesture=null;}
  const label=e.target.closest?.('.node-label');
  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,rotate:e.button===2,node:nodes.find(n=>n.label===label)});
@@ -265,7 +270,7 @@ function releasePointer(e,cancelled=false){
  if(!cancelled&&!moved&&pointers.size===1&&e.button===0&&!pointer.rotate){
   const node=pointer.node||pick(e.clientX,e.clientY);
   if(e.pointerType==='touch'){lastTouchTime=performance.now();handleTouchTap(node,e.clientX,e.clientY);}
-  else if(node)clickNode(node);
+  else clickNode(node,e.clientX,e.clientY);
  }
  pointers.delete(e.pointerId);lastGesture=null;
  if(pointers.size){moved=true;for(const p of pointers.values()){p.startX=p.x;p.startY=p.y;}}
@@ -284,7 +289,7 @@ function fitCategory(){
 }
 $('#search').oninput=applyFilter;
 document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{
- cancelTouchTap();clearTimeout(clickTimer);pendingClick=null;$('#close').click();
+ cancelTouchTap();pendingClick=null;$('#close').click();
  filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(n=>n.classList.toggle('active',n===b));applyFilter();
  fitCategory();
 });
