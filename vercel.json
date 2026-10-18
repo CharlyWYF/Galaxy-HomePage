@@ -113,5 +113,6 @@
       "source": "/icon/:path*",
       "destination": "https://hub.charlyw.top/icon/:path*"
     }
-  ]
+  ],
+  "trailingSlash": true
 }
