@@ -101,7 +101,7 @@ updateRoutes();
 let focus=new THREE.Vector3(-5,0,0),desired=new THREE.Vector3(-5,0,0),distance=105,wantedDistance=105,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,filter='all',selected=null;
 let infoNode=null,infoTimer=null,nearbyNode=null;
 spacecraft.position.copy(focus);
-const initialAzimuth=Math.atan2(.15,.64),initialElevation=Math.atan2(.82,Math.hypot(.15,.64)),orbitRadius=Math.hypot(.15,.82,.64);
+const initialAzimuth=Math.atan2(.15,.64),initialElevation=Math.PI/4,orbitRadius=Math.hypot(.15,.82,.64);
 let azimuth=initialAzimuth,elevation=initialElevation,wantedAzimuth=azimuth,wantedElevation=elevation;
 // Slow idle orbit; user input pauses immediately and restarts after 2 seconds.
 let autoOrbitLastActivity=-Infinity,autoOrbitSpeed=0,autoOrbitOffset=0;
