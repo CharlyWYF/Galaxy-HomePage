@@ -49,13 +49,51 @@ nodes.forEach(node=>{
  const label=document.createElement('button');label.className='node-label';label.innerHTML=node.name+'<span>↗</span><small>'+new URL(node.url).hostname+'</small>';label.setAttribute('aria-label',node.name+'，单击查看，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
-const routePositions=[];for(let i=0;i<nodes.length-1;i++){const n=nodes[i],next=nodes[(i+1)%10];routePositions.push(n.x,-2,n.z,next.x,-2,next.z);}const routeGeo=new THREE.BufferGeometry();routeGeo.setAttribute('position',new THREE.Float32BufferAttribute(routePositions,3));const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial({color:0x4b6b82,dashSize:.4,gapSize:.8,transparent:true,opacity:.2}));routes.computeLineDistances();scene.add(routes);
+const routePositions=[];for(let i=0;i<nodes.length-1;i++){const n=nodes[i],next=nodes[(i+1)%10];routePositions.push(n.x,-2,n.z,next.x,-2,next.z);}const routeGeo=new THREE.BufferGeometry();routeGeo.setAttribute('position',new THREE.Float32BufferAttribute(routePositions,3));const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial({color:0x4b6b82,dashSize:.4,gapSize:.8,transparent:true,opacity:.40}));routes.computeLineDistances();scene.add(routes);
 let focus=new THREE.Vector3(-5,0,0),desired=new THREE.Vector3(-5,0,0),distance=105,wantedDistance=105,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,filter='all',selected=null;
 const initialAzimuth=Math.atan2(.15,.64),initialElevation=Math.atan2(.82,Math.hypot(.15,.64)),orbitRadius=Math.hypot(.15,.82,.64);
 let azimuth=initialAzimuth,elevation=initialElevation,wantedAzimuth=azimuth,wantedElevation=elevation;
 let pendingClick=null,clickTimer=null;
 // 等待双击判定结束后才移动镜头，避免第二次点击时星球已经移走。
-function clickNode(node){const now=performance.now();if(pendingClick?.node===node&&now-pendingClick.time<=450){clearTimeout(clickTimer);pendingClick=null;window.location.assign(node.url);return;}clearTimeout(clickTimer);pendingClick={node,time:now};clickTimer=setTimeout(()=>{pendingClick=null;select(node);},450);}
+function clickNode(node){const now=performance.now();if(pendingClick?.node===node&&now-pendingClick.time<=450){clearTimeout(clickTimer);pendingClick=null;enterPlanet(node);return;}clearTimeout(clickTimer);pendingClick={node,time:now};clickTimer=setTimeout(()=>{pendingClick=null;select(node);},450);}
+// Keep departure feedback visible while the browser waits for the destination.
+let departure=null;
+const departureUI=$('#departure'),departureVeil=$('#departureVeil');
+const departureControls=[canvas,$('header'),$('.intro'),$('#labels'),$('#sectorLabels'),$('#destination'),$('.zoom'),$('footer')];
+function enterPlanet(node){
+ if(departure)return;
+ clearTimeout(clickTimer);pendingClick=null;
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ departure={node,start:performance.now(),duration:reduced?120:950,reduced,focus:focus.clone(),distance,active:document.activeElement};
+ $('#departureTitle').textContent='正在前往 '+node.name;
+ $('#departureHost').textContent=new URL(node.url).hostname;
+ departureUI.hidden=false;document.body.classList.add('departing');
+ departureControls.forEach(el=>el.inert=true);
+ $('#cancelDeparture').focus({preventScroll:true});
+ departure.timer=setTimeout(()=>{
+  if(!departure)return;
+  departureVeil.style.opacity='1';
+  $('#departureTitle').textContent='正在连接 '+node.name+'…';
+  window.location.assign(node.url);
+ },departure.duration);
+}
+function cancelDeparture(){
+ if(!departure)return;
+ const previousDeparture=departure;
+ clearTimeout(previousDeparture.timer);
+ window.stop();
+ focus.copy(previousDeparture.focus);desired.copy(previousDeparture.focus);
+ distance=wantedDistance=previousDeparture.distance;
+ departure=null;departureUI.hidden=true;departureVeil.style.opacity='0';
+ document.body.classList.remove('departing');departureControls.forEach(el=>el.inert=false);
+ if(previousDeparture.active?.isConnected)previousDeparture.active.focus({preventScroll:true});
+}
+$('#cancelDeparture').onclick=cancelDeparture;
+$('#destLink').onclick=e=>{
+ if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+ if(selected){e.preventDefault();enterPlanet(selected);}
+};
+addEventListener('pageshow',e=>{if(e.persisted)cancelDeparture();});
 const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),ground=new THREE.Plane(new THREE.Vector3(0,1,0),0),projection=new THREE.Vector3();
 function pointOnPlane(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.ray.intersectPlane(ground,new THREE.Vector3());}
 function pick(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.intersectObjects(pickables,false).find(hit=>hit.object.visible&&hit.object.parent.visible)?.object.userData.node;}
@@ -81,13 +119,55 @@ canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane
 function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible;if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if(selected&&!selected.body.visible)$('#close').click();}
 $('#search').oninput=applyFilter;document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(n=>n.classList.toggle('active',n===b));applyFilter();if(filter!=='all'){const ns=nodes.filter(n=>n.group===filter);desired.set(ns.reduce((s,n)=>s+n.x,0)/ns.length,0,ns.reduce((s,n)=>s+n.z,0)/ns.length);wantedDistance=65;}else home();});
 function motion(){$('#motion').textContent=paused?'▷':'Ⅱ';$('#motion').setAttribute('aria-label',paused?'播放星体动画':'暂停星体动画');}motion();$('#motion').onclick=()=>{paused=!paused;motion();};
-document.addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement){if(e.key==='Escape'){e.target.value='';applyFilter();e.target.blur();}return;}if(e.key==='/'){e.preventDefault();$('#search').focus();return;}if(e.key==='Escape'){$('#close').click();return;}const step=wantedDistance*.06;const moves={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]};if(moves[e.key]){e.preventDefault();desired.x+=moves[e.key][0];desired.z+=moves[e.key][1];clampFocus();}if(e.key==='+'||e.key==='=')$('#plus').click();if(e.key==='-')$('#minus').click();if(e.key==='Home')home();});
+document.addEventListener('keydown',e=>{if(departure){if(e.key==='Escape'){e.preventDefault();cancelDeparture();}return;}if(e.target instanceof HTMLInputElement){if(e.key==='Escape'){e.target.value='';applyFilter();e.target.blur();}return;}if(e.key==='/'){e.preventDefault();$('#search').focus();return;}if(e.key==='Escape'){$('#close').click();return;}const step=wantedDistance*.06;const moves={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]};if(moves[e.key]){e.preventDefault();desired.x+=moves[e.key][0];desired.z+=moves[e.key][1];clampFocus();}if(e.key==='+'||e.key==='=')$('#plus').click();if(e.key==='-')$('#minus').click();if(e.key==='Home')home();});
+// Keep distant labels small and quiet; preserve the larger close-up labels.
+// Use each label's camera depth so panning and rotation also preserve perspective.
+const labelViewPosition=new THREE.Vector3();
+function labelMetrics(position){
+ const depth=Math.max(.1,-labelViewPosition.copy(position).applyMatrix4(camera.matrixWorldInverse).z);
+ const zoom=defaultDistance()*orbitRadius/depth;
+ const emphasis=THREE.MathUtils.smoothstep(zoom,1,1.6);
+ const scale=THREE.MathUtils.clamp(Math.pow(zoom,.55)*(.8+.2*emphasis),.72,1.9);
+ const opacity=.45+.55*THREE.MathUtils.smoothstep(zoom,.8,1.7);
+ return {scale, opacity, pixelsPerUnit:innerHeight/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*depth)};
+}
 function project(pos){projection.copy(pos).project(camera);return {x:(projection.x*.5+.5)*innerWidth,y:(-.5*projection.y+.5)*innerHeight,visible:projection.z<1&&projection.z>-1};}
+// Font loading can change label bounds after the first frame.
+document.fonts.ready.then(()=>nodes.forEach(n=>{n.labelLayoutKey=null;}));
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer?.setSize(innerWidth,innerHeight);});
 let previous=performance.now(),lastHud=0;
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;const radius=distance*orbitRadius,groundRadius=radius*Math.cos(elevation);camera.position.set(focus.x+Math.sin(azimuth)*groundRadius,radius*Math.sin(elevation),focus.z+Math.cos(azimuth)*groundRadius);camera.lookAt(focus);camera.updateMatrixWorld();
- nodes.forEach(n=>{n.body.position.y=Math.sin(time*.5+n.phase)*.25;n.rock.rotation.y=n.phase+time*n.speed;n.orbit.material.opacity=n===selected ? .75 : .2;const p=project(n.body.position);n.label.style.left=p.x+'px';n.label.style.top=(p.y+n.r/distance*innerHeight*1.15+12)+'px';const onScreen=p.visible&&p.x>45&&p.x<innerWidth-45&&p.y>95&&p.y<innerHeight-100;n.label.hidden=!n.body.visible||!onScreen;n.label.querySelector('small').hidden=distance>100;n.label.style.opacity=distance>170?'.75':'1';});
- Object.values(groups).forEach(g=>{const p=project(new THREE.Vector3(g.x,-1,g.z));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':'1';});
+function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
+ const t=THREE.MathUtils.clamp((now-departure.start)/departure.duration,0,1),travel=t*t*(3-2*t);
+ focus.lerpVectors(departure.focus,departure.node.body.position,travel);
+ const arrivalDistance=Math.max(.6,departure.node.r*.35);
+ distance=departure.distance*Math.pow(arrivalDistance/departure.distance,travel);
+ departureVeil.style.opacity=THREE.MathUtils.smoothstep(t,.45,1).toFixed(3);
+ }
+ const radius=distance*orbitRadius,groundRadius=radius*Math.cos(elevation);camera.position.set(focus.x+Math.sin(azimuth)*groundRadius,radius*Math.sin(elevation),focus.z+Math.cos(azimuth)*groundRadius);camera.lookAt(focus);camera.updateMatrixWorld();
+ nodes.forEach(n=>{
+  n.body.position.y=Math.sin(time*.5+n.phase)*.25;
+  n.rock.rotation.y=n.phase+time*n.speed;
+  n.orbit.material.opacity=n===selected ? .75 : .2;
+  const p=project(n.body.position),metrics=labelMetrics(n.body.position);
+  n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
+  n.label.querySelector('small').hidden=distance>100;
+  // Cache unscaled bounds; only text visibility and viewport changes affect them.
+  const layoutKey=innerWidth+':'+innerHeight+':'+(distance>100);
+  if(n.labelLayoutKey!==layoutKey){
+   n.label.hidden=false;
+   n.labelWidth=n.label.offsetWidth;n.labelHeight=n.label.offsetHeight;
+   n.labelLayoutKey=layoutKey;
+  }
+  const halfWidth=n.labelWidth*metrics.scale/2;
+  const labelTop=p.y+n.r*metrics.pixelsPerUnit+10*metrics.scale;
+  const labelBottom=labelTop+n.labelHeight*metrics.scale;
+  n.label.style.left=THREE.MathUtils.clamp(p.x,halfWidth+12,innerWidth-halfWidth-12)+'px';
+  n.label.style.top=labelTop+'px';
+  const onScreen=p.visible&&p.x>45&&p.x<innerWidth-45&&p.y>95&&labelBottom<innerHeight-100;
+  n.label.hidden=!n.body.visible||!onScreen;
+  n.label.style.setProperty('--label-opacity',metrics.opacity.toFixed(3));
+ });
+ Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-1,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':metrics.opacity.toFixed(3);});
  if(now-lastHud>80){$('#zoomValue').textContent=(105/distance).toFixed(1)+'×';$('.intro').style.visibility=distance<75?'hidden':'visible';lastHud=now;}
  if(renderer){renderer.render(scene,camera);if(!document.body.classList.contains('ready')){document.body.classList.add('ready');$('#loading').setAttribute('aria-hidden','true');}}}
 frame(performance.now());
