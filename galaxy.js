@@ -140,6 +140,7 @@ function showInfo(node){
  $('#destination').hidden=false;
  $('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');
  $('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destUrl').textContent=displayUrl(node.url);
+ measureInfoFraming();
 }
 function hideInfoSoon(){if(infoPinned||infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;},160);}
 function select(node,pin=false){
@@ -239,9 +240,40 @@ function labelMetrics(position){
  return {scale, opacity, pixelsPerUnit:innerHeight/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*depth)};
 }
 function project(pos){projection.copy(pos).project(camera);return {x:(projection.x*.5+.5)*innerWidth,y:(-.5*projection.y+.5)*innerHeight,visible:projection.z<1&&projection.z>-1};}
+// Shift the projection, not the planet's coordinates or the gesture's world target.
+const infoFraming={x:0,y:0,targetX:0,targetY:0,clearBottom:Infinity};
+function measureInfoFraming(){
+ const card=$('#destination');
+ infoFraming.targetX=infoFraming.targetY=0;infoFraming.clearBottom=Infinity;
+ if(!touchMode||!infoPinned||!infoNode||card.hidden)return;
+ const top=$('header').offsetTop+$('header').offsetHeight+16;
+ if(innerWidth<=700&&innerHeight>500){
+  infoFraming.clearBottom=card.offsetTop-12;
+  const bottom=Math.max(top+80,card.offsetTop-20);
+  infoFraming.targetY=innerHeight/2-(top+bottom)/2;
+ }else if(innerHeight<=500){
+  const left=card.offsetLeft+card.offsetWidth+20,right=$('.zoom').offsetLeft-16;
+  const bottom=Math.max(top+60,innerHeight-170);
+  infoFraming.targetX=innerWidth/2-(left+Math.max(left+80,right))/2;
+  infoFraming.targetY=innerHeight/2-(top+bottom)/2;
+ }
+}
+function updateInfoFraming(dt){
+ if(!touchMode||!infoPinned||!infoNode||$('#destination').hidden||departure){infoFraming.targetX=infoFraming.targetY=0;infoFraming.clearBottom=Infinity;}
+ const ease=paused?1:1-Math.exp(-dt*8);
+ infoFraming.x=THREE.MathUtils.lerp(infoFraming.x,infoFraming.targetX,ease);
+ infoFraming.y=THREE.MathUtils.lerp(infoFraming.y,infoFraming.targetY,ease);
+ if(Math.abs(infoFraming.x)<.05&&Math.abs(infoFraming.y)<.05){
+  if(camera.view?.enabled)camera.clearViewOffset();
+ }else{
+  camera.setViewOffset(innerWidth,innerHeight,infoFraming.x,infoFraming.y,innerWidth,innerHeight);
+ }
+}
+const infoResizeObserver=new ResizeObserver(measureInfoFraming);
+infoResizeObserver.observe($('#destination'));infoResizeObserver.observe($('header'));
 // Font loading can change label bounds after the first frame.
 document.fonts.ready.then(()=>nodes.forEach(n=>{n.labelLayoutKey=null;}));
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer?.setSize(innerWidth,innerHeight);});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer?.setSize(innerWidth,innerHeight);measureInfoFraming();});
 let previous=performance.now(),lastHud=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
  const t=THREE.MathUtils.clamp((now-departure.start)/departure.duration,0,1),travel=t*t*(3-2*t);
@@ -250,7 +282,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
  distance=departure.distance*Math.pow(arrivalDistance/departure.distance,travel);
  departureVeil.style.opacity=THREE.MathUtils.smoothstep(t,.45,1).toFixed(3);
  }
- const radius=distance*orbitRadius,groundRadius=radius*Math.cos(elevation);camera.position.set(focus.x+Math.sin(azimuth)*groundRadius,radius*Math.sin(elevation),focus.z+Math.cos(azimuth)*groundRadius);camera.lookAt(focus);camera.updateMatrixWorld();
+ const radius=distance*orbitRadius,groundRadius=radius*Math.cos(elevation);camera.position.set(focus.x+Math.sin(azimuth)*groundRadius,radius*Math.sin(elevation),focus.z+Math.cos(azimuth)*groundRadius);camera.lookAt(focus);camera.updateMatrixWorld();updateInfoFraming(dt);
  nodes.forEach(n=>{
   n.body.position.y=Math.sin(time*.5+n.phase)*.25;
   n.rock.rotation.y=n.phase+time*n.speed;
@@ -276,7 +308,8 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
   n.label.style.left=THREE.MathUtils.clamp(p.x,halfWidth+12,innerWidth-halfWidth-12)+'px';
   n.label.style.top=labelTop+'px';
   const onScreen=p.visible&&p.x>45&&p.x<innerWidth-45&&p.y>95&&labelBottom<innerHeight-100;
-  n.label.hidden=!n.body.visible||!onScreen||(n.group==='home'&&n!==selected);
+  const coveredByInfo=touchMode&&infoPinned&&n===infoNode&&labelBottom>infoFraming.clearBottom;
+  n.label.hidden=!n.body.visible||!onScreen||coveredByInfo||(n.group==='home'&&n!==selected);
   n.label.style.setProperty('--label-opacity',metrics.opacity.toFixed(3));
  });
  Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-1,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':metrics.opacity.toFixed(3);});
