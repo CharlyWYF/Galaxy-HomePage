@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070b13"><title>查理の星空</title><meta name="description" content="CHARLY 的小宇宙。拖动探索星空，双击小行星前往另一个地方。"><link rel="icon" href="icon/favicon.ico"><link rel="preload" href="vendor/fonts/oxanium/Oxanium.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="galaxy.css?v=20261018-model1"></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070b13"><title>查理の星空</title><meta name="description" content="CHARLY 的小宇宙。拖动探索星空，双击小行星前往另一个地方。"><link rel="icon" href="icon/favicon.ico"><link rel="preload" href="vendor/fonts/oxanium/Oxanium.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="galaxy.css?v=20261018-url1"></head>
 <body>
 <canvas id="space" aria-label="可以拖动平移和缩放的三维星图"></canvas><div class="vignette" aria-hidden="true"></div>
 <header><a class="brand" href="./">CHARLY</a><div class="search"><span>⌕</span><input id="search" aria-label="查找星球或链接" placeholder="寻找一颗星星…" autocomplete="off"><kbd>/</kbd></div></header>
 <aside class="intro"><h1>查理の星空</h1><div>悬停了解星球，靠近后进入。</div></aside>
 <div id="labels" aria-label="星球链接"></div><div id="sectorLabels" aria-hidden="true"></div>
 <div id="empty" hidden role="status">这片星区没有找到匹配的坐标。</div>
-<section id="destination" hidden aria-label="星球信息"><button id="close" aria-label="关闭星球信息">✕</button><p id="destSector"></p><h2 id="destTitle"></h2><div id="destDesc"></div><small>旧坐标，服务状态尚未确认。</small></section>
+<section id="destination" hidden aria-label="星球信息"><button id="close" aria-label="关闭星球信息">✕</button><p id="destSector"></p><h2 id="destTitle"></h2><div id="destDesc"></div><p id="destUrl"></p><small>旧坐标，服务状态尚未确认。</small></section>
 <a id="destLink" class="entry-button" hidden rel="noopener noreferrer"><span id="entryText"></span><span aria-hidden="true">↗</span></a>
 <div class="zoom"><button id="plus" aria-label="放大星图">＋</button><div id="zoomValue">1.0×</div><button id="minus" aria-label="缩小星图">−</button><button id="home" aria-label="返回初始星图">⌂</button></div>
 <footer><div class="hint">左键平移 <b>·</b> 右键旋转 <b>·</b> 滚轮缩放</div><nav aria-label="星区筛选"><button data-filter="all" class="active">全部星区</button><button data-filter="service">信号</button><button data-filter="tool">工具</button><button data-filter="memory">记忆</button></nav></footer>
@@ -17,5 +17,5 @@ const loading=document.getElementById('loading');
 function startupFailed(error){const detail=String(error?.error?.stack||error?.reason?.stack||error?.stack||error?.message||error);console.error('Star map startup failed:',detail);if(document.body.classList.contains('ready'))return;loading.replaceChildren(document.createTextNode('星图启动失败'));const reason=document.createElement('small');reason.textContent=detail.split('\n')[0];loading.append(reason);const retry=document.createElement('button');retry.textContent='重新展开';retry.onclick=()=>location.reload();loading.append(retry);}
 window.addEventListener('error',startupFailed);
 window.addEventListener('unhandledrejection',startupFailed);
-import('./galaxy.js?v=20261018-model1').catch(startupFailed);
+import('./galaxy.js?v=20261018-url1').catch(startupFailed);
 </script></body></html>
