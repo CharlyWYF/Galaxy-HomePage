@@ -11,7 +11,7 @@ const nodes=[
  {name:'Derby SQL',url:'https://www.charlyw.top/docs/derby_database',group:'memory',x:-25,z:20,r:1.6,color:0x9d8b7c,desc:'数据库笔记的旧坐标。一些当时认真记录过的东西。'},
  {name:'移动通信复习',url:'https://www.charlyw.top/docs/ydtx',group:'memory',x:-40,z:3,r:1.8,color:0x8993ad,desc:'留在这里的考试季记忆。一颗慢慢自转的旧知识星球。'},
  {name:'大数据复习',url:'https://www.charlyw.top/docs/dsj/dsj.html',group:'memory',x:-43,z:35,r:2.1,color:0x83977d,desc:'关于大数据的旧资料，封存在这片安静的星区。'},
- {name:'出发的地方',url:'https://github.com/CharlyWYF/HomePage',group:'home',x:0,z:0,r:1.4,color:0xd6ad75,desc:'这片星图的起点，也是旧主页的源码仓库。这里一直有人保留着坐标。'}
+ {name:'星图原点',url:new URL('/',window.location.href).href,group:'home',x:0,z:0,r:1.4,color:0xd6ad75,desc:'这片星图的零号坐标。无论航行多远，都可以回到这里，重新选择方向。'}
 ];
 const groups={service:{name:'信号星区',sub:'SIGNALS',color:'#86b7b2',x:-15,z:-41},tool:{name:'游乐星区',sub:'PLAYGROUND',color:'#d4a36f',x:30,z:-24},memory:{name:'记忆星区',sub:'MEMORIES',color:'#969bc2',x:-31,z:42}};
 const canvas=$('#space');let renderer;
