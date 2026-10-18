@@ -26,7 +26,7 @@ export function parseGalaxyContent(input){
  const sectors=Object.fromEntries(Object.entries(sectorInput).map(([id,value])=>{
   if(!/^[a-z][a-z0-9-]*$/.test(id)||['all','home'].includes(id))fail('分类 ID 无效：'+id);
   const sector=object(value,'分类 '+id);
-  return [id,{label:text(sector.label,'分类 '+id+'.label'),name:text(sector.name,'分类 '+id+'.name'),sub:text(sector.sub,'分类 '+id+'.sub'),x:number(sector.x??0,'分类 '+id+'.x'),z:number(sector.z??0,'分类 '+id+'.z')}];
+  return [id,{label:text(sector.label,'分类 '+id+'.label'),name:text(sector.name,'分类 '+id+'.name'),sub:text(sector.sub,'分类 '+id+'.sub')}];
  }));
  const defaults={radius:2,color:'#8fb9b2',ring:false,satellites:true,orbit:true,glow:true,...object(config.defaults??{},'defaults')};
  // Validate defaults even when no planet currently uses them.
@@ -47,6 +47,13 @@ export function parseGalaxyContent(input){
   for(const key of ['ring','satellites','orbit','glow'])planet[key]=flag(item[key],path+'.'+key);
   return planet;
  });
+ // Place each sector label at the centroid of its member planets.
+ for(const [id,sector] of Object.entries(sectors)){
+  const members=planets.filter(planet=>planet.group===id);
+  sector.hasPlanets=members.length>0;
+  sector.x=members.length?members.reduce((sum,planet)=>sum+planet.x,0)/members.length:0;
+  sector.z=members.length?members.reduce((sum,planet)=>sum+planet.z,0)/members.length:0;
+ }
  const routeInput=object(config.routes??{},'routes');
  const routes={mode:'auto',closed:true,links:[],color:'#4b6b82',opacity:.4,dashSize:.4,gapSize:.8,...routeInput};
  if(!['auto','manual','none'].includes(routes.mode))fail('routes.mode 必须为 auto、manual 或 none');

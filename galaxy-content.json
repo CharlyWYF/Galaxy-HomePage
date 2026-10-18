@@ -3,23 +3,17 @@
     "service": {
       "label": "信号",
       "name": "信号星区",
-      "sub": "SIGNALS",
-      "x": -15,
-      "z": -41
+      "sub": "SIGNALS"
     },
     "tool": {
       "label": "工具",
       "name": "游乐星区",
-      "sub": "PLAYGROUND",
-      "x": 30,
-      "z": -24
+      "sub": "PLAYGROUND"
     },
     "memory": {
       "label": "记忆",
       "name": "记忆星区",
-      "sub": "MEMORIES",
-      "x": -31,
-      "z": 42
+      "sub": "MEMORIES"
     }
   },
   "defaults": {

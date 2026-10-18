@@ -35,6 +35,12 @@ assert.equal(parseGalaxyContent(edit(c=>delete c.planets[0].radius)).planets[0].
 const withCategory=parseGalaxyContent(edit(c=>{c.sectors.blog={label:'博客',name:'博客星区',sub:'BLOG',x:10,z:20};c.planets.push({id:'new-blog',name:'新博客',url:'https://example.com',group:'blog',x:10,z:20});}));
 assert.equal(withCategory.planets.at(-1).r,2);
 assert.equal(withCategory.sectors.blog.label,'博客');
+assert.equal(withCategory.sectors.tool.x,5);
+assert.equal(withCategory.sectors.tool.z,0);
+assert.equal(withCategory.sectors.blog.x,10);
+assert.equal(withCategory.sectors.blog.z,20);
+const emptySector=parseGalaxyContent(edit(c=>c.sectors.empty={label:'空',name:'空星区',sub:'EMPTY'}));
+assert.equal(emptySector.sectors.empty.hasPlanets,false);
 // Exercise the scene's actual route update against real Three.js geometry.
 const source=await readFile(new URL('../galaxy.js',import.meta.url),'utf8');
 const updateSource=source.slice(source.indexOf('function updateRoutes(){'),source.indexOf('\nupdateRoutes();'));

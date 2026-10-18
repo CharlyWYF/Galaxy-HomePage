@@ -1,4 +1,4 @@
-import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-sector-routes1';
+import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-sector-centers1';
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft,updateSpacecraftThrust} from './spacecraft.js?v=20261018-exhaust1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
@@ -91,7 +91,7 @@ function updateShip(dt){
  spacecraft.quaternion.slerp(shipFacing,1-Math.exp(-dt*8));
  updateSpacecraftThrust(spacecraft,shipVelocity.length(),dt,time);
 }
-Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
+Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;el.hidden=!g.hasPlanets;$('#sectorLabels').append(el);g.el=el;});
 const routePairs=buildRoutePairs(content.planets,content.routes);
 const nodesById=new Map(nodes.map(n=>[n.id,n]));
 const routeGeo=new THREE.BufferGeometry();
@@ -290,7 +290,7 @@ canvas.addEventListener('pointerup',e=>releasePointer(e));
 canvas.addEventListener('pointercancel',e=>releasePointer(e,true));
 canvas.addEventListener('lostpointercapture',e=>releasePointer(e,true));
 canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane(e.clientX,e.clientY),ratio=Math.exp(THREE.MathUtils.clamp(e.deltaY,-200,200)*.0015),next=THREE.MathUtils.clamp(wantedDistance*ratio,13,600);if(anchor){const factor=1-next/wantedDistance;desired.x+=(anchor.x-desired.x)*factor;desired.z+=(anchor.z-desired.z)*factor;clampFocus();}wantedDistance=next;},{passive:false});
-function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();updateRoutes();}
+function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=!g.hasPlanets||(filter!=='all'&&filter!==key));if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();updateRoutes();}
 function fitCategory(){
  const visible=nodes.filter(n=>n.body.visible&&n.group!=='home');
  const fit=fitPlanetView(visible.map(n=>({...n,r:n.r*mobileModelScale()})),{width:innerWidth,height:innerHeight,azimuth:wantedAzimuth,elevation:wantedElevation,fov:camera.fov,orbitRadius});
