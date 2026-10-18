@@ -71,18 +71,6 @@
       "ring": true
     },
     {
-      "id": "kingdom",
-      "name": "查理亡国",
-      "url": "https://www.charlyw.top/kingdom",
-      "desc": "王座陨落，传奇不朽，集结亡国之魂，再战黎明！",
-      "group": "tool",
-      "x": 13,
-      "z": -3,
-      "radius": 2.2,
-      "color": "#17191d",
-      "accentColor": "#c74b45"
-    },
-    {
       "id": "bitrate",
       "name": "视频码率计算器",
       "url": "https://ming.charlyw.top/cal",
@@ -103,6 +91,18 @@
       "z": 15,
       "radius": 2.5,
       "color": "#bf8c58"
+    },
+    {
+      "id": "kingdom",
+      "name": "查理亡国",
+      "url": "https://www.charlyw.top/kingdom",
+      "desc": "王座陨落，传奇不朽，集结亡国之魂，再战黎明！",
+      "group": "tool",
+      "x": 13,
+      "z": -3,
+      "radius": 2.2,
+      "color": "#17191d",
+      "accentColor": "#c74b45"
     },
     {
       "id": "communications",
