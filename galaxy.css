@@ -32,6 +32,8 @@ nav .active{color:#e5c295;border-bottom:1px solid #c2965e}
 .zoom{position:fixed;right:4%;bottom:100px;display:flex;align-items:center;flex-direction:column;gap:5px;background:#0b1320a0;border:1px solid #74899a33;border-radius:12px;padding:6px;z-index:4}
 .zoom button{border:0;border-radius:8px;background:none;width:34px;height:34px;font-size:23px;color:#a8becd}
 .zoom button:hover{color:#f1c28b;background:#7d9abb12}
+#home{display:grid;place-items:center;padding:0;line-height:1}
+#home svg{display:block}
 #zoomValue{font-size:12px;color:#698395;padding:5px 0}
 #destination{position:fixed;left:4%;bottom:100px;width:min(360px,92vw);max-height:calc(100dvh - 200px);overflow-y:auto;padding:25px;background:#0a1321a6;backdrop-filter:blur(14px);border:1px solid #a8c8df55;border-radius:16px;box-shadow:0 10px 50px #0005,0 0 28px #8dbfe51c,inset 0 0 20px #a8c8df08;z-index:5;opacity:1;visibility:visible;transform:translateY(0) scale(1);transform-origin:top left;transition:opacity .2s ease,transform .24s cubic-bezier(.2,.7,.2,1),visibility 0s}
 /* Keep the fixed card mounted so both opening and closing can transition. */
