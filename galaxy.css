@@ -15,7 +15,6 @@ header{position:fixed;left:4%;right:4%;top:26px;display:flex;align-items:center;
 .search{margin-left:auto;display:flex;align-items:center;gap:12px;border-bottom:1px solid #74899a44;padding:10px 0;color:#9aaab3}
 .search input{width:220px;background:none;border:0;color:#d9dfdf;font-size:15px;outline:none}
 .search kbd{font-size:12px;border:1px solid #74899a44;padding:1px 5px;color:#647785}
-#motion{border:1px solid #74899a44;background:#0b1320b0;border-radius:50%;width:36px;height:36px;color:#9aadb9}
 .intro{position:fixed;left:4%;top:127px;pointer-events:none;z-index:2}
 .intro h1{font-size:28px;font-weight:300;letter-spacing:3px;margin:15px 0}
 .intro div{font-size:14px;color:#7d8f9e;letter-spacing:1px}
@@ -41,8 +40,6 @@ nav .active{color:#e5c295;border-bottom:1px solid #c2965e}
 #destSector{font-size:12px;letter-spacing:2px;color:#bf9c6b;margin:0 0 15px}
 #destTitle{font-size:25px;font-weight:300;margin:0 0 15px;letter-spacing:1px}
 #destDesc{font-size:15px;color:#8398a8;line-height:1.9}
-#destLink{display:block;margin-top:25px;border-top:1px solid #7b99ad44;padding:16px 0 0;font-size:15px;color:#edc795}
-#destLink span{float:right}
 #destination small{font-size:12px;color:#586f82;display:block;margin-top:13px}
 #empty{position:fixed;top:50%;width:100%;text-align:center;font-size:16px;color:#9aaebc;pointer-events:none}
 #loading{position:fixed;inset:0;background:#070b13;display:flex;align-items:center;justify-content:center;gap:15px;z-index:10;letter-spacing:3px;font-size:15px;color:#b4c1c9;transition:opacity .6s}
@@ -56,7 +53,6 @@ to{opacity:1;transform:translateY(0)}
 .search{gap:5px}
 .search input{width:clamp(105px,32vw,180px);font-size:14px}
 .search kbd{display:none}
-#motion{width:32px;height:32px;flex-shrink:0}
 .intro{top:105px}
 .intro h1{font-size:24px}
 .intro div{font-size:13px}
@@ -88,3 +84,9 @@ nav button{font-size:13px}
 #cancelDeparture{display:block;margin:22px auto 0;padding:8px 14px;font-size:12px;color:#8fa4b3;background:transparent;border:1px solid #74899a44;cursor:pointer}
 .departing header,.departing .intro,.departing footer,.departing .zoom,.departing #destination,.departing #labels,.departing #sectorLabels{opacity:0;transition:opacity .18s;pointer-events:none}
 @keyframes signalPulse{from{opacity:.35}to{opacity:1}}
+
+.entry-button{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);z-index:6;width:min(360px,calc(100vw - 140px));min-width:200px;min-height:62px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #d6ad7588;background:linear-gradient(125deg,#29323bee,#131c2aee);backdrop-filter:blur(12px);box-shadow:0 8px 40px #0007,0 0 28px #d6ad7510;color:#f5d3a1;font-size:18px;letter-spacing:1px;transition:background .2s,border-color .2s}
+.entry-button:hover{border-color:#f5d3a1;background:#35404fee}
+.departing .entry-button{opacity:0;pointer-events:none}
+@media(max-width:1000px){#destination{bottom:190px;width:min(320px,92vw)}}
+@media(max-width:700px){#destination{top:86px;bottom:auto;max-height:calc(50dvh - 95px);padding:18px}#destTitle{font-size:21px;margin-bottom:10px}#destDesc{font-size:13px;line-height:1.7}.entry-button{font-size:16px;min-height:58px;padding:16px 18px}}
