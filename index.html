@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070b13"><title>查理の星空</title><meta name="description" content="CHARLY 的小宇宙。拖动探索星空，双击小行星前往另一个地方。"><link rel="icon" href="icon/favicon.ico"><link rel="preload" href="vendor/fonts/oxanium/Oxanium.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="galaxy.css?v=20261018-framing1"></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070b13"><title>查理の星空</title><meta name="description" content="CHARLY 的小宇宙。拖动探索星空，双击小行星前往另一个地方。"><link rel="icon" href="icon/favicon.ico"><link rel="preload" href="vendor/fonts/oxanium/Oxanium.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="galaxy.css?v=20261018-home1"></head>
 <body>
 <canvas id="space" aria-label="可以拖动平移和缩放的三维星图"></canvas><div class="vignette" aria-hidden="true"></div>
 <header><a class="brand" href="./">CHARLY</a><div class="search"><span>⌕</span><input id="search" aria-label="查找星球或链接" placeholder="寻找一颗星星…" autocomplete="off"><kbd>/</kbd></div></header>
@@ -17,5 +17,5 @@ const loading=document.getElementById('loading');
 function startupFailed(error){const detail=String(error?.error?.stack||error?.reason?.stack||error?.stack||error?.message||error);console.error('Star map startup failed:',detail);if(document.body.classList.contains('ready'))return;loading.replaceChildren(document.createTextNode('星图启动失败'));const reason=document.createElement('small');reason.textContent=detail.split('\n')[0];loading.append(reason);const retry=document.createElement('button');retry.textContent='重新展开';retry.onclick=()=>location.reload();loading.append(retry);}
 window.addEventListener('error',startupFailed);
 window.addEventListener('unhandledrejection',startupFailed);
-import('./galaxy.js?v=20261018-framing1').catch(startupFailed);
+import('./galaxy.js?v=20261018-home1').catch(startupFailed);
 </script></body></html>
