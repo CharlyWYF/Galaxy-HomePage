@@ -4,7 +4,7 @@
 
 - 基线：HomePage `9e31db19ba678ceaf2cd523a5fb51f464c5e5d7d`。
 - 主页整理在本地分支 `refactor/project-split`，未更新生产分支。
-- 独立内容项目位于桌面 `CharlyHub`，私有仓库 https://github.com/CharlyWYF/CharlyHub 已创建并推送；域名 hub.charlyw.top 的 Vercel 部署接入待完成。
+- 独立内容项目位于桌面 `CharlyHub`，私有仓库 https://github.com/CharlyWYF/CharlyHub 已创建并推送；已连接 Vercel 项目 `charlyhub`；`hub.charlyw.top` 已绑定，等待 DNS 配置与线上验证。
 - 迁出 200 个原始文件，逐文件 SHA-256 校验一致；详见新项目 `migration-manifest.json`。
 - 主页只部署 `public/`。旧笔记、游戏、影音、下载和历史脚本不再进入主页产物。
 
@@ -60,4 +60,5 @@
 - 新项目本地目录已更名为 `../CharlyHub`。
 - GitHub 仓库已创建为私有并上传完整内容。
 - 主页的兼容转发已配置到 `https://hub.charlyw.top`，本地构建与检查通过。
-- 尚未创建或验证 Vercel 部署、绑定域名，因此没有合并或推送主页生产分支。
+- Vercel 项目 `charlyhub` 已创建并连接 GitHub 自动部署，域名已绑定。Cloudflare 需要添加 `hub` CNAME 到 `cf68ae1dcd23c27c.vercel-dns-017.com`（仅 DNS）。
+- 等待新站 DNS 与 HTTPS、迁移路径验证通过，因此没有合并或推送主页生产分支。
