@@ -3,7 +3,7 @@
 <body>
 <canvas id="space" aria-label="可以拖动平移和缩放的三维星图"></canvas><div class="vignette" aria-hidden="true"></div>
 <header><a class="brand" href="./">CHARLY</a><div class="search"><span>⌕</span><input id="search" aria-label="查找星球或链接" placeholder="寻找一颗星星…" autocomplete="off"><kbd>/</kbd></div></header>
-<aside class="intro"><h1>查理の星空</h1><div>悬停了解星球，靠近后进入。</div></aside>
+<aside class="intro"><h1>查理の星空</h1><div>左键拖动，右键旋转，滚轮缩放</div></aside>
 <div id="labels" aria-label="星球链接"></div><div id="sectorLabels" aria-hidden="true"></div>
 <div id="empty" hidden role="status">这片星区没有找到匹配的坐标。</div>
 <section id="destination" hidden aria-label="星球信息"><button id="close" aria-label="关闭星球信息">✕</button><p id="destSector"></p><h2 id="destTitle"></h2><div id="destDesc"></div><p id="destUrl"></p></section>
@@ -17,5 +17,5 @@ const loading=document.getElementById('loading');
 function startupFailed(error){const detail=String(error?.error?.stack||error?.reason?.stack||error?.stack||error?.message||error);console.error('Star map startup failed:',detail);if(document.body.classList.contains('ready'))return;loading.replaceChildren(document.createTextNode('星图启动失败'));const reason=document.createElement('small');reason.textContent=detail.split('\n')[0];loading.append(reason);const retry=document.createElement('button');retry.textContent='重新展开';retry.onclick=()=>location.reload();loading.append(retry);}
 window.addEventListener('error',startupFailed);
 window.addEventListener('unhandledrejection',startupFailed);
-import('./galaxy.js?v=20261018-content1').catch(startupFailed);
+import('./galaxy.js?v=20261018-desktop-hint1').catch(startupFailed);
 </script></body></html>
