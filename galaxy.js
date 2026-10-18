@@ -200,7 +200,8 @@ canvas.addEventListener('pointermove',e=>{
   if(lastGesture){
    const change=gestureChange(lastGesture,gesture);
    wantedDistance=THREE.MathUtils.clamp(wantedDistance*change.zoom,13,230);
-   wantedAzimuth-=change.twist+change.dx*.004;
+   // Camera orbit must match screen-space finger rotation.
+   wantedAzimuth+=change.twist-change.dx*.004;
    wantedElevation=THREE.MathUtils.clamp(wantedElevation+change.dy*.004,.3,1.45);
   }
   lastGesture=gesture;moved=true;
