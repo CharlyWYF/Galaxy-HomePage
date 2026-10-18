@@ -40,14 +40,41 @@ nodes.forEach(node=>{
  halo(body,0,-.2,0,node.color,node.r*5,.15);
  if(node.ring){const ring=mesh(new THREE.RingGeometry(node.r*1.4,node.r*1.9,80),new THREE.MeshStandardMaterial({color:0xb78f65,side:THREE.DoubleSide,transparent:true,opacity:.5,roughness:1}),body);ring.rotation.set(-1.2,.1,.25);ring.userData.node=node;pickables.push(ring);}
  if(node.group==='home'){
-  rock.visible=false;const h=mat(0xb6b7af),d=mat(0x334554),gold=mat(0xcca66b);
-  mesh(new THREE.CylinderGeometry(.65,.65,2.2,8),h,body).rotation.z=Math.PI/2;
-  for(const side of [-1,1]){mesh(new THREE.BoxGeometry(3,.08,.12),gold,body,side*2.3,0,0);mesh(new THREE.BoxGeometry(2.5,.07,2),d,body,side*2.7,0,0);}
-  mesh(new THREE.CylinderGeometry(.23,.3,1.1,8),h,body,0,.9,0);halo(body,0,1.5,0,0xffc071,2,.8);
-  body.children.filter(o=>o.isMesh&&o!==rock).forEach(m=>{m.userData.node=node;pickables.push(m);});
+  rock.visible=false;
+  // The spacecraft travels independently; the origin's coordinates stay fixed.
+  const ship=new THREE.Group();scene.add(ship);node.ship=ship;
+  const h=mat(0xb6b7af),d=mat(0x334554),gold=mat(0xcca66b);
+  mesh(new THREE.CylinderGeometry(.65,.65,2.2,8),h,ship).rotation.z=Math.PI/2;
+  for(const side of [-1,1]){mesh(new THREE.BoxGeometry(3,.08,.12),gold,ship,side*2.3,0,0);mesh(new THREE.BoxGeometry(2.5,.07,2),d,ship,side*2.7,0,0);}
+  mesh(new THREE.CylinderGeometry(.23,.3,1.1,8),h,ship,0,.9,0);halo(ship,0,1.5,0,0xffc071,2,.8);
+  ship.children.filter(o=>o.isMesh).forEach(m=>{m.userData.node=node;pickables.push(m);});
  }
  const label=document.createElement('button');label.className='node-label';label.innerHTML=node.name+'<span>↗</span><small>'+new URL(node.url).hostname+'</small>';label.setAttribute('aria-label',node.name+'，单击查看，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
+const spacecraft=nodes.find(n=>n.ship).ship;
+const shipDestination=new THREE.Vector3();
+let shipFlight=null;
+function sendShipTo(node){
+ // Leave enough clearance for the wings and the largest planet's rings.
+ shipDestination.set(node&&node.group!=='home'?node.x+node.r+5.5:0,node&&node.group!=='home'?1:0,node&&node.group!=='home'?node.z-2:0);
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+  spacecraft.position.copy(shipDestination);spacecraft.rotation.z=0;shipFlight=null;return;
+ }
+ const length=spacecraft.position.distanceTo(shipDestination);
+ shipFlight={start:spacecraft.position.clone(),end:shipDestination.clone(),time:performance.now(),duration:THREE.MathUtils.clamp(length*20,700,1400),height:Math.min(6,length*.12)};
+}
+function updateShip(now){
+ if(shipFlight){
+  const t=THREE.MathUtils.clamp((now-shipFlight.time)/shipFlight.duration,0,1),eased=t*t*(3-2*t);
+  spacecraft.position.lerpVectors(shipFlight.start,shipFlight.end,eased);
+  spacecraft.position.y+=Math.sin(Math.PI*t)*shipFlight.height;
+  spacecraft.rotation.z=Math.sin(Math.PI*t)*.12;
+  if(t===1){spacecraft.rotation.z=0;shipFlight=null;}
+ }else{
+  spacecraft.position.copy(shipDestination);
+  spacecraft.position.y+=Math.sin(time*.5)*.12;
+ }
+}
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
 const routePositions=[];for(let i=0;i<nodes.length-1;i++){const n=nodes[i],next=nodes[(i+1)%10];routePositions.push(n.x,-2,n.z,next.x,-2,next.z);}const routeGeo=new THREE.BufferGeometry();routeGeo.setAttribute('position',new THREE.Float32BufferAttribute(routePositions,3));const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial({color:0x4b6b82,dashSize:.4,gapSize:.8,transparent:true,opacity:.40}));routes.computeLineDistances();scene.add(routes);
 let focus=new THREE.Vector3(-5,0,0),desired=new THREE.Vector3(-5,0,0),distance=105,wantedDistance=105,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,filter='all',selected=null;
@@ -98,8 +125,8 @@ const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),ground=new THREE.Plane(n
 function pointOnPlane(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.ray.intersectPlane(ground,new THREE.Vector3());}
 function pick(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);return ray.intersectObjects(pickables,false).find(hit=>hit.object.visible&&hit.object.parent.visible)?.object.userData.node;}
 function clampFocus(){desired.x=THREE.MathUtils.clamp(desired.x,-105,105);desired.z=THREE.MathUtils.clamp(desired.z,-95,95);}
-function select(node){selected=node;desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);$('#destination').hidden=false;$('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');$('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destLink').href=node.url;nodes.forEach(n=>n.label.classList.toggle('selected',n===node));}
-$('#close').onclick=()=>{$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
+function select(node){selected=node;sendShipTo(node);desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);$('#destination').hidden=false;$('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');$('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destLink').href=node.url;nodes.forEach(n=>n.label.classList.toggle('selected',n===node));}
+$('#close').onclick=()=>{$('#destination').hidden=true;selected=null;sendShipTo(null);nodes.forEach(n=>n.label.classList.remove('selected'));};
 function home(){clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
 function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
@@ -169,6 +196,7 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
  });
  Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-1,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=distance<45?'0':metrics.opacity.toFixed(3);});
  if(now-lastHud>80){$('#zoomValue').textContent=(105/distance).toFixed(1)+'×';$('.intro').style.visibility=distance<75?'hidden':'visible';lastHud=now;}
+ updateShip(now);
  if(renderer){renderer.render(scene,camera);if(!document.body.classList.contains('ready')){document.body.classList.add('ready');$('#loading').setAttribute('aria-hidden','true');}}}
 frame(performance.now());
 
