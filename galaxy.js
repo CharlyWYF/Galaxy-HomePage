@@ -61,14 +61,22 @@ nodes.forEach(node=>{
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
 const shipError=new THREE.Vector3(),shipStep=new THREE.Vector3();
+const shipHeading=new THREE.Vector3(),shipUp=new THREE.Vector3(0,1,0),shipOrigin=new THREE.Vector3();
+const shipHeadingMatrix=new THREE.Matrix4(),shipFacing=spacecraft.quaternion.clone();
 function updateShip(dt){
  // A point on the camera's center ray stays in front of the planet, not inside it.
  shipTarget.copy(camera.position).sub(focus);
  shipTarget.setLength(Math.min(4,shipTarget.length()*.25)).add(focus);
+ // The model's nose points along local +Z. Keep the last heading near rest.
+ shipHeading.subVectors(shipTarget,spacecraft.position);
+ if(shipHeading.lengthSq()>.0025){
+  shipHeadingMatrix.lookAt(shipHeading,shipOrigin,shipUp);
+  shipFacing.setFromRotationMatrix(shipHeadingMatrix);
+ }
  const targetScale=mobileModelScale()*THREE.MathUtils.lerp(.30,1,THREE.MathUtils.smoothstep(distance,42,110));
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
   spacecraft.position.copy(shipTarget);shipVelocity.set(0,0,0);
-  spacecraft.scale.setScalar(targetScale);spacecraft.rotation.z=0;return;
+  spacecraft.scale.setScalar(targetScale);spacecraft.quaternion.copy(shipFacing);return;
  }
  // Critically damped following retains momentum when the center keeps moving.
  // Exact integration avoids restarting an animation on every pointer movement.
@@ -79,8 +87,7 @@ function updateShip(dt){
  shipVelocity.addScaledVector(shipStep,-omega).multiplyScalar(decay);
  const ease=1-Math.exp(-dt*3);
  spacecraft.scale.setScalar(THREE.MathUtils.lerp(spacecraft.scale.x,targetScale,ease));
- const bank=THREE.MathUtils.clamp(-shipVelocity.x*.012,-.12,.12);
- spacecraft.rotation.z=THREE.MathUtils.lerp(spacecraft.rotation.z,bank,ease);
+ spacecraft.quaternion.slerp(shipFacing,1-Math.exp(-dt*8));
 }
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
 const routePairs=buildRoutePairs(content.planets,content.routes);
