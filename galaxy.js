@@ -107,7 +107,7 @@ let azimuth=initialAzimuth,elevation=initialElevation,wantedAzimuth=azimuth,want
 let autoOrbitLastActivity=-Infinity,autoOrbitSpeed=0,autoOrbitOffset=0;
 function pauseAutoOrbit(){autoOrbitLastActivity=performance.now();autoOrbitSpeed=0;}
 function updateAutoOrbit(now,dt){
- const blocked=paused||document.hidden||departure||pointers.size>0||!$('#destination').hidden||document.activeElement instanceof HTMLInputElement;
+ const blocked=paused||document.hidden||departure;
  if(blocked){pauseAutoOrbit();return;}
  if(now-autoOrbitLastActivity<2000||!document.body.classList.contains('ready'))return;
  autoOrbitSpeed=THREE.MathUtils.lerp(autoOrbitSpeed,.036,1-Math.exp(-dt*.7));
@@ -335,7 +335,8 @@ infoResizeObserver.observe($('#destination'));infoResizeObserver.observe($('head
 // Font loading can change label bounds after the first frame.
 document.fonts.ready.then(()=>nodes.forEach(n=>{n.labelLayoutKey=null;}));
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer?.setSize(innerWidth,innerHeight);measureInfoFraming();});
-for(const event of ['pointerdown','pointerup','pointercancel','wheel','keydown','input','focusin','focusout'])document.addEventListener(event,pauseAutoOrbit,{capture:true,passive:true});
+for(const event of ['pointerdown','pointerup','pointercancel','wheel','keydown','input'])document.addEventListener(event,pauseAutoOrbit,{capture:true,passive:true});
+document.addEventListener('pointermove',e=>{if(pointers.has(e.pointerId))pauseAutoOrbit();},{capture:true,passive:true});
 document.addEventListener('visibilitychange',pauseAutoOrbit);
 let previous=performance.now(),lastHud=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;updateAutoOrbit(now,dt);if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
