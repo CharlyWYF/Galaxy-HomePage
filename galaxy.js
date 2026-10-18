@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
+import {fitPlanetView} from './view-fit.js?v=20261018-fit1';
 const $=s=>document.querySelector(s);
 let touchMode=matchMedia('(hover: none) and (pointer: coarse)').matches,lastTouchTime=-Infinity,infoPinned=false;
 function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'悬停了解星球，靠近后进入。';}
@@ -98,6 +99,7 @@ const departureUI=$('#departure'),departureVeil=$('#departureVeil');
 const departureControls=[canvas,$('header'),$('.intro'),$('#labels'),$('#sectorLabels'),$('#destination'),$('#destLink'),$('.zoom'),$('footer')];
 function enterPlanet(node){
  if(departure)return;
+ cancelTouchTap();
  clearTimeout(clickTimer);pendingClick=null;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  departure={node,start:performance.now(),duration:reduced?120:950,reduced,focus:focus.clone(),distance,active:document.activeElement};
@@ -149,7 +151,7 @@ function select(node,pin=false){
 }
 $('#destination').onpointerenter=()=>{clearTimeout(infoTimer);infoTimer=null;};
 $('#destination').onpointerleave=hideInfoSoon;
-$('#close').onclick=()=>{infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;document.body.classList.remove('info-open');selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
+$('#close').onclick=()=>{cancelTouchTap();infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;document.body.classList.remove('info-open');selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
 function updateEntry(){
  // Proximity follows the camera, independently of whichever description is hovered.
  let nearest=null,best=Infinity;
@@ -165,15 +167,34 @@ function updateEntry(){
   if(nearest){$('#destLink').href=nearest.url;$('#destLink').title=displayUrl(nearest.url);$('#entryText').textContent='进入 '+nearest.name;}
  }
 }
-function home(){clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
+function home(){cancelTouchTap();clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
 function isHomeView(){
  const angle=Math.atan2(Math.sin(wantedAzimuth-initialAzimuth),Math.cos(wantedAzimuth-initialAzimuth));
  return Math.hypot(desired.x+5,desired.z)<.2&&Math.abs(wantedDistance-defaultDistance())<.5&&Math.abs(angle)<.01&&Math.abs(wantedElevation-initialElevation)<.01;
 }
 function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
-$('#home').onclick=home;$('#plus').onclick=()=>wantedDistance=Math.max(13,wantedDistance*.78);$('#minus').onclick=()=>wantedDistance=Math.min(230,wantedDistance*1.28);
-const pointers=new Map();let moved=false,lastGesture=null;
+$('#home').onclick=home;$('#plus').onclick=()=>wantedDistance=Math.max(13,wantedDistance*.78);$('#minus').onclick=()=>wantedDistance=Math.min(600,wantedDistance*1.28);
+const pointers=new Map();let moved=false,lastGesture=null,pendingTouchTap=null;
+function cancelTouchTap(){if(pendingTouchTap)clearTimeout(pendingTouchTap.timer);pendingTouchTap=null;}
+function handleTouchTap(node,x,y){
+ const now=performance.now(),previous=pendingTouchTap;
+ if(previous&&now-previous.time<=300&&Math.hypot(x-previous.x,y-previous.y)<30){
+  cancelTouchTap();
+  const target=node||previous.node,before=wantedDistance;
+  if(target){select(target,true);wantedDistance=Math.max(13,Math.min(wantedDistance,before*.6));}
+  else{
+   dismissTouchInfo();const anchor=pointOnPlane(x,y),next=Math.max(13,before*.6);
+   if(anchor){desired.x+=(anchor.x-desired.x)*(1-next/before);desired.z+=(anchor.z-desired.z)*(1-next/before);clampFocus();}
+   wantedDistance=next;
+  }
+  return;
+ }
+ if(previous){clearTimeout(previous.timer);pendingTouchTap=null;if(previous.node)select(previous.node,true);}
+ const tap={node,x,y,time:now};
+ tap.timer=setTimeout(()=>{if(pendingTouchTap!==tap)return;pendingTouchTap=null;if(node)select(node,true);else $('#close').click();},300);
+ pendingTouchTap=tap;
+}
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 function pointerDown(e){
  if(departure||(e.pointerType==='mouse'&&e.button!==0&&e.button!==2))return;
@@ -182,7 +203,7 @@ function pointerDown(e){
  if(!pointers.size){moved=false;lastGesture=null;}
  const label=e.target.closest?.('.node-label');
  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,rotate:e.button===2,node:nodes.find(n=>n.label===label)});
- if(pointers.size>1){moved=true;lastGesture=measureGesture([...pointers.values()]);dismissTouchInfo();}
+ if(pointers.size>1){cancelTouchTap();moved=true;lastGesture=measureGesture([...pointers.values()]);dismissTouchInfo();}
  if(e.pointerType!=='touch')hideInfoSoon();
  canvas.style.cursor='grabbing';
 }
@@ -196,7 +217,7 @@ canvas.addEventListener('pointermove',e=>{
  }
  const old=pointers.get(e.pointerId);
  pointers.set(e.pointerId,{...old,x:e.clientX,y:e.clientY});
- if(Math.hypot(e.clientX-old.startX,e.clientY-old.startY)>(e.pointerType==='touch'?8:4)){moved=true;dismissTouchInfo();}
+ if(Math.hypot(e.clientX-old.startX,e.clientY-old.startY)>(e.pointerType==='touch'?8:4)){cancelTouchTap();moved=true;dismissTouchInfo();}
  if(e.pointerType==='touch'&&pointers.size===1&&!moved)return;
  if(pointers.size===1&&old.rotate){wantedAzimuth-=(e.clientX-old.x)*.006;wantedElevation=THREE.MathUtils.clamp(wantedElevation+(e.clientY-old.y)*.005,.3,1.45);}
  else if(pointers.size===1){const a=pointOnPlane(old.x,old.y),b=pointOnPlane(e.clientX,e.clientY);if(a&&b){desired.add(a.sub(b));clampFocus();}}
@@ -204,7 +225,7 @@ canvas.addEventListener('pointermove',e=>{
   const gesture=measureGesture([...pointers.values()]);
   if(lastGesture){
    const change=gestureChange(lastGesture,gesture);
-   wantedDistance=THREE.MathUtils.clamp(wantedDistance*change.zoom,13,230);
+   wantedDistance=THREE.MathUtils.clamp(wantedDistance*change.zoom,13,600);
    // Camera orbit must match screen-space finger rotation.
    wantedAzimuth+=change.twist-change.dx*.004;
    wantedElevation=THREE.MathUtils.clamp(wantedElevation+change.dy*.004,.3,1.45);
@@ -215,9 +236,10 @@ canvas.addEventListener('pointermove',e=>{
 canvas.addEventListener('pointerleave',()=>{if(!touchMode)hideInfoSoon();});
 function releasePointer(e,cancelled=false){
  const pointer=pointers.get(e.pointerId);if(!pointer)return;
+ if(cancelled)cancelTouchTap();
  if(!cancelled&&!moved&&pointers.size===1&&e.button===0&&!pointer.rotate){
   const node=pointer.node||pick(e.clientX,e.clientY);
-  if(e.pointerType==='touch'){lastTouchTime=performance.now();if(node)select(node,true);else $('#close').click();}
+  if(e.pointerType==='touch'){lastTouchTime=performance.now();handleTouchTap(node,e.clientX,e.clientY);}
   else if(node)clickNode(node);
  }
  pointers.delete(e.pointerId);lastGesture=null;
@@ -228,9 +250,19 @@ function releasePointer(e,cancelled=false){
 canvas.addEventListener('pointerup',e=>releasePointer(e));
 canvas.addEventListener('pointercancel',e=>releasePointer(e,true));
 canvas.addEventListener('lostpointercapture',e=>releasePointer(e,true));
-canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane(e.clientX,e.clientY),ratio=Math.exp(THREE.MathUtils.clamp(e.deltaY,-200,200)*.0015),next=THREE.MathUtils.clamp(wantedDistance*ratio,13,230);if(anchor){const factor=1-next/wantedDistance;desired.x+=(anchor.x-desired.x)*factor;desired.z+=(anchor.z-desired.z)*factor;clampFocus();}wantedDistance=next;},{passive:false});
+canvas.addEventListener('wheel',e=>{e.preventDefault();const anchor=pointOnPlane(e.clientX,e.clientY),ratio=Math.exp(THREE.MathUtils.clamp(e.deltaY,-200,200)*.0015),next=THREE.MathUtils.clamp(wantedDistance*ratio,13,600);if(anchor){const factor=1-next/wantedDistance;desired.x+=(anchor.x-desired.x)*factor;desired.z+=(anchor.z-desired.z)*factor;clampFocus();}wantedDistance=next;},{passive:false});
 function applyFilter(){const query=$('#search').value.trim().toLowerCase();let count=0;nodes.forEach(n=>{const visible=(filter==='all'||n.group===filter)&&(!query||(n.name+' '+n.url).toLowerCase().includes(query));n.body.visible=visible;n.label.hidden=!visible||(n.group==='home'&&n!==selected);if(visible)count++;});$('#empty').hidden=count>0;Object.entries(groups).forEach(([key,g])=>g.el.hidden=filter!=='all'&&filter!==key);if((selected&&!selected.body.visible)||(infoNode&&!infoNode.body.visible))$('#close').click();}
-$('#search').oninput=applyFilter;document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(n=>n.classList.toggle('active',n===b));applyFilter();if(filter!=='all'){const ns=nodes.filter(n=>n.group===filter);desired.set(ns.reduce((s,n)=>s+n.x,0)/ns.length,0,ns.reduce((s,n)=>s+n.z,0)/ns.length);wantedDistance=65;}else home();});
+function fitCategory(){
+ const visible=nodes.filter(n=>n.body.visible&&n.group!=='home');
+ const fit=fitPlanetView(visible,{width:innerWidth,height:innerHeight,azimuth:wantedAzimuth,elevation:wantedElevation,fov:camera.fov,orbitRadius});
+ if(fit){desired.set(fit.x,0,fit.z);wantedDistance=fit.distance;clampFocus();}
+}
+$('#search').oninput=applyFilter;
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{
+ cancelTouchTap();clearTimeout(clickTimer);pendingClick=null;$('#close').click();
+ filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(n=>n.classList.toggle('active',n===b));applyFilter();
+ fitCategory();
+});
 document.addEventListener('keydown',e=>{if(departure){if(e.key==='Escape'){e.preventDefault();cancelDeparture();}return;}if(e.target instanceof HTMLInputElement){if(e.key==='Escape'){e.target.value='';applyFilter();e.target.blur();}return;}if(e.key==='/'){e.preventDefault();$('#search').focus();return;}if(e.key==='Escape'){$('#close').click();return;}const step=wantedDistance*.06;const moves={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]};if(moves[e.key]){e.preventDefault();desired.x+=moves[e.key][0];desired.z+=moves[e.key][1];clampFocus();}if(e.key==='+'||e.key==='=')$('#plus').click();if(e.key==='-')$('#minus').click();if(e.key==='Home')home();});
 // Keep distant labels small and quiet; preserve the larger close-up labels.
 // Use each label's camera depth so panning and rotation also preserve perspective.
