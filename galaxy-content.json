@@ -73,7 +73,8 @@
       "x": 29,
       "z": -13,
       "radius": 2.1,
-      "color": "#a48299"
+      "color": "#a48299",
+      "ring": true
     },
     {
       "id": "bitrate",
@@ -95,8 +96,7 @@
       "x": 15,
       "z": 21,
       "radius": 2.5,
-      "color": "#bf8c58",
-      "ring": true
+      "color": "#bf8c58"
     },
     {
       "id": "communications",
