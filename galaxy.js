@@ -39,6 +39,8 @@ nodes.forEach(node=>{
  for(let k=0;k<3;k++){const a=rand()*Math.PI*2,r=node.r+1+rand()*1.3;const shard=mesh(new THREE.IcosahedronGeometry(.1+rand()*.22,0),mat(node.color),body,Math.cos(a)*r,(rand()-.5)*1.4,Math.sin(a)*r);shard.rotation.set(rand(),rand(),rand());shard.userData.node=node;pickables.push(shard);}
  const orbit=mesh(new THREE.TorusGeometry(node.r+1,.012,4,64),new THREE.MeshBasicMaterial({color:node.color,transparent:true,opacity:.25}),body);orbit.rotation.x=Math.PI/2;node.orbit=orbit;
  halo(body,0,-.2,0,node.color,node.r*5,.15);
+ node.hoverGlow=halo(body,0,0,0,0xffffff,node.r*6.5,0);
+ node.hoverGlow.visible=false;
  }
  if(node.ring){const ring=mesh(new THREE.RingGeometry(node.r*1.4,node.r*1.9,80),new THREE.MeshStandardMaterial({color:0xb78f65,side:THREE.DoubleSide,transparent:true,opacity:.5,roughness:1}),body);ring.rotation.set(-1.2,.1,.25);ring.userData.node=node;pickables.push(ring);}
  if(node.group==='home'){
@@ -131,19 +133,19 @@ function pick(x,y){ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamer
 function clampFocus(){desired.x=THREE.MathUtils.clamp(desired.x,-105,105);desired.z=THREE.MathUtils.clamp(desired.z,-95,95);}
 function showInfo(node){
  if(departure||!node.body.visible)return;
- clearTimeout(infoTimer);infoNode=node;
+ clearTimeout(infoTimer);infoTimer=null;infoNode=node;
  $('#destination').hidden=false;
  $('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');
  $('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;
 }
-function hideInfoSoon(){clearTimeout(infoTimer);infoTimer=setTimeout(()=>{infoNode=null;$('#destination').hidden=true;},160);}
+function hideInfoSoon(){if(infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;},160);}
 function select(node){
  selected=node;desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);
  showInfo(node);nodes.forEach(n=>n.label.classList.toggle('selected',n===node));
 }
-$('#destination').onpointerenter=()=>clearTimeout(infoTimer);
+$('#destination').onpointerenter=()=>{clearTimeout(infoTimer);infoTimer=null;};
 $('#destination').onpointerleave=hideInfoSoon;
-$('#close').onclick=()=>{clearTimeout(infoTimer);infoNode=null;$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
+$('#close').onclick=()=>{clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
 function updateEntry(){
  // Proximity follows the camera, independently of whichever description is hovered.
  let nearest=null,best=Infinity;
@@ -207,6 +209,11 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
   n.body.position.y=Math.sin(time*.5+n.phase)*.25;
   n.rock.rotation.y=n.phase+time*n.speed;
   if(n.orbit)n.orbit.material.opacity=n===selected ? .75 : .2;
+  if(n.hoverGlow){
+   const target=n===infoNode&&!departure ? .32 : 0;
+   n.hoverGlow.material.opacity=THREE.MathUtils.lerp(n.hoverGlow.material.opacity,target,paused?1:1-Math.exp(-dt*10));
+   n.hoverGlow.visible=n.hoverGlow.material.opacity>.002;
+  }
   const p=project(n.body.position),metrics=labelMetrics(n.body.position);
   n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
   n.label.querySelector('small').hidden=distance>100;
