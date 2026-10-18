@@ -60,7 +60,7 @@ function sendShipTo(node){
  const docking=Boolean(node&&node.group!=='home');
  // Keep the flight and docking position clear of wings and planetary rings.
  shipDestination.set(docking?node.x+node.r+5.5:0,docking?1:0,docking?node.z-2:0);
- shipDockScale=docking ? .72 : 1;
+ shipDockScale=docking ? .30 : 1;
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
   spacecraft.position.copy(shipDestination);spacecraft.scale.setScalar(shipDockScale);
   spacecraft.rotation.z=0;shipFlight=null;return;
