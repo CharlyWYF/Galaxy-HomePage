@@ -3,7 +3,7 @@ import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
 const $=s=>document.querySelector(s);
 let touchMode=matchMedia('(hover: none) and (pointer: coarse)').matches,lastTouchTime=-Infinity,infoPinned=false;
-function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'悬停了解星球，靠近后进入。';$('.hint').textContent=touch?'单指平移 · 双指缩放 / 旋转 / 俯仰':'左键平移 · 右键旋转 · 滚轮缩放';}
+function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'悬停了解星球，靠近后进入。';}
 updateInputMode(touchMode);
 document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){lastTouchTime=performance.now();updateInputMode(true);}else if(e.pointerType==='mouse')updateInputMode(false);},{capture:true});
 function displayUrl(url){return url.replace(/^https?:\/\//i,'');}
@@ -137,19 +137,19 @@ function clampFocus(){desired.x=THREE.MathUtils.clamp(desired.x,-105,105);desire
 function showInfo(node){
  if(departure||!node.body.visible)return;
  clearTimeout(infoTimer);infoTimer=null;infoNode=node;
- $('#destination').hidden=false;
+ $('#destination').hidden=false;document.body.classList.add('info-open');
  $('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');
  $('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destUrl').textContent=displayUrl(node.url);
  measureInfoFraming();
 }
-function hideInfoSoon(){if(infoPinned||infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;},160);}
+function hideInfoSoon(){if(infoPinned||infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;document.body.classList.remove('info-open');},160);}
 function select(node,pin=false){
  infoPinned=pin;selected=node;desired.set(node.x,0,node.z);wantedDistance=Math.min(wantedDistance,42);
  showInfo(node);nodes.forEach(n=>n.label.classList.toggle('selected',n===node));
 }
 $('#destination').onpointerenter=()=>{clearTimeout(infoTimer);infoTimer=null;};
 $('#destination').onpointerleave=hideInfoSoon;
-$('#close').onclick=()=>{infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
+$('#close').onclick=()=>{infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;document.body.classList.remove('info-open');selected=null;nodes.forEach(n=>n.label.classList.remove('selected'));};
 function updateEntry(){
  // Proximity follows the camera, independently of whichever description is hovered.
  let nearest=null,best=Infinity;
@@ -186,7 +186,7 @@ function pointerDown(e){
  if(e.pointerType!=='touch')hideInfoSoon();
  canvas.style.cursor='grabbing';
 }
-function dismissTouchInfo(){if(touchMode){infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;}}
+function dismissTouchInfo(){if(touchMode){infoPinned=false;clearTimeout(infoTimer);infoTimer=null;infoNode=null;$('#destination').hidden=true;document.body.classList.remove('info-open');}}
 canvas.addEventListener('pointerdown',pointerDown);
 $('#labels').addEventListener('pointerdown',e=>{if(e.pointerType==='touch')pointerDown(e);});
 canvas.addEventListener('pointermove',e=>{
@@ -257,7 +257,7 @@ function measureInfoFraming(){
   infoFraming.targetY=innerHeight/2-(top+bottom)/2;
  }else if(innerHeight<=500){
   const left=card.offsetLeft+card.offsetWidth+20,right=$('.zoom').offsetLeft-16;
-  const bottom=Math.max(top+60,innerHeight-170);
+  const bottom=Math.max(top+60,innerHeight-100);
   infoFraming.targetX=innerWidth/2-(left+Math.max(left+80,right))/2;
   infoFraming.targetY=innerHeight/2-(top+bottom)/2;
  }
