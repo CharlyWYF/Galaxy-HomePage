@@ -397,7 +397,7 @@ function frame(now){frameRequest=null;if(document.hidden||!pageFocused){syncRend
   n.label.hidden=!n.body.visible||!onScreen||coveredByInfo||(n.group==='home'&&n!==selected);
   n.label.style.setProperty('--label-opacity',metrics.opacity.toFixed(3));
  });
- Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-8,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',metrics.scale.toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=p.visible?metrics.opacity.toFixed(3):'0';});
+ Object.values(groups).forEach(g=>{const position=new THREE.Vector3(g.x,-11,g.z),p=project(position),metrics=labelMetrics(position);g.el.style.setProperty('--label-scale',Math.min(metrics.scale,1.15).toFixed(3));g.el.style.left=p.x+'px';g.el.style.top=p.y+'px';g.el.style.opacity=p.visible?metrics.opacity.toFixed(3):'0';});
  if(now-lastHud>80){document.body.classList.toggle('view-changed',!isHomeView());$('#zoomValue').textContent=(105/distance).toFixed(1)+'×';$('.intro').style.visibility=distance<75?'hidden':'visible';lastHud=now;}
  updateShip(dt);
  updateEntry();
