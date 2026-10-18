@@ -143,3 +143,7 @@ footer{transition:opacity .2s ease,transform .2s ease,visibility .2s}
  body:not(.touch-ui) #destination{left:50%;width:min(460px,92vw);transform:translate(-50%,0) scale(1);transform-origin:top center}
  body:not(.touch-ui) #destination[hidden]{transform:translate(-50%,10px) scale(.985)}
 }
+
+.desktop-hint{margin-right:auto;color:#7d8f9e;font-size:12px;letter-spacing:1px}
+.touch-ui .desktop-hint{display:none}
+@media(max-width:700px){.desktop-hint{display:none}}

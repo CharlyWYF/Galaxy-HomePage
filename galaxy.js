@@ -5,7 +5,7 @@ import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
 import {fitPlanetView} from './view-fit.js?v=20261018-fit1';
 const $=s=>document.querySelector(s);
 let touchMode=matchMedia('(hover: none) and (pointer: coarse)').matches,lastTouchTime=-Infinity,infoPinned=false;
-function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'左键拖动，右键旋转，滚轮缩放';}
+function updateInputMode(touch){touchMode=touch;document.body.classList.toggle('touch-ui',touch);$('.intro div').textContent=touch?'轻点了解星球，靠近后进入。':'悬停了解星球，靠近后进入。';}
 updateInputMode(touchMode);
 document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){lastTouchTime=performance.now();updateInputMode(true);}else if(e.pointerType==='mouse')updateInputMode(false);},{capture:true});
 function mobileModelScale(){return touchMode&&(innerWidth<=700||innerHeight<=500)?1.25:1;}
