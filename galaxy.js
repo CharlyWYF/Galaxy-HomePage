@@ -57,7 +57,7 @@ nodes.forEach(node=>{
   const ship=createSpacecraft();scene.add(ship);node.ship=ship;
   ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
  }
- const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.append(document.createTextNode(node.name));const host=document.createElement('small');host.textContent=displayUrl(node.url);label.append(host);label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node,e.clientX,e.clientY);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=.04+rand()*.025;
+ const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.append(document.createTextNode(node.name));const host=document.createElement('small');host.textContent=displayUrl(node.url);label.append(host);label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node,e.clientX,e.clientY);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=.08+rand()*.05;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
