@@ -390,6 +390,7 @@ function frame(now){frameRequest=null;if(document.hidden||!pageFocused){syncRend
   }
   const mobile=mobileModelScale()>1;
   const p=project(n.body.position),metrics=labelMetrics(n.body.position,mobile?.55:.72);
+  if(mobile)metrics.scale=Math.min(metrics.scale,1.25);
   n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
   const urlHidden=distance>(mobile?145:100);
   n.label.querySelector('small').hidden=urlHidden;
