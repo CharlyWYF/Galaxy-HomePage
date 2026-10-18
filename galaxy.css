@@ -147,3 +147,14 @@ footer{transition:opacity .2s ease,transform .2s ease,visibility .2s}
 .desktop-hint{margin-right:auto;color:#7d8f9e;font-size:12px;letter-spacing:1px}
 .touch-ui .desktop-hint{display:none}
 @media(max-width:700px){.desktop-hint{display:none}}
+
+/* CSS starts animating before the 3D engine has finished downloading. */
+.loading-orbit{position:relative;flex:none;width:30px;height:30px;border:1px solid #89a9c52e;border-top-color:#b7d2e8;border-right-color:#89a9c580;border-radius:50%;box-shadow:0 0 18px #89a9c518;animation:loadingOrbit 2.4s linear infinite}
+.loading-orbit::after{content:"";position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:#d7e8f5;box-shadow:0 0 9px #b7d2e888}
+.loading-dots{display:flex;gap:5px;letter-spacing:0}
+.loading-dots span{display:inline-block;opacity:.25;animation:loadingDot 1.5s ease-in-out infinite}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+.ready .loading-orbit,.ready .loading-dots span{animation:none}
+@keyframes loadingOrbit{to{transform:rotate(360deg)}}
+@keyframes loadingDot{0%,70%,100%{opacity:.25;transform:translateY(0)}35%{opacity:1;transform:translateY(-3px)}}
