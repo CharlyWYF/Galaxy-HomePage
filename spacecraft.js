@@ -3,6 +3,17 @@ import * as THREE from './vendor/three.module.js';
 // Lightweight, locally generated geometry; no model downloads or textures required.
 export function createSpacecraft(){
  const ship=new THREE.Group();
+ // Two tiny tapered plumes share geometry/material; no particles or extra lights.
+ const plumeGeometry=new THREE.CylinderGeometry(1,0,1,8,1,true);
+ const plumeColors=[];
+ for(let i=0;i<plumeGeometry.attributes.position.count;i++){
+  const fade=plumeGeometry.attributes.position.getY(i)+.5;
+  plumeColors.push(.48,.8,1,fade);
+ }
+ plumeGeometry.setAttribute('color',new THREE.Float32BufferAttribute(plumeColors,4));
+ const plumeMaterial=new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,toneMapped:false});
+ const plumes=[];
+ ship.userData.exhaust={material:plumeMaterial,plumes,intensity:0};
  const material=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.55,metalness:.45,flatShading:true,...extra});
  const hull=material(0xc8cec9),trim=material(0xbba071),dark=material(0x283641),panel=material(0x203f58,{roughness:.35,metalness:.65});
  const glass=material(0x345d73,{roughness:.18,metalness:.7,emissive:0x173b50,emissiveIntensity:.28});
@@ -30,10 +41,26 @@ export function createSpacecraft(){
   // Twin recessed engine bells; the light is confined to their cores.
   part(new THREE.CylinderGeometry(.23,.29,.48,8),dark,side*.43,-.08,-1.39).rotation.x=Math.PI/2;
   part(new THREE.CylinderGeometry(.15,.15,.018,12),engine,side*.43,-.08,-1.64).rotation.x=Math.PI/2;
+  const plume=part(plumeGeometry,plumeMaterial,side*.43,-.08,-2.1);
+  plume.rotation.x=Math.PI/2;plume.scale.set(.14,.9,.14);plume.visible=false;
+  plume.userData.exhaust=true;plumes.push(plume);
  }
  // Compact communication mast and a small dorsal fin.
  part(new THREE.CylinderGeometry(.025,.035,.48,6),trim,0,.91,-.65);
  part(new THREE.SphereGeometry(.065,6,4),hull,0,1.17,-.65);
  const fin=part(new THREE.BoxGeometry(.07,.48,.52),hull,0,.57,-1.05);fin.rotation.x=-.25;
  return ship;
+}
+
+export function updateSpacecraftThrust(ship,speed,dt,time,reduced=false){
+ const exhaust=ship.userData.exhaust;
+ const target=reduced?0:THREE.MathUtils.smoothstep(speed,.15,8);
+ exhaust.intensity=reduced?0:THREE.MathUtils.lerp(exhaust.intensity,target,1-Math.exp(-dt*8));
+ const strength=exhaust.intensity;
+ const length=(.65+strength*1.3)*(1+.04*Math.sin(time*27));
+ exhaust.material.opacity=strength*.18;
+ for(const plume of exhaust.plumes){
+  plume.visible=strength>.01;
+  plume.scale.y=length;plume.position.z=-1.66-length/2;
+ }
 }

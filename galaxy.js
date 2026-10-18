@@ -1,6 +1,6 @@
 import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-content1';
 import * as THREE from './vendor/three.module.js';
-import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
+import {createSpacecraft,updateSpacecraftThrust} from './spacecraft.js?v=20261018-exhaust1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
 import {fitPlanetView} from './view-fit.js?v=20261018-fit1';
 const $=s=>document.querySelector(s);
@@ -55,7 +55,7 @@ nodes.forEach(node=>{
   rock.visible=false;
   // The spacecraft travels independently; the origin's coordinates stay fixed.
   const ship=createSpacecraft();scene.add(ship);node.ship=ship;
-  ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
+  ship.traverse(m=>{if(m.isMesh&&!m.userData.exhaust){m.userData.node=node;pickables.push(m);}});
  }
  const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.append(document.createTextNode(node.name));const host=document.createElement('small');host.textContent=displayUrl(node.url);label.append(host);label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>{if(e.detail!==0&&performance.now()-lastTouchTime<700)return;e.detail===0?select(node,touchMode):clickNode(node,e.clientX,e.clientY);};$('#labels').append(label);node.label=label;label.onpointerenter=e=>{if(e.pointerType!=='touch'&&!touchMode)showInfo(node);};label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=.08+rand()*.05;
 });
@@ -77,7 +77,7 @@ function updateShip(dt){
  const targetScale=mobileModelScale()*THREE.MathUtils.lerp(.30,1,THREE.MathUtils.smoothstep(distance,42,110));
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
   spacecraft.position.copy(shipTarget);shipVelocity.set(0,0,0);
-  spacecraft.scale.setScalar(targetScale);spacecraft.quaternion.copy(shipFacing);return;
+  spacecraft.scale.setScalar(targetScale);spacecraft.quaternion.copy(shipFacing);updateSpacecraftThrust(spacecraft,0,dt,time,true);return;
  }
  // Critically damped following retains momentum when the center keeps moving.
  // Exact integration avoids restarting an animation on every pointer movement.
@@ -89,6 +89,7 @@ function updateShip(dt){
  const ease=1-Math.exp(-dt*3);
  spacecraft.scale.setScalar(THREE.MathUtils.lerp(spacecraft.scale.x,targetScale,ease));
  spacecraft.quaternion.slerp(shipFacing,1-Math.exp(-dt*8));
+ updateSpacecraftThrust(spacecraft,shipVelocity.length(),dt,time);
 }
 Object.values(groups).forEach(g=>{const el=document.createElement('div');el.className='sector-label';el.textContent=g.sub+' / '+g.name;$('#sectorLabels').append(el);g.el=el;});
 const routePairs=buildRoutePairs(content.planets,content.routes);
