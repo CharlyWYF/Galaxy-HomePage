@@ -362,18 +362,20 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous
    n.hoverGlow.material.opacity=THREE.MathUtils.lerp(n.hoverGlow.material.opacity,target,paused?1:1-Math.exp(-dt*10));
    n.hoverGlow.visible=n.hoverGlow.material.opacity>.002;
   }
-  const p=project(n.body.position),metrics=labelMetrics(n.body.position,mobileModelScale()>1?.55:.72);
+  const mobile=mobileModelScale()>1;
+  const p=project(n.body.position),metrics=labelMetrics(n.body.position,mobile?.55:.72);
   n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
-  n.label.querySelector('small').hidden=distance>100;
+  const urlHidden=distance>(mobile?145:100);
+  n.label.querySelector('small').hidden=urlHidden;
   // Cache unscaled bounds; only text visibility and viewport changes affect them.
-  const layoutKey=innerWidth+':'+innerHeight+':'+(distance>100);
+  const layoutKey=innerWidth+':'+innerHeight+':'+mobile+':'+urlHidden;
   if(n.labelLayoutKey!==layoutKey){
    n.label.hidden=false;
    n.labelWidth=n.label.offsetWidth;n.labelHeight=n.label.offsetHeight;
    n.labelLayoutKey=layoutKey;
   }
   const halfWidth=n.labelWidth*metrics.scale/2;
-  const labelTop=p.y+n.r*mobileModelScale()*metrics.pixelsPerUnit+10*metrics.scale;
+  const labelTop=p.y+n.r*mobileModelScale()*metrics.pixelsPerUnit+(mobile?2:10)*metrics.scale;
   const labelBottom=labelTop+n.labelHeight*metrics.scale;
   n.label.style.left=THREE.MathUtils.clamp(p.x,halfWidth+12,innerWidth-halfWidth-12)+'px';
   n.label.style.top=labelTop+'px';
