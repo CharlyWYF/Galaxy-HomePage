@@ -17,6 +17,11 @@ assert.deepEqual(buildRoutePairs(small,{...auto,closed:false}),[['a','b'],['b','
 assert.deepEqual(buildRoutePairs(small,{mode:'manual',links:[['a','c'],['c','a'],['a','a'],['a','removed'],['b','c']]}),[['a','c'],['b','c']]);
 assert.deepEqual(buildRoutePairs([...small].reverse(),{mode:'manual',links:[['a','c']]}),[['a','c']]);
 assert.deepEqual(buildRoutePairs(small,{mode:'none'}),[]);
+const mixed=[{id:'a',group:'signal'},{id:'x',group:'tool'},{id:'b',group:'signal'},{id:'y',group:'tool'},{id:'c',group:'signal'},{id:'solo',group:'memory'}];
+assert.deepEqual(buildRoutePairs(mixed,auto),[['a','b'],['b','c'],['c','a'],['x','y']]);
+assert.deepEqual(buildRoutePairs(mixed,{...auto,closed:false}),[['a','b'],['b','c'],['x','y']]);
+const groupsById=new Map(parsed.planets.map(n=>[n.id,n.group]));
+for(const [a,b] of buildRoutePairs(parsed.planets,{...parsed.routes,mode:'auto'}))assert.equal(groupsById.get(a),groupsById.get(b),'automatic routes must stay within one sector');
 const fixture={sectors:{tool:{label:'工具',name:'工具星区',sub:'TOOLS',x:0,z:0}},defaults:{radius:2},planets:[{id:'a',name:'A',url:'https://example.com/a',group:'tool',x:0,z:0},{id:'b',name:'B',url:'https://example.com/b',group:'tool',x:10,z:0}],routes:{}};
 const edit=callback=>{const config=structuredClone(fixture);callback(config);return config;};
 assert.throws(()=>parseGalaxyContent(edit(c=>c.planets[1].id=c.planets[0].id)),/id/);

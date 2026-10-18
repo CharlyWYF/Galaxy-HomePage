@@ -66,8 +66,15 @@ export function buildRoutePairs(planets,routes){
   if(!seen.has(key)){seen.add(key);pairs.push([a,b]);}
  };
  if(routes.mode==='auto'){
-  for(let i=1;i<ids.length;i++)add(ids[i-1],ids[i]);
-  if(routes.closed&&ids.length>2)add(ids.at(-1),ids[0]);
+  const sectors=new Map();
+  for(const planet of planets){
+   if(!sectors.has(planet.group))sectors.set(planet.group,[]);
+   sectors.get(planet.group).push(planet.id);
+  }
+  for(const members of sectors.values()){
+   for(let i=1;i<members.length;i++)add(members[i-1],members[i]);
+   if(routes.closed&&members.length>2)add(members.at(-1),members[0]);
+  }
  }else if(routes.mode==='manual'){
   for(const [a,b] of routes.links)add(a,b);
  }

@@ -1,4 +1,4 @@
-import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-content1';
+import {parseGalaxyContent,buildRoutePairs} from './galaxy-content.mjs?v=20261018-sector-routes1';
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft,updateSpacecraftThrust} from './spacecraft.js?v=20261018-exhaust1';
 import {measureGesture,gestureChange} from './gestures.js?v=20261018-mobile1';
