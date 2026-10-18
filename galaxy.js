@@ -392,7 +392,7 @@ function frame(now){frameRequest=null;if(document.hidden||!pageFocused){syncRend
   const p=project(n.body.position),metrics=labelMetrics(n.body.position,mobile?.55:.72);
   if(mobile)metrics.scale=Math.min(metrics.scale,1.25);
   n.label.style.setProperty('--label-scale',metrics.scale.toFixed(3));
-  const urlHidden=distance>(mobile?145:100);
+  const urlHidden=distance>(mobile?115:100);
   n.label.querySelector('small').hidden=urlHidden;
   // Cache unscaled bounds; only text visibility and viewport changes affect them.
   const layoutKey=innerWidth+':'+innerHeight+':'+mobile+':'+urlHidden;
