@@ -49,7 +49,7 @@ nodes.forEach(node=>{
  node.hoverGlow=halo(body,0,0,0,0xffffff,node.r*6.5,0);
  node.hoverGlow.visible=false;
  }
- if(node.ring){const ring=mesh(new THREE.RingGeometry(node.r*1.4,node.r*1.9,80),new THREE.MeshStandardMaterial({color:0xb78f65,side:THREE.DoubleSide,transparent:true,opacity:.5,roughness:1}),body);ring.rotation.set(-1.2,.1,.25);ring.userData.node=node;pickables.push(ring);}
+ if(node.ring){const ring=mesh(new THREE.RingGeometry(node.r*1.4,node.r*1.9,80),new THREE.MeshStandardMaterial({color:node.color,side:THREE.DoubleSide,transparent:true,opacity:.5,roughness:1}),body);ring.rotation.set(-1.2,.1,.25);ring.userData.node=node;pickables.push(ring);}
  if(node.group==='home'){
   rock.visible=false;
   // The spacecraft travels independently; the origin's coordinates stay fixed.
