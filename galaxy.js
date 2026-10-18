@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import {createSpacecraft} from './spacecraft.js?v=20261018-model1';
 const $=s=>document.querySelector(s);
+function displayUrl(url){return url.replace(/^https?:\/\//i,'');}
 const nodes=[
  {name:'Bing Chat 镜像',url:'https://bing.charlyw.top',group:'service',x:-29,z:-22,r:1.8,color:0x7a9a88,desc:'来自旧时代的聊天信号。坐标还在，频道是否有人值守已无从得知。'},
  {name:'NextChat',url:'https://chat.charlyw.top',group:'service',x:-12,z:-31,r:2.4,color:0x8fb9b2,desc:'一颗用于对话的小行星。曾经在这里部署过自己的聊天入口。'},
@@ -50,7 +51,7 @@ nodes.forEach(node=>{
   const ship=createSpacecraft();scene.add(ship);node.ship=ship;
   ship.traverse(m=>{if(m.isMesh){m.userData.node=node;pickables.push(m);}});
  }
- const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+node.url+'</small>';label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;label.onpointerenter=()=>showInfo(node);label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
+ const label=document.createElement('button');label.className='node-label';label.hidden=node.group==='home';label.innerHTML=node.name+'<span>↗</span><small>'+displayUrl(node.url)+'</small>';label.setAttribute('aria-label',node.name+'，单击靠近，双击进入');label.onclick=e=>e.detail===0?select(node):clickNode(node);$('#labels').append(label);node.label=label;label.onpointerenter=()=>showInfo(node);label.onpointerleave=hideInfoSoon;label.onfocus=()=>showInfo(node);label.onblur=hideInfoSoon;node.phase=rand()*6;node.speed=(rand()-.5)*.15;
 });
 const spacecraft=nodes.find(n=>n.ship).ship;
 const shipVelocity=new THREE.Vector3(),shipTarget=new THREE.Vector3();
@@ -96,7 +97,7 @@ function enterPlanet(node){
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  departure={node,start:performance.now(),duration:reduced?120:950,reduced,focus:focus.clone(),distance,active:document.activeElement};
  $('#departureTitle').textContent='正在前往 '+node.name;
- $('#departureHost').textContent=node.url;
+ $('#departureHost').textContent=displayUrl(node.url);
  departureUI.hidden=false;document.body.classList.add('departing');
  departureControls.forEach(el=>el.inert=true);
  $('#cancelDeparture').focus({preventScroll:true});
@@ -133,7 +134,7 @@ function showInfo(node){
  clearTimeout(infoTimer);infoTimer=null;infoNode=node;
  $('#destination').hidden=false;
  $('#destSector').textContent=(groups[node.group]?.sub||'HOME')+' / COORDINATE '+String(nodes.indexOf(node)+1).padStart(2,'0');
- $('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destUrl').textContent=node.url;
+ $('#destTitle').textContent=node.name;$('#destDesc').textContent=node.desc;$('#destUrl').textContent=displayUrl(node.url);
 }
 function hideInfoSoon(){if(infoTimer)return;infoTimer=setTimeout(()=>{infoTimer=null;infoNode=null;$('#destination').hidden=true;},160);}
 function select(node){
@@ -155,7 +156,7 @@ function updateEntry(){
  }
  if(nearest!==nearbyNode){
   nearbyNode=nearest;$('#destLink').hidden=!nearest;
-  if(nearest){$('#destLink').href=nearest.url;$('#destLink').title=nearest.url;$('#entryText').textContent='进入 '+nearest.name;}
+  if(nearest){$('#destLink').href=nearest.url;$('#destLink').title=displayUrl(nearest.url);$('#entryText').textContent='进入 '+nearest.name;}
  }
 }
 function home(){clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
