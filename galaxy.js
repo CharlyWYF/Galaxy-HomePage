@@ -103,6 +103,17 @@ let infoNode=null,infoTimer=null,nearbyNode=null;
 spacecraft.position.copy(focus);
 const initialAzimuth=Math.atan2(.15,.64),initialElevation=Math.atan2(.82,Math.hypot(.15,.64)),orbitRadius=Math.hypot(.15,.82,.64);
 let azimuth=initialAzimuth,elevation=initialElevation,wantedAzimuth=azimuth,wantedElevation=elevation;
+// Slow idle orbit; user input pauses immediately and restarts after 20 seconds.
+let autoOrbitLastActivity=-Infinity,autoOrbitSpeed=0,autoOrbitOffset=0;
+function pauseAutoOrbit(){autoOrbitLastActivity=performance.now();autoOrbitSpeed=0;}
+function updateAutoOrbit(now,dt){
+ const blocked=paused||document.hidden||departure||pointers.size>0||!$('#destination').hidden||document.activeElement instanceof HTMLInputElement;
+ if(blocked){pauseAutoOrbit();return;}
+ if(now-autoOrbitLastActivity<20000||!document.body.classList.contains('ready'))return;
+ autoOrbitSpeed=THREE.MathUtils.lerp(autoOrbitSpeed,.018,1-Math.exp(-dt*.7));
+ const turn=autoOrbitSpeed*dt;
+ wantedAzimuth+=turn;autoOrbitOffset+=turn;
+}
 let pendingClick=null,clickTimer=null;
 // 等待双击判定结束后才移动镜头，避免第二次点击时星球已经移走。
 function clickNode(node){const now=performance.now();if(pendingClick?.node===node&&now-pendingClick.time<=450){clearTimeout(clickTimer);pendingClick=null;enterPlanet(node);return;}clearTimeout(clickTimer);pendingClick={node,time:now};clickTimer=setTimeout(()=>{pendingClick=null;select(node);},450);}
@@ -181,9 +192,9 @@ function updateEntry(){
   if(nearest){$('#destLink').href=nearest.url;$('#destLink').title=displayUrl(nearest.url);$('#entryText').textContent='进入 '+nearest.name;}
  }
 }
-function home(){cancelTouchTap();clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
+function home(){pauseAutoOrbit();autoOrbitOffset=0;cancelTouchTap();clearTimeout(clickTimer);pendingClick=null;desired.set(-5,0,0);wantedDistance=defaultDistance();wantedAzimuth=initialAzimuth;wantedElevation=initialElevation;$('#close').click();}
 function isHomeView(){
- const angle=Math.atan2(Math.sin(wantedAzimuth-initialAzimuth),Math.cos(wantedAzimuth-initialAzimuth));
+ const angle=Math.atan2(Math.sin(wantedAzimuth-initialAzimuth-autoOrbitOffset),Math.cos(wantedAzimuth-initialAzimuth-autoOrbitOffset));
  return Math.hypot(desired.x+5,desired.z)<.2&&Math.abs(wantedDistance-defaultDistance())<.5&&Math.abs(angle)<.01&&Math.abs(wantedElevation-initialElevation)<.01;
 }
 function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
@@ -324,8 +335,10 @@ infoResizeObserver.observe($('#destination'));infoResizeObserver.observe($('head
 // Font loading can change label bounds after the first frame.
 document.fonts.ready.then(()=>nodes.forEach(n=>{n.labelLayoutKey=null;}));
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer?.setSize(innerWidth,innerHeight);measureInfoFraming();});
+for(const event of ['pointerdown','pointermove','pointerup','pointercancel','wheel','keydown','input','focusin','focusout'])document.addEventListener(event,pauseAutoOrbit,{capture:true,passive:true});
+document.addEventListener('visibilitychange',pauseAutoOrbit);
 let previous=performance.now(),lastHud=0;
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
+function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;updateAutoOrbit(now,dt);if(!paused&&!document.hidden)time+=dt;const ease=paused?1:1-Math.exp(-dt*6);focus.lerp(desired,ease);distance+=(wantedDistance-distance)*ease;azimuth+=(wantedAzimuth-azimuth)*ease;elevation+=(wantedElevation-elevation)*ease;if(departure&&!departure.reduced){
  const t=THREE.MathUtils.clamp((now-departure.start)/departure.duration,0,1),travel=t*t*(3-2*t);
  focus.lerpVectors(departure.focus,departure.node.body.position,travel);
  const arrivalDistance=Math.max(.6,departure.node.r*.35);
