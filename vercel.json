@@ -1,0 +1,41 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "node scripts/check.mjs --deployment",
+  "outputDirectory": "public",
+  "rewrites": [
+    {
+      "source": "/galaxy.js",
+      "destination": "/assets/js/galaxy.js"
+    },
+    {
+      "source": "/galaxy-content.mjs",
+      "destination": "/assets/js/galaxy-content.mjs"
+    },
+    {
+      "source": "/spacecraft.js",
+      "destination": "/assets/js/spacecraft.js"
+    },
+    {
+      "source": "/gestures.js",
+      "destination": "/assets/js/gestures.js"
+    },
+    {
+      "source": "/view-fit.js",
+      "destination": "/assets/js/view-fit.js"
+    },
+    {
+      "source": "/galaxy.css",
+      "destination": "/assets/css/galaxy.css"
+    },
+    {
+      "source": "/galaxy-content.json",
+      "destination": "/content/galaxy-content.json"
+    },
+    {
+      "source": "/vendor/:path*",
+      "destination": "/assets/vendor/:path*"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "legacyOrigin": null,
+  "legacyPaths": [
+    "/cal",
+    "/kingdom",
+    "/docs",
+    "/flv",
+    "/video",
+    "/downloads",
+    "/apks",
+    "/sub",
+    "/style.css",
+    "/icon"
+  ],
+  "homepageAliases": {
+    "/galaxy.js": "/assets/js/galaxy.js",
+    "/galaxy-content.mjs": "/assets/js/galaxy-content.mjs",
+    "/spacecraft.js": "/assets/js/spacecraft.js",
+    "/gestures.js": "/assets/js/gestures.js",
+    "/view-fit.js": "/assets/js/view-fit.js",
+    "/galaxy.css": "/assets/css/galaxy.css",
+    "/galaxy-content.json": "/content/galaxy-content.json",
+    "/vendor/:path*": "/assets/vendor/:path*"
+  }
+}

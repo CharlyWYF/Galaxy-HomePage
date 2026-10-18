@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-const source=await readFile(new URL('../galaxy.js',import.meta.url),'utf8');
+const source=await readFile(new URL('../public/assets/js/galaxy.js',import.meta.url),'utf8');
 const lifecycle=source.slice(source.indexOf('// Stop scheduling frames entirely'));
 const windowEvents=new Map(),documentEvents=new Map(),scheduled=new Map();
 let clock=1000,id=0,focused=true,suspended=false;

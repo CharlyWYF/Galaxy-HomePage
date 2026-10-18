@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import * as THREE from '../vendor/three.module.js';
-import {parseGalaxyContent,buildRoutePairs} from '../galaxy-content.mjs';
-const raw=JSON.parse(await readFile(new URL('../galaxy-content.json',import.meta.url),'utf8'));
+import * as THREE from '../public/assets/vendor/three.module.js';
+import {parseGalaxyContent,buildRoutePairs} from '../public/assets/js/galaxy-content.mjs';
+const raw=JSON.parse(await readFile(new URL('../public/content/galaxy-content.json',import.meta.url),'utf8'));
 const parsed=parseGalaxyContent(raw);
 assert.equal(parsed.planets.length,raw.planets.length);
 const small=['a','b','c'].map(id=>({id}));
@@ -42,7 +42,7 @@ assert.equal(withCategory.sectors.blog.z,20);
 const emptySector=parseGalaxyContent(edit(c=>c.sectors.empty={label:'空',name:'空星区',sub:'EMPTY'}));
 assert.equal(emptySector.sectors.empty.hasPlanets,false);
 // Exercise the scene's actual route update against real Three.js geometry.
-const source=await readFile(new URL('../galaxy.js',import.meta.url),'utf8');
+const source=await readFile(new URL('../public/assets/js/galaxy.js',import.meta.url),'utf8');
 const updateSource=source.slice(source.indexOf('function updateRoutes(){'),source.indexOf('\nupdateRoutes();'));
 const routeGeo=new THREE.BufferGeometry();
 const routes=new THREE.LineSegments(routeGeo,new THREE.LineDashedMaterial());

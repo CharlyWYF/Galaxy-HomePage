@@ -1,41 +1,77 @@
-# 查理の星空
+# 查理の星空 · HomePage 2.0
 
-CHARLY 的 Three.js 交互主页。每颗小行星代表一个站点、工具或旧资料入口。
+只负责三维星空主页和站点导航。工具、影音、游戏、资料及下载资源已在本地拆分到独立项目 `../charly-sites`；生产切换尚未执行。
 
-## 操作
+## 项目结构
 
-- 左键拖动平移，右键拖动旋转，滚轮缩放。
-- 悬停星球或名称查看详情；单击星球拉近镜头，靠近后底部出现独立的进入按钮。双击或点击进入按钮时，镜头飞近星球后在当前标签页打开网站；连接期间持续显示提示，可返回星图取消。系统偏好减少动态效果时使用简短静态过渡。
-- 飞船以平滑的非线性缓动跟随视角中心，适用于拖动、键盘平移、筛选、查看详情和归位；近景逐渐缩小至 30%。关闭详情不会单独触发返航。
-- 右侧按钮缩放或恢复初始视角。
-- 搜索名称、域名，或按信号、工具、记忆筛选。切换分类时会收起详情，并根据该分类的星球分布和屏幕比例自动取景，完整展示各颗星球。
-- 方向键平移，+/- 缩放，Home 归位，/ 聚焦搜索，Escape 关闭详情。
-- 触屏双击放大，不触发跳转；单击立即靠近，不等待双击判定。支持单指平移、双指捏合缩放、扭转旋转、同向滑动调整方位和俯仰。轻点星球或名称查看并靠近，信息卡片保持展开；轻点空白或关闭按钮收起。手势操作会收起卡片，双指操作结束不会误触进入，跳转通过独立进入按钮确认；动画尊重系统减少动态效果偏好。
+```text
+public/                 唯一的部署目录
+  index.html            主页入口
+  content/
+    galaxy-content.json 网站、星球、分类和连线配置
+  assets/
+    js/                 场景、飞船、手势和内容校验模块
+    css/galaxy.css      界面样式
+    vendor/             本地 Three.js 和字体，包含许可证
+    icons/              主页图标
+scripts/
+  check.mjs             本地资源和部署前校验
+  configure-legacy.mjs  配置迁出内容的旧路径兼容
+tests/                 内容、连线和渲染生命周期检查
+docs/
+  EDITING.md            内容编辑指南
+  MIGRATION.md          两个项目的迁移与切换说明
+migration-config.json   旧路径和新项目目标域名
+vercel.json             只发布 public/ 的 Vercel 配置
+```
 
-页面加载完成后会缓慢自动环绕视角（约 3 分钟一圈）。实际拖动、缩放、点击或输入时暂停，停止操作 2 秒后平滑恢复；悬停、详情展开及搜索框保持聚焦均不阻止旋转，单纯移动鼠标不算操作。页面进入后台或窗口失去焦点时取消渲染帧并暂停 CSS 动画，恢复可见且获得焦点后重启，动画时间不补算后台停留时长。系统减少动态效果模式下不会自动旋转。
+## 本地运行
 
-## 本地运行与部署
+需要 Node.js 20+；没有第三方工具依赖，不需要 npm install。
 
-纯静态站点，无需安装依赖或构建。使用任意静态 HTTP 服务，例如在仓库目录运行 `python -m http.server 8000`，访问 http://localhost:8000 。ES modules 不能通过直接双击 HTML 加载。
+```sh
+npm run check
+npm test
+npm run dev
+```
 
-根目录可直接部署至静态托管服务；保留原有部署方式即可。Three.js 已存放于 vendor，不依赖外部 CDN 或字体服务。界面英文和数字统一使用本地 Oxanium 可变字体（200–800），中文使用本地 Noto Sans SC 可变字体（300–700，思源黑体同源）。中文包含当前界面的小字包及按 Unicode 范围加载的完整分片；新增内容不需要重新生成字体，也不依赖 Google Fonts 在线服务。
+访问 http://127.0.0.1:8000/ 。也可以运行 `python3 -m http.server 8000 --directory public`。不要直接双击 HTML；模块和 JSON 需要 HTTP 服务。
 
-## 字号与镜头缩放
+## 内容编辑
 
-界面文字使用较大的基础字号；桌面端星球名称为 16px，窄屏为 14px。星图内的名称、域名和星区文字按镜头深度的 0.55 次幂缓和放大，范围为基础字号的 0.72–1.9 倍；手机端星球标签的最小缩放单独降至 0.55 倍（名称约 7.7px），近景上限不变；默认远景约为 13px，越远越淡，最低不透明度为 45%。悬停或选中的名称保持清晰。固定的搜索、筛选和详情面板不随镜头缩放。相关参数位于 galaxy.js 的 labelMetrics 和 galaxy.css 的标签规则中。
+日常编辑 `public/content/galaxy-content.json`，无需修改场景代码。可配置网站名称、链接、介绍、星球位置/大小/颜色/装饰和分类。星区标签位于该区域各星球中心，自动连线只连接同星区内的星球。详见 [编辑指南](docs/EDITING.md)。
 
-## 维护
+调整脚本或样式时，更新 `public/index.html` 中的资源版本；模块依赖也使用各自的查询版本。内容 JSON 每次加载会重新验证缓存，无需修改资源版本。
 
-网站内容、星球位置与外观、分类和连线集中在 `galaxy-content.json`，具体字段及增删网站、自动/手动连线示例见 [编辑指南](EDITING.md)。只修改 JSON 无需更新资源版本号。分类按钮自动生成，自动连线仅连接同一星区内的星球，数量不再写死；搜索/筛选时仅显示两端可见的连线。
+## 操作与动画
 
-首页为 index.html、galaxy.css、galaxy.js；内容读取和校验由 galaxy-content.mjs 处理，飞船模型由 spacecraft.js 中的轻量几何体生成。更改脚本或样式后，同步更新对应引用的资源版本号以避免旧缓存。
+- 桌面：左键拖动、右键旋转、滚轮缩放，悬停查看信息，单击立即靠近，双击进入。
+- 触屏：单指平移、双指缩放和旋转，轻点查看并靠近，双击放大；通过独立进入按钮跳转。
+- 分类会按屏幕比例完整取景。方向键移动，+/- 缩放，Home 归位，/ 搜索，Escape 关闭信息。
+- 飞船缓动跟随视角中心、朝目标飞行，移动时有轻量双引擎尾焰；星球自转、卫星绕行。
+- 闲置 2 秒后缓慢自动环绕。页面隐藏或窗口失焦时停止渲染及 CSS 动画，恢复后不补算暂停时间；尊重系统减少动态效果偏好。
 
-原有 docs、cal、downloads、flv 等路径继续保留。历史外部服务可能已经停用，链接展示不代表服务存活状态。
+移动端星球名称基础字号 11px，缩放范围 0.55–1.25 倍；网址更小且在靠近时显示。星区标签最大 1 倍。桌面名称基础字号 16px，最大 1.9 倍。
 
-## 许可
+英文和数字使用本地 Oxanium 可变字体，中文使用本地 Noto Sans SC 可变字体，当前界面优先使用小字包，新字按需加载分片。不依赖外部字体服务。
 
-Three.js 0.180.0 使用 MIT 许可证，详见 vendor/LICENSE。
+## 部署与迁移状态
 
-Oxanium 使用 SIL Open Font License 1.1，详见 vendor/fonts/oxanium/OFL.txt。
+Vercel 只部署 `public/`，构建命令为 `node scripts/check.mjs --deployment`。
 
-Noto Sans SC 使用 SIL Open Font License 1.1，详见 vendor/fonts/noto-sans-sc/OFL.txt；字体来源和加载方式见 vendor/fonts/noto-sans-sc/README.md。
+**当前迁移分支不能直接发布。** 需先部署独立内容项目，再运行：
+
+```sh
+node scripts/configure-legacy.mjs https://NEW-SITES-DOMAIN
+npm run build
+```
+
+这会为 `/docs`、`/kingdom`、`/flv` 等旧入口配置到新项目的反向代理，保留既有 URL。新地址未配置时，部署检查会主动失败，避免误发布后旧页面 404。详细顺序和回退方式见 [迁移说明](docs/MIGRATION.md)。
+
+当前生产版本仍在 `main`；本地结构整理位于 `refactor/project-split`，尚未推送。
+
+## 开源许可
+
+- Three.js 0.180.0：MIT，见 `public/assets/vendor/LICENSE`。
+- Oxanium：SIL OFL 1.1，见 `public/assets/vendor/fonts/oxanium/OFL.txt`。
+- Noto Sans SC：SIL OFL 1.1，见 `public/assets/vendor/fonts/noto-sans-sc/OFL.txt`。字体来源见同目录 README。
