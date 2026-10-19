@@ -105,6 +105,18 @@
       "accentColor": "#c74b45"
     },
     {
+      "id": "dualshock",
+      "name": "手柄校准",
+      "url": "https://ds.charlyw.top/",
+      "desc": "DualShock 手柄校准工具。为下一场游戏，校准手中的方向。",
+      "group": "tool",
+      "x": 17,
+      "z": -14,
+      "radius": 1.8,
+      "color": "#9270c6",
+      "accentColor": "#c9a7ef"
+    },
+    {
       "id": "communications",
       "name": "通信原理",
       "url": "https://txyl.charlyw.top",
