@@ -1,19 +1,19 @@
 {
   "sectors": {
-    "service": {
-      "label": "信号",
-      "name": "信号星区",
-      "sub": "SIGNALS"
+    "explore": {
+      "label": "探索",
+      "name": "探索星区",
+      "sub": "EXPLORE"
     },
-    "tool": {
-      "label": "工具",
+    "playground": {
+      "label": "游乐",
       "name": "游乐星区",
       "sub": "PLAYGROUND"
     },
-    "memory": {
-      "label": "记忆",
-      "name": "记忆星区",
-      "sub": "MEMORIES"
+    "knowledge": {
+      "label": "知识",
+      "name": "知识星区",
+      "sub": "KNOWLEDGE"
     }
   },
   "defaults": {
@@ -30,7 +30,7 @@
       "name": "Bing Chat 镜像",
       "url": "https://bing.charlyw.top",
       "desc": "来自旧时代的聊天信号。坐标还在，频道是否有人值守已无从得知。",
-      "group": "service",
+      "group": "explore",
       "x": -18.7,
       "z": -16.15,
       "radius": 1.8,
@@ -41,7 +41,7 @@
       "name": "NextChat",
       "url": "https://chat.charlyw.top",
       "desc": "一颗用于对话的小行星。曾经在这里部署过自己的聊天入口。",
-      "group": "service",
+      "group": "explore",
       "x": -8.5,
       "z": -22.95,
       "radius": 2.4,
@@ -52,7 +52,7 @@
       "name": "深夜放映厅",
       "url": "https://hub.charlyw.top/flv/",
       "desc": "一座在夜里点灯的放映厅。这里存放着曾经的观影入口。",
-      "group": "tool",
+      "group": "playground",
       "x": 5.95,
       "z": 5.95,
       "radius": 2.1,
@@ -64,7 +64,7 @@
       "name": "PIZZA 星球",
       "url": "https://pizza.charlyw.top",
       "desc": "一颗有点不严肃的星球。很久以前，这里有过一个简陋的 PIZZA 网站。",
-      "group": "tool",
+      "group": "playground",
       "x": 13.6,
       "z": 12.75,
       "radius": 2.1,
@@ -75,7 +75,7 @@
       "name": "视频码率计算器",
       "url": "https://hub.charlyw.top/cal/",
       "desc": "一件留在轨道上的小工具，用来计算视频码率。",
-      "group": "tool",
+      "group": "playground",
       "x": 26.35,
       "z": 8.5,
       "radius": 1.8,
@@ -86,7 +86,7 @@
       "name": "小铭的站",
       "url": "https://ming.charlyw.top",
       "desc": "附近星区的一座小站。沿着这条航线，去别处看看。",
-      "group": "tool",
+      "group": "playground",
       "x": 20.4,
       "z": -6.8,
       "radius": 1.6,
@@ -97,7 +97,7 @@
       "name": "手柄校准",
       "url": "https://ds.charlyw.top/",
       "desc": "DualShock 手柄校准工具。为下一场游戏，校准手中的方向。",
-      "group": "tool",
+      "group": "playground",
       "x": 14.45,
       "z": -11.9,
       "radius": 1.8,
@@ -109,7 +109,7 @@
       "name": "查理亡国",
       "url": "https://hub.charlyw.top/kingdom/",
       "desc": "王座陨落，传奇不朽，集结亡国之魂，再战黎明！",
-      "group": "tool",
+      "group": "playground",
       "x": 11.05,
       "z": -2.55,
       "radius": 2.2,
@@ -121,7 +121,7 @@
       "name": "通信原理",
       "url": "https://txyl.charlyw.top",
       "desc": "以前整理的通信原理知识点。像一段仍在传播的电磁波。",
-      "group": "memory",
+      "group": "knowledge",
       "x": -8.5,
       "z": 22.95,
       "radius": 1.7,
@@ -132,7 +132,7 @@
       "name": "Derby SQL",
       "url": "https://hub.charlyw.top/docs/derby_database/",
       "desc": "数据库笔记的旧坐标。一些当时认真记录过的东西。",
-      "group": "memory",
+      "group": "knowledge",
       "x": -18.7,
       "z": 14.45,
       "radius": 1.6,
@@ -143,7 +143,7 @@
       "name": "移动通信复习",
       "url": "https://hub.charlyw.top/docs/ydtx/",
       "desc": "留在这里的考试季记忆。一颗慢慢自转的旧知识星球。",
-      "group": "memory",
+      "group": "knowledge",
       "x": -28.9,
       "z": 6.8,
       "radius": 1.8,
@@ -154,7 +154,7 @@
       "name": "大数据复习",
       "url": "https://hub.charlyw.top/docs/dsj/dsj.html",
       "desc": "关于大数据的旧资料，封存在这片安静的星区。",
-      "group": "memory",
+      "group": "knowledge",
       "x": -28.9,
       "z": 26.35,
       "radius": 2.1,

@@ -14,7 +14,7 @@
   "name": "我的博客",
   "url": "https://example.com/blog",
   "desc": "记录一些有趣的事情。",
-  "group": "memory",
+  "group": "knowledge",
   "x": 12,
   "z": -8,
   "radius": 2.2,
@@ -119,3 +119,5 @@ JSON 要用双引号，不能写注释，也不能有末尾多余的逗号。布
 ```sh
 node tests/galaxy-content.test.mjs
 ```
+
+当前分类标识：`explore`（探索）、`playground`（游乐）、`knowledge`（知识）。星球的 `group` 必须填写对应标识，场景标签与底部按钮均从 `sectors` 中读取。
