@@ -50,7 +50,7 @@
     {
       "id": "bitrate",
       "name": "视频码率计算器",
-      "url": "https://hub.charlyw.top/cal/",
+      "url": "https://404.charlyw.top/cal/",
       "desc": "一件留在轨道上的小工具，用来计算视频码率。",
       "group": "explore",
       "x": -6.8,
@@ -61,7 +61,7 @@
     {
       "id": "cinema",
       "name": "深夜放映厅",
-      "url": "https://hub.charlyw.top/flv/",
+      "url": "https://404.charlyw.top/flv/",
       "desc": "一座在夜里点灯的放映厅。这里存放着曾经的观影入口。",
       "group": "playground",
       "x": 5.95,
@@ -107,7 +107,7 @@
     {
       "id": "kingdom",
       "name": "查理亡国",
-      "url": "https://hub.charlyw.top/kingdom/",
+      "url": "https://404.charlyw.top/kingdom/",
       "desc": "王座陨落，传奇不朽，集结亡国之魂，再战黎明！",
       "group": "playground",
       "x": 11.05,
@@ -130,7 +130,7 @@
     {
       "id": "derby",
       "name": "Derby SQL",
-      "url": "https://hub.charlyw.top/docs/derby_database/",
+      "url": "https://404.charlyw.top/docs/derby_database/",
       "desc": "数据库笔记的旧坐标。一些当时认真记录过的东西。",
       "group": "knowledge",
       "x": -18.7,
@@ -141,7 +141,7 @@
     {
       "id": "mobile-notes",
       "name": "移动通信复习",
-      "url": "https://hub.charlyw.top/docs/ydtx/",
+      "url": "https://404.charlyw.top/docs/ydtx/",
       "desc": "留在这里的考试季记忆。一颗慢慢自转的旧知识星球。",
       "group": "knowledge",
       "x": -28.9,
@@ -152,7 +152,7 @@
     {
       "id": "big-data",
       "name": "大数据复习",
-      "url": "https://hub.charlyw.top/docs/dsj/dsj.html",
+      "url": "https://404.charlyw.top/docs/dsj/dsj.html",
       "desc": "关于大数据的旧资料，封存在这片安静的星区。",
       "group": "knowledge",
       "x": -28.9,
