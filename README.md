@@ -1,4 +1,4 @@
-# 查理の星空 · HomePage 2.0
+# 查理の星空 · Galaxy-HomePage
 
 基于 Three.js 的个人星空主页，将网站导航呈现为可探索的三维星图。
 
