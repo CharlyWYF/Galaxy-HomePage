@@ -48,6 +48,17 @@
       "color": "#8fb9b2"
     },
     {
+      "id": "bitrate",
+      "name": "视频码率计算器",
+      "url": "https://hub.charlyw.top/cal/",
+      "desc": "一件留在轨道上的小工具，用来计算视频码率。",
+      "group": "explore",
+      "x": -6.8,
+      "z": -11.9,
+      "radius": 1.8,
+      "color": "#aa9870"
+    },
+    {
       "id": "cinema",
       "name": "深夜放映厅",
       "url": "https://hub.charlyw.top/flv/",
@@ -69,17 +80,6 @@
       "z": 12.75,
       "radius": 2.1,
       "color": "#bf8c58"
-    },
-    {
-      "id": "bitrate",
-      "name": "视频码率计算器",
-      "url": "https://hub.charlyw.top/cal/",
-      "desc": "一件留在轨道上的小工具，用来计算视频码率。",
-      "group": "playground",
-      "x": 26.35,
-      "z": 8.5,
-      "radius": 1.8,
-      "color": "#aa9870"
     },
     {
       "id": "ming",
