@@ -1,6 +1,6 @@
 # 查理の星空 · HomePage 2.0
 
-只负责三维星空主页和站点导航。工具、影音、游戏、资料及下载资源已在本地拆分到独立项目 `../CharlyHub`；生产切换尚未执行。
+只负责三维星空主页和站点导航。工具、影音、游戏、资料及下载资源已迁移到独立项目 [CharlyHub](https://hub.charlyw.top)，本地目录为 `../CharlyHub`。
 
 ## 项目结构
 
@@ -16,12 +16,10 @@ public/                 唯一的部署目录
     icons/              主页图标
 scripts/
   check.mjs             本地资源和部署前校验
-  configure-legacy.mjs  配置迁出内容的旧路径兼容
 tests/                 内容、连线和渲染生命周期检查
 docs/
   EDITING.md            内容编辑指南
   MIGRATION.md          两个项目的迁移与切换说明
-migration-config.json   旧路径和新项目目标域名
 vercel.json             只发布 public/ 的 Vercel 配置
 ```
 
@@ -57,18 +55,11 @@ npm run dev
 
 ## 部署与迁移状态
 
-Vercel 只部署 `public/`，构建命令为 `node scripts/check.mjs --deployment`。
+主页生产分支为 `main`。Vercel 只部署 `public/`，构建命令为 `node scripts/check.mjs`。
 
-**当前迁移分支不能直接发布。** 目标私有仓库已创建并推送：https://github.com/CharlyWYF/CharlyHub 。目标域名为 `hub.charlyw.top`，旧路径规则已配置，但新项目尚未完成 Vercel 部署验证，因此暂不合并上线。首次或以后更换地址时使用：
+原域名仅提供星空主页及其资源。迁出的游戏、工具、影音、资料和下载内容只在 [hub.charlyw.top](https://hub.charlyw.top) 提供，原 `/kingdom`、`/docs`、`/flv` 等地址不再转发。星空中的相关星球已直接指向 Hub。
 
-```sh
-node scripts/configure-legacy.mjs https://NEW-SITES-DOMAIN
-npm run build
-```
-
-这会为 `/docs`、`/kingdom`、`/flv` 等旧入口配置到新项目的反向代理，保留既有 URL。新地址未配置时，部署检查会主动失败，避免误发布后旧页面 404。详细顺序和回退方式见 [迁移说明](docs/MIGRATION.md)。
-
-当前生产版本仍在 `main`；本地结构整理位于 `refactor/project-split`，尚未推送。
+内容项目私有仓库：[CharlyWYF/CharlyHub](https://github.com/CharlyWYF/CharlyHub)。两个项目分别推送、分别部署。迁移记录见 [迁移说明](docs/MIGRATION.md)。
 
 ## 开源许可
 

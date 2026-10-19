@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "",
-  "buildCommand": "node scripts/check.mjs --deployment",
+  "buildCommand": "node scripts/check.mjs",
   "outputDirectory": "public",
   "rewrites": [
     {
@@ -36,130 +36,6 @@
     {
       "source": "/vendor/:path*",
       "destination": "/assets/vendor/:path*"
-    },
-    {
-      "source": "/cal/",
-      "destination": "https://hub.charlyw.top/cal/index.html"
-    },
-    {
-      "source": "/docs/derby_database/",
-      "destination": "https://hub.charlyw.top/docs/derby_database/index.html"
-    },
-    {
-      "source": "/docs/ydtx/",
-      "destination": "https://hub.charlyw.top/docs/ydtx/index.html"
-    },
-    {
-      "source": "/downloads/",
-      "destination": "https://hub.charlyw.top/downloads/index.html"
-    },
-    {
-      "source": "/flv/",
-      "destination": "https://hub.charlyw.top/flv/index.html"
-    },
-    {
-      "source": "/kingdom/",
-      "destination": "https://hub.charlyw.top/kingdom/index.html"
-    },
-    {
-      "source": "/kingdom/flip/",
-      "destination": "https://hub.charlyw.top/kingdom/flip/index.html"
-    },
-    {
-      "source": "/kingdom/gun/",
-      "destination": "https://hub.charlyw.top/kingdom/gun/index.html"
-    },
-    {
-      "source": "/kingdom/names/",
-      "destination": "https://hub.charlyw.top/kingdom/names/index.html"
-    },
-    {
-      "source": "/kingdom/red/",
-      "destination": "https://hub.charlyw.top/kingdom/red/index.html"
-    },
-    {
-      "source": "/kingdom/sat/",
-      "destination": "https://hub.charlyw.top/kingdom/sat/index.html"
-    },
-    {
-      "source": "/video/",
-      "destination": "https://hub.charlyw.top/video/index.html"
-    },
-    {
-      "source": "/cal",
-      "destination": "https://hub.charlyw.top/cal"
-    },
-    {
-      "source": "/cal/:path*",
-      "destination": "https://hub.charlyw.top/cal/:path*"
-    },
-    {
-      "source": "/kingdom",
-      "destination": "https://hub.charlyw.top/kingdom"
-    },
-    {
-      "source": "/kingdom/:path*",
-      "destination": "https://hub.charlyw.top/kingdom/:path*"
-    },
-    {
-      "source": "/docs",
-      "destination": "https://hub.charlyw.top/docs"
-    },
-    {
-      "source": "/docs/:path*",
-      "destination": "https://hub.charlyw.top/docs/:path*"
-    },
-    {
-      "source": "/flv",
-      "destination": "https://hub.charlyw.top/flv"
-    },
-    {
-      "source": "/flv/:path*",
-      "destination": "https://hub.charlyw.top/flv/:path*"
-    },
-    {
-      "source": "/video",
-      "destination": "https://hub.charlyw.top/video"
-    },
-    {
-      "source": "/video/:path*",
-      "destination": "https://hub.charlyw.top/video/:path*"
-    },
-    {
-      "source": "/downloads",
-      "destination": "https://hub.charlyw.top/downloads"
-    },
-    {
-      "source": "/downloads/:path*",
-      "destination": "https://hub.charlyw.top/downloads/:path*"
-    },
-    {
-      "source": "/apks",
-      "destination": "https://hub.charlyw.top/apks"
-    },
-    {
-      "source": "/apks/:path*",
-      "destination": "https://hub.charlyw.top/apks/:path*"
-    },
-    {
-      "source": "/sub",
-      "destination": "https://hub.charlyw.top/sub"
-    },
-    {
-      "source": "/sub/:path*",
-      "destination": "https://hub.charlyw.top/sub/:path*"
-    },
-    {
-      "source": "/style.css",
-      "destination": "https://hub.charlyw.top/style.css"
-    },
-    {
-      "source": "/icon",
-      "destination": "https://hub.charlyw.top/icon"
-    },
-    {
-      "source": "/icon/:path*",
-      "destination": "https://hub.charlyw.top/icon/:path*"
     }
   ],
   "trailingSlash": true

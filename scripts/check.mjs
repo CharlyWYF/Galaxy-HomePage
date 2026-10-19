@@ -21,15 +21,4 @@ for(const file of await files(publicRoot)){
  }
 }
 const content=parseGalaxyContent(JSON.parse(await readFile(path.join(publicRoot,'content/galaxy-content.json'),'utf8')));
-const migration=JSON.parse(await readFile(path.join(root,'migration-config.json'),'utf8'));
-const deployment=process.argv.includes('--deployment');
-if(deployment&&!migration.legacyOrigin)throw new Error('Migration not ready: deploy CharlyHub first, then run node scripts/configure-legacy.mjs https://NEW-ORIGIN before deploying the homepage.');
-if(deployment){
- const vercel=JSON.parse(await readFile(path.join(root,'vercel.json'),'utf8'));
- for(const prefix of migration.legacyPaths){
-  const rule=vercel.rewrites?.find(rule=>rule.source===prefix);
-  if(rule?.destination!==migration.legacyOrigin+prefix)throw new Error('Missing legacy rewrite: '+prefix);
- }
-}
 console.log(`Homepage: ${content.planets.length} planets; ${checked} local resource references valid.`);
-if(!migration.legacyOrigin)console.log('Production cutover pending: legacy origin has not been configured.');
