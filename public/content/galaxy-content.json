@@ -59,6 +59,17 @@
       "color": "#aa9870"
     },
     {
+      "id": "sat",
+      "name": "单双周查询",
+      "url": "https://404.charlyw.top/sat/",
+      "desc": "查看单双周安排，让日程在轨道上有序运行。",
+      "group": "explore",
+      "x": -16,
+      "z": -7,
+      "radius": 1.7,
+      "color": "#7b99c8"
+    },
+    {
       "id": "cinema",
       "name": "深夜放映厅",
       "url": "https://404.charlyw.top/flv/",
