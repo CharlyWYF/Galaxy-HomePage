@@ -70,6 +70,17 @@
       "color": "#7b99c8"
     },
     {
+      "id": "lantai",
+      "name": "兰台 · 下一班",
+      "url": "https://lantai.charlyw.top/",
+      "desc": "查询兰台、北门与纪忠楼的接驳车时刻，查看下一班与倒计时。",
+      "group": "explore",
+      "x": -25,
+      "z": -10,
+      "radius": 1.8,
+      "color": "#ba504c"
+    },
+    {
       "id": "cinema",
       "name": "深夜放映厅",
       "url": "https://404.charlyw.top/flv/",
