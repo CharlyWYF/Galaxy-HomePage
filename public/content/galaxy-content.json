@@ -93,6 +93,18 @@
       "color": "#bf8c58"
     },
     {
+      "id": "minecraft",
+      "name": "Minecraft",
+      "url": "https://playmc.charlyw.top/",
+      "desc": "从一块草方块开始，挖掘、建造，开启新的冒险。",
+      "group": "playground",
+      "x": 25,
+      "z": 5.5,
+      "radius": 1.9,
+      "color": "#6f9d3b",
+      "accentColor": "#805a3a"
+    },
+    {
       "id": "ming",
       "name": "小铭的站",
       "url": "https://ming.charlyw.top",
