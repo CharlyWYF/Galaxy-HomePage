@@ -226,7 +226,8 @@ function isHomeView(){
  const angle=Math.atan2(Math.sin(wantedAzimuth-initialAzimuth-autoOrbitOffset),Math.cos(wantedAzimuth-initialAzimuth-autoOrbitOffset));
  return Math.hypot(desired.x+5,desired.z)<.2&&Math.abs(wantedDistance-defaultDistance())<.5&&Math.abs(angle)<.01&&Math.abs(wantedElevation-initialElevation)<.01;
 }
-function defaultDistance(){return innerWidth/innerHeight<1?175:110;}
+// Only touch layouts use the portrait overview distance; desktop labels keep a stable reference.
+function defaultDistance(){return touchMode&&innerWidth/innerHeight<1?175:110;}
 wantedDistance=defaultDistance();distance=wantedDistance*(paused?1:1.2);
 $('#home').onclick=home;$('#plus').onclick=()=>wantedDistance=Math.max(13,wantedDistance*.78);$('#minus').onclick=()=>wantedDistance=Math.min(600,wantedDistance*1.28);
 const pointers=new Map();let moved=false,lastGesture=null,pendingTouchTap=null;
